@@ -42,7 +42,20 @@ def get_supabase():
 supabase = get_supabase()
 
 if "gruppo" not in st.session_state:
-    st.session_state.gruppo = random.choice(["A", "B"])
+    try:
+        res = supabase.table("Risposte").select("gruppo").eq("esperimento", NOME_ESPERIMENTO).execute()
+        gruppi = [r["gruppo"] for r in res.data]
+        count_a = gruppi.count("A")
+        count_b = gruppi.count("B")
+        
+        # Assegna al gruppo con meno persone (bilanciamento perfetto)
+        if count_a <= count_b:
+            st.session_state.gruppo = "A"
+        else:
+            st.session_state.gruppo = "B"
+    except Exception:
+        # Fallback di sicurezza in caso di disconnessione momentanea
+        st.session_state.gruppo = random.choice(["A", "B"])
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
