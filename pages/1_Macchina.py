@@ -66,14 +66,14 @@ supabase = get_supabase()
 # ─── RANDOMIZZAZIONE ──────────────────────────────────────────────────
 if "gruppo" not in st.session_state:
     st.session_state.gruppo = random.choice(["A", "B"])
-if "submitted" not in st.session_state:
-    st.session_state.submitted = False
+if NOME_ESPERIMENTO not in st.session_state:
+    st.session_state[NOME_ESPERIMENTO] = False
 
 # ─── PAGINA ───────────────────────────────────────────────────────────
 st.markdown('<h1 class="exp-title">🚗 Incidente Stradale</h1>', unsafe_allow_html=True)
 st.markdown('<p class="exp-subtitle">Rispondi alle domande qui sotto</p>', unsafe_allow_html=True)
 
-if not st.session_state.submitted:
+if not st.session_state[NOME_ESPERIMENTO]:
     
     st.markdown('<div class="question-card">', unsafe_allow_html=True)
     
@@ -129,7 +129,7 @@ if not st.session_state.submitted:
             "valore": 1 if vetri == "Sì" else 0,
         }).execute()
         
-        st.session_state.submitted = True
+        st.session_state[NOME_ESPERIMENTO] = True
         st.rerun()
 else:
     st.markdown("""

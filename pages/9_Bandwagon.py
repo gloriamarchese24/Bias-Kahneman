@@ -43,13 +43,13 @@ supabase = get_supabase()
 
 if "gruppo" not in st.session_state:
     st.session_state.gruppo = random.choice(["A", "B"])
-if "submitted" not in st.session_state:
-    st.session_state.submitted = False
+if NOME_ESPERIMENTO not in st.session_state:
+    st.session_state[NOME_ESPERIMENTO] = False
 
 st.markdown('<h1 class="exp-title">🐑 Scelta del Prodotto</h1>', unsafe_allow_html=True)
 st.markdown('<p class="exp-subtitle">Quale preferisci?</p>', unsafe_allow_html=True)
 
-if not st.session_state.submitted:
+if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown('<div class="question-card">', unsafe_allow_html=True)
     
     st.markdown("#### 🛍️ Due prodotti a confronto")
@@ -91,7 +91,7 @@ if not st.session_state.submitted:
             "gruppo": st.session_state.gruppo,
             "valore": valore,
         }).execute()
-        st.session_state.submitted = True
+        st.session_state[NOME_ESPERIMENTO] = True
         st.rerun()
 else:
     st.markdown("""

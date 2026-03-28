@@ -41,8 +41,8 @@ def get_supabase():
 
 supabase = get_supabase()
 
-if "submitted" not in st.session_state:
-    st.session_state.submitted = False
+if NOME_ESPERIMENTO not in st.session_state:
+    st.session_state[NOME_ESPERIMENTO] = False
 
 # ─── QUIZ ─────────────────────────────────────────────────────────────
 DOMANDE = [
@@ -56,7 +56,7 @@ DOMANDE = [
 st.markdown('<h1 class="exp-title">🎓 Quanto ne sai?</h1>', unsafe_allow_html=True)
 st.markdown('<p class="exp-subtitle">Rispondi al quiz e poi valuta la tua prestazione</p>', unsafe_allow_html=True)
 
-if not st.session_state.submitted:
+if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown('<div class="question-card">', unsafe_allow_html=True)
     
     st.markdown("#### 📝 Quiz di Cultura Generale")
@@ -102,7 +102,7 @@ if not st.session_state.submitted:
             "valore": punteggio,
         }).execute()
         
-        st.session_state.submitted = True
+        st.session_state[NOME_ESPERIMENTO] = True
         st.session_state.punteggio = punteggio
         st.session_state.stima = stima
         st.rerun()
