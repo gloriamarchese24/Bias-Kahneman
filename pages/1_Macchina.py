@@ -1,0 +1,141 @@
+import streamlit as st
+import random
+from supabase import create_client
+
+# ─── CONFIG ───────────────────────────────────────────────────────────
+st.set_page_config(page_title="🚗 Velocità Auto", page_icon="🚗", layout="centered")
+
+NOME_ESPERIMENTO = "macchina"
+
+# ─── CUSTOM CSS ───────────────────────────────────────────────────────
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+
+.question-card {
+    background: linear-gradient(135deg, #1A1F2E 0%, #2A2F3E 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(108, 99, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(108, 99, 255, 0.2);
+    margin: 1rem 0;
+}
+
+.exp-title {
+    font-size: 2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #6C63FF, #FF6584);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.exp-subtitle {
+    color: #888;
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.thanks-box {
+    background: linear-gradient(135deg, #1a2a1a 0%, #2a3a2a 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 255, 136, 0.2);
+}
+
+.thanks-emoji { font-size: 4rem; }
+.thanks-text { color: #00FF88; font-size: 1.5rem; font-weight: 700; }
+
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
+
+# ─── SUPABASE ─────────────────────────────────────────────────────────
+@st.cache_resource
+def get_supabase():
+    return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
+
+supabase = get_supabase()
+
+# ─── RANDOMIZZAZIONE ──────────────────────────────────────────────────
+if "gruppo" not in st.session_state:
+    st.session_state.gruppo = random.choice(["A", "B"])
+if "submitted" not in st.session_state:
+    st.session_state.submitted = False
+
+# ─── PAGINA ───────────────────────────────────────────────────────────
+st.markdown('<h1 class="exp-title">🚗 Incidente Stradale</h1>', unsafe_allow_html=True)
+st.markdown('<p class="exp-subtitle">Rispondi alle domande qui sotto</p>', unsafe_allow_html=True)
+
+if not st.session_state.submitted:
+    
+    st.markdown('<div class="question-card">', unsafe_allow_html=True)
+    
+    st.markdown("#### 📹 Scenario")
+    st.markdown(
+        "Immagina di aver visto un video di un incidente tra due automobili. "
+        "Ora rispondi alla seguente domanda:"
+    )
+    
+    st.markdown("---")
+    
+    # Domanda 1: diversa per gruppo
+    if st.session_state.gruppo == "A":
+        st.markdown(
+            '**A che velocità andavano le auto quando si sono** ***colpite***❓',
+        )
+    else:
+        st.markdown(
+            '**A che velocità andavano le auto quando si sono** ***sfracellate***❓',
+        )
+    
+    velocita = st.slider(
+        "Stima la velocità (km/h):",
+        min_value=0, max_value=150, value=50, step=5,
+        key="slider_velocita",
+    )
+    
+    st.markdown("---")
+    
+    # Domanda 2: uguale per tutti (vetri rotti)
+    st.markdown("**Hai notato dei vetri rotti a terra?**")
+    vetri = st.radio(
+        "Scegli una risposta:",
+        options=["Sì", "No"],
+        key="radio_vetri",
+        horizontal=True,
+    )
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+        # Salva velocità
+        supabase.table("Risposte").insert({
+            "esperimento": NOME_ESPERIMENTO,
+            "gruppo": st.session_state.gruppo,
+            "valore": velocita,
+        }).execute()
+        
+        # Salva vetri rotti come secondo record
+        supabase.table("Risposte").insert({
+            "esperimento": "macchina_vetri",
+            "gruppo": st.session_state.gruppo,
+            "valore": 1 if vetri == "Sì" else 0,
+        }).execute()
+        
+        st.session_state.submitted = True
+        st.rerun()
+else:
+    st.markdown("""
+    <div class="thanks-box">
+        <p class="thanks-emoji">🎉</p>
+        <p class="thanks-text">Grazie per la tua risposta!</p>
+        <p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p>
+    </div>
+    """, unsafe_allow_html=True)
