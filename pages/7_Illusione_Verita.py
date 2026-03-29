@@ -49,7 +49,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
         val = st.slider('Da 1 a 10, quanto ti sembra vera e scientifica questa frase?', 1, 10, 5, key='s1')
 
     else:
-        st.markdown("""<p style="font-size:12px; font-weight:300; color:#555555; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;">L'assunzione di omega-3 riduce del 15% le infiammazioni corporee.</p>""", unsafe_allow_html=True)
+        st.markdown("""<p style="font-size:16px; font-weight:300; color:#AAAAAA; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;">L'assunzione di omega-3 riduce del 15% le infiammazioni corporee.</p>""", unsafe_allow_html=True)
         st.markdown("""---""")
         val = st.slider('Da 1 a 10, quanto ti sembra vera e scientifica questa frase?', 1, 10, 5, key='s2')
 

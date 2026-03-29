@@ -199,7 +199,7 @@ build_ab_page(
     "7_Illusione_Verita.py", "illusione_verita", "👁️", "Scienza e Verità", "Valuta l'Affermazione",
     "",
     "        st.markdown(\"\"\"<p style=\"font-size:32px; font-weight:900; color:#FAFAFA; font-family:Arial; text-align:center;\">L'assunzione di Omega-3 riduce<br>del 15% le infiammazioni corporee.</p>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"---\"\"\")\n        val = st.slider('Da 1 a 10, quanto ti sembra vera e scientifica questa frase?', 1, 10, 5, key='s1')\n",
-    "        st.markdown(\"\"\"<p style=\"font-size:12px; font-weight:300; color:#555555; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;\">L'assunzione di omega-3 riduce del 15% le infiammazioni corporee.</p>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"---\"\"\")\n        val = st.slider('Da 1 a 10, quanto ti sembra vera e scientifica questa frase?', 1, 10, 5, key='s2')\n",
+    "        st.markdown(\"\"\"<p style=\"font-size:16px; font-weight:300; color:#AAAAAA; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;\">L'assunzione di omega-3 riduce del 15% le infiammazioni corporee.</p>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"---\"\"\")\n        val = st.slider('Da 1 a 10, quanto ti sembra vera e scientifica questa frase?', 1, 10, 5, key='s2')\n",
     "",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
 )
