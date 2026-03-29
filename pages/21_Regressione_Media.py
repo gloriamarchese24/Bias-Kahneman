@@ -1,10 +1,9 @@
 import streamlit as st
-import random
 from supabase import create_client
 
-st.set_page_config(page_title="Incidente Auto", page_icon="🚗", layout="centered")
+st.set_page_config(page_title="Psicologia Umana", page_icon="🧑‍✈️", layout="centered")
 
-NOME_ESPERIMENTO = "macchina"
+NOME_ESPERIMENTO = "regression"
 
 st.markdown('''
 <style>
@@ -27,42 +26,25 @@ def get_supabase():
 
 supabase = get_supabase()
 
-if "gruppo" not in st.session_state:
-    try:
-        res = supabase.table("Risposte").select("gruppo").eq("esperimento", NOME_ESPERIMENTO).execute()
-        gruppi = [r["gruppo"] for r in res.data]
-        st.session_state.gruppo = "A" if gruppi.count("A") <= gruppi.count("B") else "B"
-    except Exception:
-        st.session_state.gruppo = random.choice(["A", "B"])
-
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
-st.markdown('<h1 class="exp-title">🚗 Incidente Stradale</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="exp-title">🧑‍✈️ L'Effetto Lode/Castigo</h1>', unsafe_allow_html=True)
 st.markdown('<p class="exp-subtitle">Rispondi alle domande qui sotto</p>', unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown('<div class="question-card">', unsafe_allow_html=True)
-    st.markdown('**Scenario:** Hai appena visto un breve video della dashcam in cui due automobili si scontrano.')
+    st.markdown('Tra gli istruttori di volo militare israeliani era prassi comune sgridare duramente gli allievi dopo una manovra disastrosa, e complimentarsi con loro dopo una manovra eccezionale e perfetta.')
+    st.markdown('Nel tempo notarono che **chi veniva sgridato, il volo successivo migliorava** enormemente. Invece **chi veniva elogiato per una manovra fantastica, il volo successivo faceva nettamente peggio**.')
+    st.markdown('Da questo, gli istruttori militari conclusero che i castighi verbali spronano all\'apprendimento, mentre la lode spinge i cadetti ad adagiarsi sugli allori peggiorando le performance.')
     st.markdown('---')
-
-    if st.session_state.gruppo == "A":
-        st.markdown('**A che velocità (in km/h) andavano le auto quando si sono URTATE❓**')
-        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s1')
-
-    else:
-        st.markdown('**A che velocità (in km/h) andavano le auto quando si sono DISINTEGRATE❓**')
-        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s2')
+    st.markdown('Alla luce del rigore scientifico e cognitivo, credi che la conclusione tratta dagli istruttori militari:')
+    scelta = st.radio('', ['A) Sia una intuizione psicologicamente corretta ed efficace in addestramento.', 'B) Sia un colossale errore statistico, legato a come funzionano gli estremi.'])
 
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('<div class="question-card">', unsafe_allow_html=True)
-    st.markdown('**2. Hai notato dei vetri rotti a terra?**')
-    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, key='v')
-    st.markdown('</div>', unsafe_allow_html=True)
-
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
-        supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()
+        v = 1 if 'A)' in scelta else 2
+        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
 
         st.session_state[NOME_ESPERIMENTO] = True
         st.rerun()

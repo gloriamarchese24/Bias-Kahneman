@@ -1,10 +1,9 @@
 import streamlit as st
-import random
 from supabase import create_client
 
-st.set_page_config(page_title="Incidente Auto", page_icon="🚗", layout="centered")
+st.set_page_config(page_title="Diagnosi Medica", page_icon="🔬", layout="centered")
 
-NOME_ESPERIMENTO = "macchina"
+NOME_ESPERIMENTO = "base_rate"
 
 st.markdown('''
 <style>
@@ -27,42 +26,23 @@ def get_supabase():
 
 supabase = get_supabase()
 
-if "gruppo" not in st.session_state:
-    try:
-        res = supabase.table("Risposte").select("gruppo").eq("esperimento", NOME_ESPERIMENTO).execute()
-        gruppi = [r["gruppo"] for r in res.data]
-        st.session_state.gruppo = "A" if gruppi.count("A") <= gruppi.count("B") else "B"
-    except Exception:
-        st.session_state.gruppo = random.choice(["A", "B"])
-
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
-st.markdown('<h1 class="exp-title">🚗 Incidente Stradale</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="exp-title">🔬 Paradosso Diagnostico</h1>', unsafe_allow_html=True)
 st.markdown('<p class="exp-subtitle">Rispondi alle domande qui sotto</p>', unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown('<div class="question-card">', unsafe_allow_html=True)
-    st.markdown('**Scenario:** Hai appena visto un breve video della dashcam in cui due automobili si scontrano.')
+    st.markdown('Una grave malattia genetica colpisce **esattamente l\'1%** della popolazione mondiale.')
+    st.markdown('Un test in grado di individuarla è **infallibile al 95%** (cioè restituisce falsi positivi solo nel 5% dei casi e falsi negativi solo nel 5% dei casi).')
+    st.markdown('Fai questo test e il medico ti dice che **SEI RISULTATO POSITIVO**.')
     st.markdown('---')
-
-    if st.session_state.gruppo == "A":
-        st.markdown('**A che velocità (in km/h) andavano le auto quando si sono URTATE❓**')
-        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s1')
-
-    else:
-        st.markdown('**A che velocità (in km/h) andavano le auto quando si sono DISINTEGRATE❓**')
-        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s2')
+    val = st.slider('Qual è l\'effettiva probabilità (da 0 a 100%) che tu abbia DAVVERO la malattia in questione?', 0, 100, 50)
 
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('<div class="question-card">', unsafe_allow_html=True)
-    st.markdown('**2. Hai notato dei vetri rotti a terra?**')
-    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, key='v')
-    st.markdown('</div>', unsafe_allow_html=True)
-
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
-        supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()
+        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()
 
         st.session_state[NOME_ESPERIMENTO] = True
         st.rerun()

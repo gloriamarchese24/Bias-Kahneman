@@ -2,9 +2,9 @@ import streamlit as st
 import random
 from supabase import create_client
 
-st.set_page_config(page_title="Incidente Auto", page_icon="🚗", layout="centered")
+st.set_page_config(page_title="Biografia Età", page_icon="👴", layout="centered")
 
-NOME_ESPERIMENTO = "macchina"
+NOME_ESPERIMENTO = "gandhi"
 
 st.markdown('''
 <style>
@@ -38,31 +38,30 @@ if "gruppo" not in st.session_state:
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
-st.markdown('<h1 class="exp-title">🚗 Incidente Stradale</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="exp-title">👴 Età di Gandhi</h1>', unsafe_allow_html=True)
 st.markdown('<p class="exp-subtitle">Rispondi alle domande qui sotto</p>', unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown('<div class="question-card">', unsafe_allow_html=True)
-    st.markdown('**Scenario:** Hai appena visto un breve video della dashcam in cui due automobili si scontrano.')
-    st.markdown('---')
 
     if st.session_state.gruppo == "A":
-        st.markdown('**A che velocità (in km/h) andavano le auto quando si sono URTATE❓**')
-        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s1')
+        st.markdown('**Mahatma Gandhi aveva più o meno di 114 anni quando è morto?**')
+        st.radio('', ['Più di 114', 'Meno di 114'], horizontal=True, key='r1')
+        st.markdown('---')
+        st.markdown('**A che età esatta è morto secondo te?**')
+        eta = st.number_input('Inserisci una stima (anni):', 0, 150, 70, key='n1')
 
     else:
-        st.markdown('**A che velocità (in km/h) andavano le auto quando si sono DISINTEGRATE❓**')
-        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s2')
+        st.markdown('**Mahatma Gandhi aveva più o meno di 35 anni quando è morto?**')
+        st.radio('', ['Più di 35', 'Meno di 35'], horizontal=True, key='r2')
+        st.markdown('---')
+        st.markdown('**A che età esatta è morto secondo te?**')
+        eta = st.number_input('Inserisci una stima (anni):', 0, 150, 70, key='n2')
 
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('<div class="question-card">', unsafe_allow_html=True)
-    st.markdown('**2. Hai notato dei vetri rotti a terra?**')
-    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, key='v')
     st.markdown('</div>', unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
-        supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()
+        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()
 
         st.session_state[NOME_ESPERIMENTO] = True
         st.rerun()

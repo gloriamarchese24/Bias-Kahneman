@@ -2,9 +2,9 @@ import streamlit as st
 import random
 from supabase import create_client
 
-st.set_page_config(page_title="Incidente Auto", page_icon="🚗", layout="centered")
+st.set_page_config(page_title="Spettacolo", page_icon="🎭", layout="centered")
 
-NOME_ESPERIMENTO = "macchina"
+NOME_ESPERIMENTO = "sunk_theater"
 
 st.markdown('''
 <style>
@@ -38,31 +38,29 @@ if "gruppo" not in st.session_state:
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
-st.markdown('<h1 class="exp-title">🚗 Incidente Stradale</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="exp-title">🎭 Lo Spettacolo a Teatro</h1>', unsafe_allow_html=True)
 st.markdown('<p class="exp-subtitle">Rispondi alle domande qui sotto</p>', unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown('<div class="question-card">', unsafe_allow_html=True)
-    st.markdown('**Scenario:** Hai appena visto un breve video della dashcam in cui due automobili si scontrano.')
-    st.markdown('---')
 
     if st.session_state.gruppo == "A":
-        st.markdown('**A che velocità (in km/h) andavano le auto quando si sono URTATE❓**')
-        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s1')
+        st.markdown('**Scenario:** Hai acquistato a tue spese un biglietto da 50€ per vedere uno spettacolo teatrale che ti interessava.')
+        st.markdown('Arriva la sera dello spettacolo ma c\'è una tormenta di neve spaventosa. Andare a teatro richiede di mettersi alla guida sulla neve per 40 minuti, sfidando il pericolo e il freddo estremo.')
+        st.markdown('---')
+        scelta = st.radio('Cosa decidi di fare?', ['A) Vado a teatro lo stesso (sfido la tormenta per non buttare i 50€).', 'B) Resto a casa al caldo rinunciando allo spettacolo e ai 50€.'], key='r1')
 
     else:
-        st.markdown('**A che velocità (in km/h) andavano le auto quando si sono DISINTEGRATE❓**')
-        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s2')
+        st.markdown('**Scenario:** Un amico ti ha **regalato** stasera un biglietto per vedere uno spettacolo teatrale che ti interessava (costo per te: 0€).')
+        st.markdown('Arriva la sera dello spettacolo ma c\'è una tormenta di neve spaventosa. Andare a teatro richiede di mettersi alla guida sulla neve per 40 minuti, sfidando il pericolo e il freddo estremo.')
+        st.markdown('---')
+        scelta = st.radio('Cosa decidi di fare?', ['A) Vado a teatro lo stesso (sfido la tormenta per non buttare il regalo).', 'B) Resto a casa al caldo rinunciando allo spettacolo.'], key='r2')
 
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('<div class="question-card">', unsafe_allow_html=True)
-    st.markdown('**2. Hai notato dei vetri rotti a terra?**')
-    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, key='v')
     st.markdown('</div>', unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
-        supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()
+        v = 1 if 'Vado' in scelta else 0
+        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
         st.session_state[NOME_ESPERIMENTO] = True
         st.rerun()
