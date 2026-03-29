@@ -38,7 +38,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown("""Da questo, gli istruttori militari conclusero che i castighi verbali spronano all'apprendimento, mentre la lode spinge i cadetti ad adagiarsi sugli allori peggiorando le performance.""")
     st.markdown("""---""")
     st.markdown("""Alla luce del rigore scientifico e cognitivo, credi che la conclusione tratta dagli istruttori militari:""")
-    scelta = st.radio('', ['A) Sia una intuizione psicologicamente corretta ed efficace in addestramento.', 'B) Sia un colossale errore statistico, legato a come funzionano gli estremi.'], index=None)
+    scelta_dom = st.radio('', ['A) Sia una intuizione psicologicamente corretta ed efficace in addestramento.', 'B) Sia un colossale errore statistico, legato a come funzionano gli estremi.'], index=None)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True
@@ -49,8 +49,8 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-        v = 1 if 'A)' in scelta else 2
-        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
+            v = 1 if 'A)' in scelta_dom else 2
+            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()

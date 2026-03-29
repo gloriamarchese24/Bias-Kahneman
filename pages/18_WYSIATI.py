@@ -59,8 +59,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
 
     
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        # Validazione generica (cerca variabili comuni come 'scelta', 'val', 'eta', 'colpa')
-        # In Streamlit, se index=None o value=None, la variabile esiste ma è None
         can_submit = True
         for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
             if var_name in locals() and locals()[var_name] is None:
@@ -69,8 +67,8 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': colpa}).execute()
-        supabase.table('Risposte').insert({'esperimento': 'wysiati_fiducia', 'gruppo': st.session_state.gruppo, 'valore': fiducia}).execute()
+            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': colpa}).execute()
+            supabase.table('Risposte').insert({'esperimento': 'wysiati_fiducia', 'gruppo': st.session_state.gruppo, 'valore': fiducia}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()

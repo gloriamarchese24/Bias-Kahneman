@@ -46,8 +46,8 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-        v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)
-        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
+            v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)
+            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()

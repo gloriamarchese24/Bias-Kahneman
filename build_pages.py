@@ -6,6 +6,9 @@ if os.path.exists("pages"):
 os.makedirs("pages")
 
 def build_ab_page(filename, id, icon, titolo_breve, titolo_lungo, scenario, dom_a, dom_b, extra_comune, salvataggio, extra_css=""):
+    # Prepariamo il salvataggio con l'indentazione corretta (12 spazi invece di 8)
+    salvataggio_indented = salvataggio.replace("\n        ", "\n            ").replace("        ", "            ", 1)
+    
     template = f"""import streamlit as st
 import random
 from supabase import create_client
@@ -58,8 +61,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
 {extra_comune}
     
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        # Validazione generica (cerca variabili comuni come 'scelta', 'val', 'eta', 'colpa')
-        # In Streamlit, se index=None o value=None, la variabile esiste ma è None
         can_submit = True
         for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
             if var_name in locals() and locals()[var_name] is None:
@@ -68,7 +69,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-{salvataggio}
+{salvataggio_indented}
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()
 else:
@@ -78,6 +79,7 @@ else:
         f.write(template)
 
 def build_single_page(filename, id, icon, titolo_breve, titolo_lungo, dom, salvataggio, extra_css=""):
+    salvataggio_indented = salvataggio.replace("\n        ", "\n            ").replace("        ", "            ", 1)
     template = f"""import streamlit as st
 from supabase import create_client
 
@@ -123,7 +125,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-{salvataggio}
+{salvataggio_indented}
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()
 else:
@@ -176,9 +178,9 @@ build_ab_page(
 build_ab_page(
     "5_Ancoraggio_Roulette.py", "roulette", "🎰", "Ruota della Fortuna", "Statistica Ospedaliera",
     "",
-    "        st.markdown(\"\"\"### Il numero estratto dalla ruota oggi è: **12**\"\"\")\n        st.markdown(\"\"\"---\"\"\")\n        val = st.slider('Considera il numero sopra. Secondo te, in Italia, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, 50, key='s1')\n",
-    "        st.markdown(\"\"\"### Il numero estratto dalla ruota oggi è: **65**\"\"\")\n        st.markdown(\"\"\"---\"\"\")\n        val = st.slider('Considera il numero sopra. Secondo te, in Italia, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, 50, key='s2')\n",
-    "",
+    "        val = st.slider('Secondo te, in Italia, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, 50, key='s1')\n",
+    "        val = st.slider('Secondo te, in Italia, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, 50, key='s2')\n",
+    "    st.markdown(\"\"\"---\"\"\")\n    st.markdown(\"\"\"### Il numero estratto dalla ruota oggi è: **12**\"\"\" if st.session_state.gruppo == 'A' else \"\"\"### Il numero estratto dalla ruota oggi è: **65**\"\"\")\n",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
 )
 
@@ -316,8 +318,8 @@ build_ab_page(
 build_ab_page(
     "19_Illusione_Focalizzazione.py", "focalizzazione", "😊", "Questionario Benessere", "Sondaggio sul Benessere",
     "    st.markdown(\"\"\"Rispondi con sincerità alle seguenti due domande sulla tua vita attuale.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
-    "        val = st.slider('1. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s1a')\n        st.markdown('<br>', unsafe_allow_html=True)\n        st.number_input('2. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\\'ultimo mese?', 0, 30, value=None, key='n1b')\n",
-    "        st.number_input('1. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\\'ultimo mese?', 0, 30, value=None, key='n2a')\n        st.markdown('<br>', unsafe_allow_html=True)\n        val = st.slider('2. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s2b')\n",
+    "        val = st.slider('1. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s1a')\n        st.markdown('<br>', unsafe_allow_html=True)\n        eta = st.number_input('2. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\\'ultimo mese?', 0, 30, value=None, key='n1b')\n",
+    "        eta = st.number_input('1. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\\'ultimo mese?', 0, 30, value=None, key='n2a')\n        st.markdown('<br>', unsafe_allow_html=True)\n        val = st.slider('2. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s2b')\n",
     "",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
 )
@@ -341,8 +343,8 @@ build_single_page(
 # --- 22. REGRESSIONE VERSO LA MEDIA ---
 build_single_page(
     "22_Regressione_Media.py", "regression", "🧑‍✈️", "Psicologia Umana", "L'Effetto Lode/Castigo",
-    "    st.markdown(\"\"\"Tra gli istruttori di volo militare israeliani era prassi comune sgridare duramente gli allievi dopo una manovra disastrosa, e complimentarsi con loro dopo una manovra eccezionale e perfetta.\"\"\")\n    st.markdown(\"\"\"Nel tempo notarono che **chi veniva sgridato, il volo successivo migliorava** enormemente. Invece **chi veniva elogiato per una manovra fantastica, il volo successivo faceva nettamente peggio**.\"\"\")\n    st.markdown(\"\"\"Da questo, gli istruttori militari conclusero che i castighi verbali spronano all'apprendimento, mentre la lode spinge i cadetti ad adagiarsi sugli allori peggiorando le performance.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n    st.markdown(\"\"\"Alla luce del rigore scientifico e cognitivo, credi che la conclusione tratta dagli istruttori militari:\"\"\")\n    scelta = st.radio('', ['A) Sia una intuizione psicologicamente corretta ed efficace in addestramento.', 'B) Sia un colossale errore statistico, legato a come funzionano gli estremi.'], index=None)\n",
-    "        v = 1 if 'A)' in scelta else 2\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n"
+    "    st.markdown(\"\"\"Tra gli istruttori di volo militare israeliani era prassi comune sgridare duramente gli allievi dopo una manovra disastrosa, e complimentarsi con loro dopo una manovra eccezionale e perfetta.\"\"\")\n    st.markdown(\"\"\"Nel tempo notarono che **chi veniva sgridato, il volo successivo migliorava** enormemente. Invece **chi veniva elogiato per una manovra fantastica, il volo successivo faceva nettamente peggio**.\"\"\")\n    st.markdown(\"\"\"Da questo, gli istruttori militari conclusero che i castighi verbali spronano all'apprendimento, mentre la lode spinge i cadetti ad adagiarsi sugli allori peggiorando le performance.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n    st.markdown(\"\"\"Alla luce del rigore scientifico e cognitivo, credi che la conclusione tratta dagli istruttori militari:\"\"\")\n    scelta_dom = st.radio('', ['A) Sia una intuizione psicologicamente corretta ed efficace in addestramento.', 'B) Sia un colossale errore statistico, legato a come funzionano gli estremi.'], index=None)\n",
+    "        v = 1 if 'A)' in scelta_dom else 2\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n"
 )
 
-print("Tutti i 22 file sono stati RIGENERATI con widget senza valori predefiniti!")
+print("Tutti i 22 file sono stati RIGENERATI con widget senza valori predefiniti e indentazione corretta!")

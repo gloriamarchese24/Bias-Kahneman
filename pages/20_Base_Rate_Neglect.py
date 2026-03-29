@@ -48,7 +48,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()
+            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()

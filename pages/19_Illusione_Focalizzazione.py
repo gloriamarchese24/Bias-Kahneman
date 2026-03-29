@@ -48,18 +48,16 @@ if not st.session_state[NOME_ESPERIMENTO]:
     if st.session_state.gruppo == "A":
         val = st.slider('1. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s1a')
         st.markdown('<br>', unsafe_allow_html=True)
-        st.number_input('2. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\'ultimo mese?', 0, 30, value=None, key='n1b')
+        eta = st.number_input('2. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\'ultimo mese?', 0, 30, value=None, key='n1b')
 
     else:
-        st.number_input('1. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\'ultimo mese?', 0, 30, value=None, key='n2a')
+        eta = st.number_input('1. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\'ultimo mese?', 0, 30, value=None, key='n2a')
         st.markdown('<br>', unsafe_allow_html=True)
         val = st.slider('2. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s2b')
 
 
     
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        # Validazione generica (cerca variabili comuni come 'scelta', 'val', 'eta', 'colpa')
-        # In Streamlit, se index=None o value=None, la variabile esiste ma è None
         can_submit = True
         for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
             if var_name in locals() and locals()[var_name] is None:
@@ -68,7 +66,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()
