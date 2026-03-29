@@ -46,20 +46,23 @@ if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
-        val = st.slider('1. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s1a')
+        st.markdown("""**1. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo (1-10)?**""")
+        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1a')
         st.markdown('<br>', unsafe_allow_html=True)
         eta = st.number_input('2. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\'ultimo mese?', 0, 30, value=None, key='n1b')
 
     else:
         eta = st.number_input('1. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\'ultimo mese?', 0, 30, value=None, key='n2a')
         st.markdown('<br>', unsafe_allow_html=True)
-        val = st.slider('2. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s2b')
+        st.markdown("""**2. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo (1-10)?**""")
+        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')
 
 
     
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+        # Cerchiamo variabili comuni di risposta
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
                 st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
                 can_submit = False

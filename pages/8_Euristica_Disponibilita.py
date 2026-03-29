@@ -47,19 +47,22 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""1. Pensa ed elenca **2 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
         st.text_area('Scrivi in breve le 2 situazioni:', height=100, key='t1')
         st.markdown("""---""")
-        val = st.slider('In generale nella tua vita, considerando tutto, quanto ritieni di essere una persona assertiva?', 1, 10, 5, key='s1')
+        st.markdown("""**In generale nella tua vita, quanto ritieni di essere una persona assertiva (1-10)?**""")
+        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')
 
     else:
         st.markdown("""1. Pensa ed elenca **12 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
         st.text_area('Scrivi in breve le 12 situazioni:', height=200, key='t2')
         st.markdown("""---""")
-        val = st.slider('In generale nella tua vita, considerando tutto, quanto ritieni di essere una persona assertiva?', 1, 10, 5, key='s2')
+        st.markdown("""**In generale nella tua vita, quanto ritieni di essere una persona assertiva (1-10)?**""")
+        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')
 
 
     
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+        # Cerchiamo variabili comuni di risposta
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
                 st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
                 can_submit = False

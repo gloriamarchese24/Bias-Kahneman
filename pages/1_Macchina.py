@@ -47,11 +47,11 @@ if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.session_state.gruppo == "A":
         st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono URTATE❓**""")
-        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s1')
+        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')
 
     else:
         st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono DISINTEGRATE❓**""")
-        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s2')
+        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s2')
 
     st.markdown("""**2. Hai notato dei vetri rotti a terra?**""")
     vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, index=None, key='v')
@@ -59,7 +59,8 @@ if not st.session_state[NOME_ESPERIMENTO]:
     
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+        # Cerchiamo variabili comuni di risposta
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
                 st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
                 can_submit = False

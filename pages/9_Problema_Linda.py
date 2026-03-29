@@ -46,16 +46,17 @@ if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
-        val = st.slider('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca**?', 0, 100, 50, key='s1')
+        val = st.number_input('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca**?', 0, 100, value=None, key='s1')
 
     else:
-        val = st.slider('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca e che sia attiva nel movimento femminista**?', 0, 100, 50, key='s2')
+        val = st.number_input('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca e che sia attiva nel movimento femminista**?', 0, 100, value=None, key='s2')
 
 
     
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+        # Cerchiamo variabili comuni di risposta
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
                 st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
                 can_submit = False

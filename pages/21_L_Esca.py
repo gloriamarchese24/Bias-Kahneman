@@ -39,7 +39,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom']:
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
                 st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
                 can_submit = False

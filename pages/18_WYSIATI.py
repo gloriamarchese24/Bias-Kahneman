@@ -46,21 +46,24 @@ if not st.session_state[NOME_ESPERIMENTO]:
     if st.session_state.gruppo == "A":
         st.markdown("""**Testimonianza (Avvocato Difensore):** "Il mio cliente è un pilastro della comunità. Ha donato soldi in beneficienza, ama la famiglia e il giorno della rapina era al telefono con sua madre, benché lei purtroppo sia deceduta e non possa confermarlo.""")
         st.markdown("""---""")
-        colpa = st.slider('Quanto ritieni sia colpevole (0=Innocente, 100=Max Colpevolezza)?', 0, 100, 50, key='s1a')
-        fiducia = st.slider('Da 1 a 10, quanto ti senti **sicuro e fiducioso** della tua scelta, basandoti sulle info in tuo possesso?', 1, 10, 5, key='s1b')
+        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s1a')
+        st.markdown("""**Quanto ti senti sicuro della tua scelta (1-10)?**""")
+        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')
 
     else:
         st.markdown("""**Testimonianza (Avvocato Difensore):** "Il mio cliente è un pilastro della comunità, ama la famiglia e il giorno della rapina era al telefono con sua madre (deceduta e incapace di confermare).""")
         st.markdown("""**Testimonianza (Pubblico Ministero):** "La maschera ritrovata sulla scena ha tracce del suo DNA e la cella telefonica lo fissa a pochi metri dalla banca, rendendo la storiella della madre puramente ridicola.""")
         st.markdown("""---""")
-        colpa = st.slider('Quanto ritieni sia colpevole (0=Innocente, 100=Max Colpevolezza)?', 0, 100, 50, key='s2a')
-        fiducia = st.slider('Da 1 a 10, quanto ti senti **sicuro e fiducioso** della tua scelta, basandoti sulle info in tuo possesso?', 1, 10, 5, key='s2b')
+        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s2a')
+        st.markdown("""**Quanto ti senti sicuro della tua scelta (1-10)?**""")
+        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')
 
 
     
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+        # Cerchiamo variabili comuni di risposta
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
                 st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
                 can_submit = False

@@ -44,10 +44,10 @@ st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", u
 if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.session_state.gruppo == "A":
-        val = st.slider('Secondo te, in Italia, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, 50, key='s1')
+        val = st.number_input('Secondo te, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, value=None, key='s1')
 
     else:
-        val = st.slider('Secondo te, in Italia, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, 50, key='s2')
+        val = st.number_input('Secondo te, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, value=None, key='s2')
 
     st.markdown("""---""")
     st.markdown("""### Il numero estratto dalla ruota oggi è: **12**""" if st.session_state.gruppo == 'A' else """### Il numero estratto dalla ruota oggi è: **65**""")
@@ -55,7 +55,8 @@ if not st.session_state[NOME_ESPERIMENTO]:
     
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+        # Cerchiamo variabili comuni di risposta
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
                 st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
                 can_submit = False

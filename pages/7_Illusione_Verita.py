@@ -46,18 +46,21 @@ if not st.session_state[NOME_ESPERIMENTO]:
     if st.session_state.gruppo == "A":
         st.markdown("""<p style="font-size:32px; font-weight:900; color:#FAFAFA; font-family:Arial; text-align:center;">L'assunzione di Omega-3 riduce<br>del 15% le infiammazioni corporee.</p>""", unsafe_allow_html=True)
         st.markdown("""---""")
-        val = st.slider('Da 1 a 10, quanto ti sembra vera e scientifica questa frase?', 1, 10, 5, key='s1')
+        st.markdown("""**Da 1 a 10, quanto ti sembra vera e scientifica questa frase?**""")
+        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')
 
     else:
         st.markdown("""<p style="font-size:16px; font-weight:300; color:#AAAAAA; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;">L'assunzione di omega-3 riduce del 15% le infiammazioni corporee.</p>""", unsafe_allow_html=True)
         st.markdown("""---""")
-        val = st.slider('Da 1 a 10, quanto ti sembra vera e scientifica questa frase?', 1, 10, 5, key='s2')
+        st.markdown("""**Da 1 a 10, quanto ti sembra vera e scientifica questa frase?**""")
+        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')
 
 
     
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+        # Cerchiamo variabili comuni di risposta
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
                 st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
                 can_submit = False

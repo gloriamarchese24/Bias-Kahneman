@@ -37,11 +37,11 @@ if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown("""Un test in grado di individuarla è **infallibile al 95%** (cioè restituisce falsi positivi solo nel 5% dei casi e falsi negativi solo nel 5% dei casi).""")
     st.markdown("""Fai questo test e il medico ti dice che **SEI RISULTATO POSITIVO**.""")
     st.markdown("""---""")
-    val = st.slider('Qual è l\'effettiva probabilità (da 0 a 100%) che tu abbia DAVVERO la malattia in questione?', 0, 100, 50)
+    val = st.number_input('Qual è l\'effettiva probabilità (da 0 a 100%) che tu abbia DAVVERO la malattia?', 0, 100, value=None)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom']:
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
                 st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
                 can_submit = False
