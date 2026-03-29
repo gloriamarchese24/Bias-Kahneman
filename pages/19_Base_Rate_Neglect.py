@@ -29,7 +29,7 @@ supabase = get_supabase()
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
-st.markdown('<h1 class="exp-title">🔬 Paradosso Diagnostico</h1>', unsafe_allow_html=True)
+st.markdown("""<h1 class="exp-title">🔬 Paradosso Diagnostico</h1>""", unsafe_allow_html=True)
 st.markdown('<p class="exp-subtitle">Rispondi alle domande qui sotto</p>', unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
