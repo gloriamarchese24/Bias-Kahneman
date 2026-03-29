@@ -119,7 +119,7 @@ build_ab_page(
     "    st.markdown(\"\"\"**Scenario:** Hai appena visto un breve video della dashcam in cui due automobili si scontrano.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
     "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono URTATE❓**\"\"\")\n        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s1')\n",
     "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono DISINTEGRATE❓**\"\"\")\n        val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s2')\n",
-    "    st.markdown(\"\"\"<div class=\"question-card\">\"\"\", unsafe_allow_html=True)\n    st.markdown(\"\"\"**2. Hai notato dei vetri rotti a terra?**\"\"\")\n    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, key='v')\n    st.markdown(\"\"\"</div>\"\"\", unsafe_allow_html=True)\n",
+    "    st.markdown(\"\"\"**2. Hai notato dei vetri rotti a terra?**\"\"\")\n    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, key='v')\n",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()\n"
 )
 
