@@ -33,12 +33,8 @@ st.markdown("""<h1 class="exp-title">🧑‍✈️ L'Effetto Lode/Castigo</h1>""
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""Tra gli istruttori di volo militare israeliani era prassi comune sgridare duramente gli allievi dopo una manovra disastrosa, e complimentarsi con loro dopo una manovra eccezionale e perfetta.""")
-    st.markdown("""Nel tempo notarono che **chi veniva sgridato, il volo successivo migliorava** enormemente. Invece **chi veniva elogiato per una manovra fantastica, il volo successivo faceva nettamente peggio**.""")
-    st.markdown("""Da questo, gli istruttori militari conclusero che i castighi verbali spronano all'apprendimento, mentre la lode spinge i cadetti ad adagiarsi sugli allori peggiorando le performance.""")
-    st.markdown("""---""")
-    st.markdown("""Alla luce del rigore scientifico e cognitivo, credi che la conclusione tratta dagli istruttori militari:""")
-    scelta_dom = st.radio('', ['A) Sia una intuizione psicologicamente corretta ed efficace in addestramento.', 'B) Sia un colossale errore statistico, legato a come funzionano gli estremi.'], index=None)
+    st.markdown("""Istruttori israeliani: sgridare migliora, lodare peggiora. Credi che:""")
+    scelta_dom = st.radio('', ['A) Sia intuizione corretta.', 'B) Sia errore statistico.'], index=None)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True

@@ -2,9 +2,9 @@ import streamlit as st
 import random
 from supabase import create_client
 
-st.set_page_config(page_title="Scommessa", page_icon="💶", layout="centered")
+st.set_page_config(page_title="Assicurazione", page_icon="🫀", layout="centered")
 
-NOME_ESPERIMENTO = "loss_aversion"
+NOME_ESPERIMENTO = "default_organ"
 
 st.markdown('''
 <style>
@@ -38,18 +38,20 @@ if "gruppo" not in st.session_state:
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
-st.markdown("""<h1 class="exp-title">💶 Decisioni Finanziarie</h1>""", unsafe_allow_html=True)
+st.markdown("""<h1 class="exp-title">🫀 Modulo Assicurativo</h1>""", unsafe_allow_html=True)
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    st.markdown("""**Firma del nuovo modulo per dipendenti ospedalieri.**""")
+    st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
-        st.markdown("""**Scenario:** Hai appena ricevuto 1.000€ in premio. Quale di queste due opzioni scegli ora?""")
-        scelta = st.radio('', ['A) Vinci altri 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di vincere altri 1000€, e 50% di vincere 0€.'], index=None, key='r1')
+        opt = st.checkbox('⚠️ Spunta la casella se **VUOI** acconsentire a diventare un donatore di organi.', value=False, key='c1')
+        st.session_state['interact_15'] = True # Mocking interaction check if needed
 
     else:
-        st.markdown("""**Scenario:** Hai appena ricevuto 2.000€ in premio. Quale di queste due opzioni scegli ora?""")
-        scelta = st.radio('', ['A) Perdi 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di perdere 1000€, e 50% di perdere 0€.'], index=None, key='r2')
+        opt = st.checkbox('⚠️ Spunta la casella se **NON VUOI** diventare un donatore di organi.', value=True, key='c2')
+        st.session_state['interact_15'] = True
 
 
     
@@ -62,7 +64,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-            v = 0 if 'sicuri' in scelta else 1
+            v = 1 if (st.session_state.gruppo == 'A' and opt == True) or (st.session_state.gruppo == 'B' and opt == False) else 0
             supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True

@@ -33,9 +33,7 @@ st.markdown("""<h1 class="exp-title">🗞️ Rivista The Economist</h1>""", unsa
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""Scegli liberamente quale abbonamento fa per te alla rivista The Economist:""")
-    st.markdown("""---""")
-    scelta = st.radio('Scegli un\'opzione:', ['A) Abbonamento SOLO Web (Accesso illimitato al sito) -> **50 €**', 'B) Abbonamento SOLO Cartaceo (Fascicolo mensile a casa) -> **120 €**', 'C) Abbonamento WEB + CARTACEO -> **120 €**'], index=None)
+    scelta = st.radio('Scegli:', ['A) Web (50€)', 'B) Cartaceo (120€)', 'C) Web+Cartaceo (120€)'], index=None)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True

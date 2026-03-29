@@ -2,9 +2,9 @@ import streamlit as st
 import random
 from supabase import create_client
 
-st.set_page_config(page_title="Scommessa", page_icon="💶", layout="centered")
+st.set_page_config(page_title="Stima di Sé", page_icon="🎓", layout="centered")
 
-NOME_ESPERIMENTO = "loss_aversion"
+NOME_ESPERIMENTO = "dunning"
 
 st.markdown('''
 <style>
@@ -38,18 +38,16 @@ if "gruppo" not in st.session_state:
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
-st.markdown("""<h1 class="exp-title">💶 Decisioni Finanziarie</h1>""", unsafe_allow_html=True)
+st.markdown("""<h1 class="exp-title">🎓 Autovalutazione</h1>""", unsafe_allow_html=True)
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.session_state.gruppo == "A":
-        st.markdown("""**Scenario:** Hai appena ricevuto 1.000€ in premio. Quale di queste due opzioni scegli ora?""")
-        scelta = st.radio('', ['A) Vinci altri 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di vincere altri 1000€, e 50% di vincere 0€.'], index=None, key='r1')
+        scelta = st.radio('Ritieni la tua abilità accademica superiore alla media della classe?', ['Sopra la media', 'Nella media', 'Sotto la media'], index=None, key='r1')
 
     else:
-        st.markdown("""**Scenario:** Hai appena ricevuto 2.000€ in premio. Quale di queste due opzioni scegli ora?""")
-        scelta = st.radio('', ['A) Perdi 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di perdere 1000€, e 50% di perdere 0€.'], index=None, key='r2')
+        scelta = st.radio('Ritieni la tua abilità accademica superiore a quella di Giorgio Parisi (Premio Nobel)?', ['Sopra la sua', 'Nella sua', 'Sotto la sua'], index=None, key='r2')
 
 
     
@@ -62,7 +60,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-            v = 0 if 'sicuri' in scelta else 1
+            v = 1 if 'Sopra' in scelta else 0
             supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True
