@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">👩‍🦰 Il Profilo di Linda</h1>""", un
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
     st.markdown("""**Profilo:** Linda ha 31 anni, è single, molto schietta e brillante. È laureata in filosofia. Da studentessa era profondamente preoccupata per le questioni relative alla discriminazione e alla giustizia sociale, e ha anche partecipato a manifestazioni antinucleari.""")
     st.markdown("""---""")
 
@@ -52,7 +51,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
     else:
         val = st.slider('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca e che sia attiva nel movimento femminista**?', 0, 100, 50, key='s2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()

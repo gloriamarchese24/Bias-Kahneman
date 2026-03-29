@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">🤖 Chirurgia Robotica AI</h1>""", unsafe_
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
     st.markdown("""**Scenario:** Un nuovo software robotico AI deve compiere un'operazione complessa su 100 pazienti in condizioni critiche.""")
     st.markdown("""---""")
 
@@ -54,7 +53,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""**Dato statistico:** Se usi l'Intelligenza Artificiale, **10 pazienti moriranno**.\n\nAutorizzi l'uso del software?""")
         scelta = st.radio('', ['Sì', 'No'], horizontal=True, key='r2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         v = 1 if scelta == 'Sì' else 0

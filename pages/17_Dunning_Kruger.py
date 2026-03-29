@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">🎓 Autovalutazione</h1>""", unsafe_allow_
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
 
     if st.session_state.gruppo == "A":
         st.markdown("""Pensa in totale onestà. Ritieni che la tua abilità accademica, intellettuale e di pensiero analitico sia... **superiore o inferiore alla media degli altri studenti attualmente presenti in quest'aula?**""")
@@ -52,7 +51,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""Pensa in totale onestà. Ritieni che la tua abilità accademica, intellettuale e di pensiero analitico sia... **superiore o inferiore alla mente del Premio Nobel italiano Giorgio Parisi?**""")
         scelta = st.radio('', ['Sopra la sua media', 'Nella sua media', 'Sotto la sua media'], key='r2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         v = 1 if 'Sopra' in scelta else 0

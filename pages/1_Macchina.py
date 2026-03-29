@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">🚗 Incidente Stradale</h1>""", unsafe_all
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
     st.markdown("""**Scenario:** Hai appena visto un breve video della dashcam in cui due automobili si scontrano.""")
     st.markdown("""---""")
 
@@ -54,7 +53,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono DISINTEGRATE❓**""")
         val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
     st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
     st.markdown("""**2. Hai notato dei vetri rotti a terra?**""")
     vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, key='v')

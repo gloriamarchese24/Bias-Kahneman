@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">🫀 Modulo Assicurativo</h1>""", unsafe_al
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
     st.markdown("""**Firma del nuovo modulo per dipendenti ospedalieri.**""")
     st.markdown("""Leggi il campo sulla donazione e procedi per confermare.""")
     st.markdown("""---""")
@@ -53,7 +52,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
     else:
         opt = st.checkbox('⚠️ Spunta la casella seguente se **NON VUOI** diventare un donatore di organi in caso di morte fulminea.', value=True, key='c2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         v = 1 if (st.session_state.gruppo == 'A' and opt == True) or (st.session_state.gruppo == 'B' and opt == False) else 0

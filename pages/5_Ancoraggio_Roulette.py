@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">🎰 Statistica Ospedaliera</h1>""", unsafe
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
 
     if st.session_state.gruppo == "A":
         st.markdown("""### Il numero estratto dalla ruota oggi è: **12**""")
@@ -54,7 +53,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""---""")
         val = st.slider('Considera il numero sopra. Secondo te, in Italia, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, 50, key='s2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()

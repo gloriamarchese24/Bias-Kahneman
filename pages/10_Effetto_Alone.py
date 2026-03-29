@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">👤 Valutazione del Profilo</h1>""", unsaf
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
 
     if st.session_state.gruppo == "A":
         st.markdown("""Considera **Alan**. I suoi colleghi lo descrivono così:""")
@@ -56,7 +55,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""---""")
         val = st.slider('Da 1 a 10, quanto valuti positivamente Ben come persona sul posto di lavoro?', 1, 10, 5, key='s2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()

@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">💶 Decisioni Finanziarie</h1>""", unsafe_
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
 
     if st.session_state.gruppo == "A":
         st.markdown("""**Scenario:** Hai appena ricevuto 1.000€ in premio. Quale di queste due opzioni scegli ora?""")
@@ -52,7 +51,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""**Scenario:** Hai appena ricevuto 2.000€ in premio. Quale di queste due opzioni scegli ora?""")
         s = st.radio('', ['A) Perdi 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di perdere 1000€, e 50% di perdere 0€.'], key='r2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         v = 0 if 'sicuri' in s else 1

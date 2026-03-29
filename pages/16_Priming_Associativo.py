@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">🍝 Parole e Associazioni</h1>""", unsafe_
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
 
     if st.session_state.gruppo == "A":
         st.markdown("""Leggi le seguenti parole velocemente:""")
@@ -60,7 +59,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""## S O _ P""")
         val = st.text_input('Scrivi la parola completa in italiano (una di uso comune che ti viene in mente istintivamente):', key='t2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         v = 1 if 'sapore' in val.lower() or 'soup' in val.lower() or 'zuppa' in val.lower() else (2 if 'sapone' in val.lower() or 'soap' in val.lower() else 0)

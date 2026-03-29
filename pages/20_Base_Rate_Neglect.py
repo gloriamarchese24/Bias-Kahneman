@@ -33,14 +33,12 @@ st.markdown("""<h1 class="exp-title">🔬 Paradosso Diagnostico</h1>""", unsafe_
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
     st.markdown("""Una grave malattia genetica colpisce **esattamente l'1%** della popolazione mondiale.""")
     st.markdown("""Un test in grado di individuarla è **infallibile al 95%** (cioè restituisce falsi positivi solo nel 5% dei casi e falsi negativi solo nel 5% dei casi).""")
     st.markdown("""Fai questo test e il medico ti dice che **SEI RISULTATO POSITIVO**.""")
     st.markdown("""---""")
     val = st.slider('Qual è l\'effettiva probabilità (da 0 a 100%) che tu abbia DAVVERO la malattia in questione?', 0, 100, 50)
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()
 

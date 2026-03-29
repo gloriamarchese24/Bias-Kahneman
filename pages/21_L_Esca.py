@@ -33,12 +33,10 @@ st.markdown("""<h1 class="exp-title">🗞️ Rivista The Economist</h1>""", unsa
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
     st.markdown("""Scegli liberamente quale abbonamento fa per te alla rivista The Economist:""")
     st.markdown("""---""")
     scelta = st.radio('Scegli un\'opzione:', ['A) Abbonamento SOLO Web (Accesso illimitato al sito) -> **50 €**', 'B) Abbonamento SOLO Cartaceo (Fascicolo mensile a casa) -> **120 €**', 'C) Abbonamento WEB + CARTACEO -> **120 €**'])
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()

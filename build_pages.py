@@ -50,13 +50,11 @@ st.markdown(\"\"\"<h1 class="exp-title">{icon} {titolo_lungo}</h1>\"\"\", unsafe
 st.markdown(\"\"\"<p class="exp-subtitle">Rispondi alle domande qui sotto</p>\"\"\", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown(\"\"\"<div class="question-card">\"\"\", unsafe_allow_html=True)
 {scenario}
     if st.session_state.gruppo == "A":
 {dom_a}
     else:
 {dom_b}
-    st.markdown(\"\"\"</div>\"\"\", unsafe_allow_html=True)
 {extra_comune}
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
 {salvataggio}
@@ -104,9 +102,7 @@ st.markdown(\"\"\"<h1 class="exp-title">{icon} {titolo_lungo}</h1>\"\"\", unsafe
 st.markdown(\"\"\"<p class="exp-subtitle">Rispondi alle domande qui sotto</p>\"\"\", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown(\"\"\"<div class="question-card">\"\"\", unsafe_allow_html=True)
 {dom}
-    st.markdown(\"\"\"</div>\"\"\", unsafe_allow_html=True)
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
 {salvataggio}
         st.session_state[NOME_ESPERIMENTO] = True

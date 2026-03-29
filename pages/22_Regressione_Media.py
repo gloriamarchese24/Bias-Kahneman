@@ -33,7 +33,6 @@ st.markdown("""<h1 class="exp-title">🧑‍✈️ L'Effetto Lode/Castigo</h1>""
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
     st.markdown("""Tra gli istruttori di volo militare israeliani era prassi comune sgridare duramente gli allievi dopo una manovra disastrosa, e complimentarsi con loro dopo una manovra eccezionale e perfetta.""")
     st.markdown("""Nel tempo notarono che **chi veniva sgridato, il volo successivo migliorava** enormemente. Invece **chi veniva elogiato per una manovra fantastica, il volo successivo faceva nettamente peggio**.""")
     st.markdown("""Da questo, gli istruttori militari conclusero che i castighi verbali spronano all'apprendimento, mentre la lode spinge i cadetti ad adagiarsi sugli allori peggiorando le performance.""")
@@ -41,7 +40,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown("""Alla luce del rigore scientifico e cognitivo, credi che la conclusione tratta dagli istruttori militari:""")
     scelta = st.radio('', ['A) Sia una intuizione psicologicamente corretta ed efficace in addestramento.', 'B) Sia un colossale errore statistico, legato a come funzionano gli estremi.'])
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         v = 1 if 'A)' in scelta else 2
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()

@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">🎭 Lo Spettacolo a Teatro</h1>""", unsafe
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
 
     if st.session_state.gruppo == "A":
         st.markdown("""**Scenario:** Hai acquistato a tue spese un biglietto da 50€ per vedere uno spettacolo teatrale che ti interessava.""")
@@ -56,7 +55,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""---""")
         scelta = st.radio('Cosa decidi di fare?', ['A) Vado a teatro lo stesso (sfido la tormenta per non buttare il regalo).', 'B) Resto a casa al caldo rinunciando allo spettacolo.'], key='r2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         v = 1 if 'Vado' in scelta else 0

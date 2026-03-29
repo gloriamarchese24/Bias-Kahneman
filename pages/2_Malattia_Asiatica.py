@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">🦠 La Malattia Asiatica</h1>""", unsafe_a
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
     st.markdown("""**Scenario:** Immagina che l'Italia si stia preparando ad affrontare una malattia molto contagiosa asiatica, che dovrebbe uccidere 600 persone. Hai due programmi per affrontarla.""")
     st.markdown("""---""")
 
@@ -54,7 +53,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""Quale programma scegli?""")
         scelta = st.radio('', ['Programma A: Moriranno 400 persone (risultato certo).', 'Programma B: C\'è 1/3 di probabilità che non muoia nessuno, e 2/3 che muoiano tutte e 600 le persone.'], key='r2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         v = 0 if 'A:' in scelta else 1

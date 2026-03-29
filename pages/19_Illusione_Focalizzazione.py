@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">😊 Sondaggio sul Benessere</h1>""", unsaf
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
     st.markdown("""Rispondi con sincerità alle seguenti due domande sulla tua vita attuale.""")
     st.markdown("""---""")
 
@@ -56,7 +55,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown('<br>', unsafe_allow_html=True)
         val = st.slider('2. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s2b')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()

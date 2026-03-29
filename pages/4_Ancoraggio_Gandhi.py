@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">👴 Età di Gandhi</h1>""", unsafe_allow_h
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
 
     if st.session_state.gruppo == "A":
         st.markdown("""**Mahatma Gandhi aveva più o meno di 114 anni quando è morto?**""")
@@ -58,7 +57,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""**A che età esatta è morto secondo te?**""")
         eta = st.number_input('Inserisci una stima (anni):', 0, 150, 70, key='n2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()

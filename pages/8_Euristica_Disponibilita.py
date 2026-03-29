@@ -42,7 +42,6 @@ st.markdown("""<h1 class="exp-title">🧠 Inventario della Personalità</h1>""",
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
 
     if st.session_state.gruppo == "A":
         st.markdown("""1. Pensa ed elenca **2 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
@@ -56,7 +55,6 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""---""")
         val = st.slider('In generale nella tua vita, considerando tutto, quanto ritieni di essere una persona assertiva?', 1, 10, 5, key='s2')
 
-    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
