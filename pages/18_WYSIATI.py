@@ -45,14 +45,14 @@ if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
 
     if st.session_state.gruppo == "A":
-        st.markdown("""**Testimonianza (Avvocato Difensore):** "Il mio cliente è un pilastro della comunità. Ha donato soldi in beneficienza, ama la famiglia e il giorno della rapina era al telefono con sua madre, benché lei purtroppo sia deceduta e non possa confermarlo."""
+        st.markdown("""**Testimonianza (Avvocato Difensore):** "Il mio cliente è un pilastro della comunità. Ha donato soldi in beneficienza, ama la famiglia e il giorno della rapina era al telefono con sua madre, benché lei purtroppo sia deceduta e non possa confermarlo.""")
         st.markdown("""---""")
         colpa = st.slider('Quanto ritieni sia colpevole (0=Innocente, 100=Max Colpevolezza)?', 0, 100, 50, key='s1a')
         fiducia = st.slider('Da 1 a 10, quanto ti senti **sicuro e fiducioso** della tua scelta, basandoti sulle info in tuo possesso?', 1, 10, 5, key='s1b')
 
     else:
-        st.markdown("""**Testimonianza (Avvocato Difensore):** "Il mio cliente è un pilastro della comunità, ama la famiglia e il giorno della rapina era al telefono con sua madre (deceduta e incapace di confermare)."""
-        st.markdown("""**Testimonianza (Pubblico Ministero):** "La maschera ritrovata sulla scena ha tracce del suo DNA e la cella telefonica lo fissa a pochi metri dalla banca, rendendo la storiella della madre puramente ridicola."""
+        st.markdown("""**Testimonianza (Avvocato Difensore):** "Il mio cliente è un pilastro della comunità, ama la famiglia e il giorno della rapina era al telefono con sua madre (deceduta e incapace di confermare).""")
+        st.markdown("""**Testimonianza (Pubblico Ministero):** "La maschera ritrovata sulla scena ha tracce del suo DNA e la cella telefonica lo fissa a pochi metri dalla banca, rendendo la storiella della madre puramente ridicola.""")
         st.markdown("""---""")
         colpa = st.slider('Quanto ritieni sia colpevole (0=Innocente, 100=Max Colpevolezza)?', 0, 100, 50, key='s2a')
         fiducia = st.slider('Da 1 a 10, quanto ti senti **sicuro e fiducioso** della tua scelta, basandoti sulle info in tuo possesso?', 1, 10, 5, key='s2b')
