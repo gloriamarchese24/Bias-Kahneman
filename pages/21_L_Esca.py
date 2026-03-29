@@ -35,13 +35,21 @@ st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", u
 if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown("""Scegli liberamente quale abbonamento fa per te alla rivista The Economist:""")
     st.markdown("""---""")
-    scelta = st.radio('Scegli un\'opzione:', ['A) Abbonamento SOLO Web (Accesso illimitato al sito) -> **50 €**', 'B) Abbonamento SOLO Cartaceo (Fascicolo mensile a casa) -> **120 €**', 'C) Abbonamento WEB + CARTACEO -> **120 €**'])
+    scelta = st.radio('Scegli un\'opzione:', ['A) Abbonamento SOLO Web (Accesso illimitato al sito) -> **50 €**', 'B) Abbonamento SOLO Cartaceo (Fascicolo mensile a casa) -> **120 €**', 'C) Abbonamento WEB + CARTACEO -> **120 €**'], index=None)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+        can_submit = True
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom']:
+            if var_name in locals() and locals()[var_name] is None:
+                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                can_submit = False
+                break
+        
+        if can_submit:
         v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
 
-        st.session_state[NOME_ESPERIMENTO] = True
-        st.rerun()
+            st.session_state[NOME_ESPERIMENTO] = True
+            st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

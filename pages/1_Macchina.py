@@ -54,13 +54,24 @@ if not st.session_state[NOME_ESPERIMENTO]:
         val = st.slider('Stima la velocità:', 0, 150, 50, 5, key='s2')
 
     st.markdown("""**2. Hai notato dei vetri rotti a terra?**""")
-    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, key='v')
+    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, index=None, key='v')
 
+    
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+        # Validazione generica (cerca variabili comuni come 'scelta', 'val', 'eta', 'colpa')
+        # In Streamlit, se index=None o value=None, la variabile esiste ma è None
+        can_submit = True
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+            if var_name in locals() and locals()[var_name] is None:
+                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                can_submit = False
+                break
+        
+        if can_submit:
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
         supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()
 
-        st.session_state[NOME_ESPERIMENTO] = True
-        st.rerun()
+            st.session_state[NOME_ESPERIMENTO] = True
+            st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

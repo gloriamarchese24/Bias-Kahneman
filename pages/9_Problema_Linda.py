@@ -52,10 +52,21 @@ if not st.session_state[NOME_ESPERIMENTO]:
         val = st.slider('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca e che sia attiva nel movimento femminista**?', 0, 100, 50, key='s2')
 
 
+    
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+        # Validazione generica (cerca variabili comuni come 'scelta', 'val', 'eta', 'colpa')
+        # In Streamlit, se index=None o value=None, la variabile esiste ma è None
+        can_submit = True
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+            if var_name in locals() and locals()[var_name] is None:
+                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                can_submit = False
+                break
+        
+        if can_submit:
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
-        st.session_state[NOME_ESPERIMENTO] = True
-        st.rerun()
+            st.session_state[NOME_ESPERIMENTO] = True
+            st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

@@ -46,18 +46,29 @@ if not st.session_state[NOME_ESPERIMENTO]:
     if st.session_state.gruppo == "A":
         st.markdown("""**Scenario:** Ti abbiamo regalato a vita una rarissima Licenza Software per diagnosi AI (è tua di diritto).""")
         st.markdown("""Un ospedale vorrebbe comprarla da te. Qual è il **prezzo minimo** che pretendi per cederla?""")
-        val = st.number_input('Valore in Euro (€):', 0, 50000, 1000, 100, key='n1')
+        val = st.number_input('Valore in Euro (€):', 0, 50000, value=None, key='n1')
 
     else:
         st.markdown("""**Scenario:** Un ospedale ha appena messo in vendita una rarissima Licenza Software per diagnosi AI.""")
         st.markdown("""A te farebbe molto comodo. Qual è il **prezzo massimo** che sei disposto a pagare per averla?""")
-        val = st.number_input('Valore in Euro (€):', 0, 50000, 1000, 100, key='n2')
+        val = st.number_input('Valore in Euro (€):', 0, 50000, value=None, key='n2')
 
 
+    
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+        # Validazione generica (cerca variabili comuni come 'scelta', 'val', 'eta', 'colpa')
+        # In Streamlit, se index=None o value=None, la variabile esiste ma è None
+        can_submit = True
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+            if var_name in locals() and locals()[var_name] is None:
+                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                can_submit = False
+                break
+        
+        if can_submit:
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
-        st.session_state[NOME_ESPERIMENTO] = True
-        st.rerun()
+            st.session_state[NOME_ESPERIMENTO] = True
+            st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

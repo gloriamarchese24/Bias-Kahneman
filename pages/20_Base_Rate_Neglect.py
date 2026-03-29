@@ -40,9 +40,17 @@ if not st.session_state[NOME_ESPERIMENTO]:
     val = st.slider('Qual è l\'effettiva probabilità (da 0 a 100%) che tu abbia DAVVERO la malattia in questione?', 0, 100, 50)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+        can_submit = True
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom']:
+            if var_name in locals() and locals()[var_name] is None:
+                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                can_submit = False
+                break
+        
+        if can_submit:
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()
 
-        st.session_state[NOME_ESPERIMENTO] = True
-        st.rerun()
+            st.session_state[NOME_ESPERIMENTO] = True
+            st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

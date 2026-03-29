@@ -45,18 +45,29 @@ if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.session_state.gruppo == "A":
         st.markdown("""**Scenario:** Hai appena ricevuto 1.000€ in premio. Quale di queste due opzioni scegli ora?""")
-        s = st.radio('', ['A) Vinci altri 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di vincere altri 1000€, e 50% di vincere 0€.'], key='r1')
+        scelta = st.radio('', ['A) Vinci altri 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di vincere altri 1000€, e 50% di vincere 0€.'], index=None, key='r1')
 
     else:
         st.markdown("""**Scenario:** Hai appena ricevuto 2.000€ in premio. Quale di queste due opzioni scegli ora?""")
-        s = st.radio('', ['A) Perdi 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di perdere 1000€, e 50% di perdere 0€.'], key='r2')
+        scelta = st.radio('', ['A) Perdi 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di perdere 1000€, e 50% di perdere 0€.'], index=None, key='r2')
 
 
+    
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        v = 0 if 'sicuri' in s else 1
+        # Validazione generica (cerca variabili comuni come 'scelta', 'val', 'eta', 'colpa')
+        # In Streamlit, se index=None o value=None, la variabile esiste ma è None
+        can_submit = True
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+            if var_name in locals() and locals()[var_name] is None:
+                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                can_submit = False
+                break
+        
+        if can_submit:
+        v = 0 if 'sicuri' in scelta else 1
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
-        st.session_state[NOME_ESPERIMENTO] = True
-        st.rerun()
+            st.session_state[NOME_ESPERIMENTO] = True
+            st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

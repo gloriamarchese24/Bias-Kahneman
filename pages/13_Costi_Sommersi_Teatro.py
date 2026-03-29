@@ -47,20 +47,31 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""**Scenario:** Hai acquistato a tue spese un biglietto da 50€ per vedere uno spettacolo teatrale che ti interessava.""")
         st.markdown("""Arriva la sera dello spettacolo ma c'è una tormenta di neve spaventosa. Andare a teatro richiede di mettersi alla guida sulla neve per 40 minuti, sfidando il pericolo e il freddo estremo.""")
         st.markdown("""---""")
-        scelta = st.radio('Cosa decidi di fare?', ['A) Vado a teatro lo stesso (sfido la tormenta per non buttare i 50€).', 'B) Resto a casa al caldo rinunciando allo spettacolo e ai 50€.'], key='r1')
+        scelta = st.radio('Cosa decidi di fare?', ['A) Vado a teatro lo stesso (sfido la tormenta per non buttare i 50€).', 'B) Resto a casa al caldo rinunciando allo spettacolo e ai 50€.'], index=None, key='r1')
 
     else:
         st.markdown("""**Scenario:** Un amico ti ha **regalato** stasera un biglietto per vedere uno spettacolo teatrale che ti interessava (costo per te: 0€).""")
         st.markdown("""Arriva la sera dello spettacolo ma c'è una tormenta di neve spaventosa. Andare a teatro richiede di mettersi alla guida sulla neve per 40 minuti, sfidando il pericolo e il freddo estremo.""")
         st.markdown("""---""")
-        scelta = st.radio('Cosa decidi di fare?', ['A) Vado a teatro lo stesso (sfido la tormenta per non buttare il regalo).', 'B) Resto a casa al caldo rinunciando allo spettacolo.'], key='r2')
+        scelta = st.radio('Cosa decidi di fare?', ['A) Vado a teatro lo stesso (sfido la tormenta per non buttare il regalo).', 'B) Resto a casa al caldo rinunciando allo spettacolo.'], index=None, key='r2')
 
 
+    
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+        # Validazione generica (cerca variabili comuni come 'scelta', 'val', 'eta', 'colpa')
+        # In Streamlit, se index=None o value=None, la variabile esiste ma è None
+        can_submit = True
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri']:
+            if var_name in locals() and locals()[var_name] is None:
+                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                can_submit = False
+                break
+        
+        if can_submit:
         v = 1 if 'Vado' in scelta else 0
         supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
-        st.session_state[NOME_ESPERIMENTO] = True
-        st.rerun()
+            st.session_state[NOME_ESPERIMENTO] = True
+            st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)
