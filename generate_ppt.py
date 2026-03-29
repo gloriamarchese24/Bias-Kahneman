@@ -27,7 +27,8 @@ PAGINE = [
     ("18_WYSIATI.py", "18. WYSIATI (Giudizio Processo)", "WYSIATI"),
     ("19_Base_Rate_Neglect.py", "19. Base Rate Neglect", "Base_Rate_Neglect"),
     ("20_L_Esca.py", "20. Decoy Effect (L'Esca)", "L_Esca"),
-    ("21_Regressione_Media.py", "21. Regressione alla Media", "Regressione_Media")
+    ("21_Regressione_Media.py", "21. Regressione alla Media", "Regressione_Media"),
+    ("22_Illusione_Focalizzazione.py", "22. Illusione di Focalizzazione (Felicità)", "Illusione_Focalizzazione")
 ]
 
 os.makedirs("qrcodes", exist_ok=True)
@@ -68,5 +69,5 @@ for file_name, titolo, url_path in PAGINE:
     p.font.color.rgb = RGBColor(108, 99, 255)
     tf.paragraphs[0].alignment = 2
 
-prs.save("QR_Esperimenti_Bias_21.pptx")
-print("PPT creato con successo 21 slides!")
+prs.save("QR_Esperimenti_Bias_FINALE.pptx")
+print("PPT creato con successo 22 slides!")

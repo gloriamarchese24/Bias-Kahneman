@@ -55,11 +55,12 @@ ESPERIMENTI = {
     "priming": {"titolo": "16. 🍝 Priming (Associativo)", "desc": "Cibo vs Detersivo.", "gruppo_a": "Pausa Pranzo", "gruppo_b": "Pausa Doccia", "unita": "% Scelta", "tipo": "ab_cat", "val_map": {0: "-", 1: "SAPORE/SOUP", 2: "SAPONE/SOAP"}},
     "dunning": {"titolo": "17. 🎓 Illusione di Superiorità", "desc": "Confronti tra coetanei vs confronto limite.", "gruppo_a": "vs Colleghi", "gruppo_b": "vs Premio Nobel", "unita": "% Si sente Superiore", "tipo": "ab_cat", "val_map": {0: "Uguale/Inf", 1: "Sopra Media"}},
     "wysiati": {"titolo": "18. ⚖️ WYSIATI", "desc": "Testimonianze parziali vs piene e sicurezza.", "gruppo_a": "Difesa", "gruppo_b": "Difesa+Accusa", "unita": "Colpevolezza", "tipo": "ab_num"},
+    "focalizzazione": {"titolo": "19. 😊 Illusione di Focalizzazione", "desc": "L'ordine delle domande sulla felicità (Kahneman).", "gruppo_a": "Felicità -> Uscite", "gruppo_b": "Uscite -> Felicità", "unita": "Voto Felicità (1-10)", "tipo": "ab_num"},
     
     # SINGLE DEMOS
-    "base_rate": {"titolo": "19. 🔬 Base Rate Neglect (Paradosso Medico)", "desc": "Test al 95%, malattia all'1% (Vero: 16%).", "tipo": "single_num", "unita": "Probabilità Stimata", "verita": 16},
-    "decoy": {"titolo": "20. 🗞️ Decoy Effect (L'Esca)", "desc": "L'opzione inutile per pilotare verso la costosa.", "tipo": "single_cat", "val_map": {1: "Solo Web", 2: "Solo Carta (ESCA)", 3: "Entrambi"}},
-    "regression": {"titolo": "21. 🧑‍✈️ Regressione alla Media", "desc": "Istinto causale vs Istinto statistico (Lode/Castighi).", "tipo": "single_cat", "val_map": {1: "Causale (Psicologica)", 2: "Statistica (Regressione)"}},
+    "base_rate": {"titolo": "20. 🔬 Base Rate Neglect (Paradosso Medico)", "desc": "Test al 95%, malattia all'1% (Vero: 16%).", "tipo": "single_num", "unita": "Probabilità Stimata", "verita": 16},
+    "decoy": {"titolo": "21. 🗞️ Decoy Effect (L'Esca)", "desc": "L'opzione inutile per pilotare verso la costosa.", "tipo": "single_cat", "val_map": {1: "Solo Web", 2: "Solo Carta (ESCA)", 3: "Entrambi"}},
+    "regression": {"titolo": "22. 🧑‍✈️ Regressione alla Media", "desc": "Istinto causale vs Istinto statistico (Lode/Castighi).", "tipo": "single_cat", "val_map": {1: "Causale (Psicologica)", 2: "Statistica (Regressione)"}},
 }
 
 # ─── SIDEBAR ──────────────────────────────────────────────────────────

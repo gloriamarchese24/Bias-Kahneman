@@ -6,9 +6,9 @@ st.set_page_config(page_title="Biografia Età", page_icon="👴", layout="center
 
 NOME_ESPERIMENTO = "gandhi"
 
-st.markdown('''
+st.markdown("""''
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap""");
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .question-card { background: linear-gradient(135deg, #1A1F2E 0%, #2A2F3E 100%); border-radius: 20px; padding: 2rem; border: 1px solid rgba(108, 99, 255, 0.3); box-shadow: 0 8px 32px rgba(108, 99, 255, 0.2); margin: 1rem 0; }
 .exp-title { font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, #6C63FF, #FF6584); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 0.5rem; }
@@ -19,7 +19,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
 #MainMenu {visibility: hidden;} footer {visibility: hidden;}
 </style>
-''', unsafe_allow_html=True)
+''""", unsafe_allow_html=True)
 
 @st.cache_resource
 def get_supabase():
@@ -39,31 +39,31 @@ if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
 st.markdown("""<h1 class="exp-title">👴 Età di Gandhi</h1>""", unsafe_allow_html=True)
-st.markdown('<p class="exp-subtitle">Rispondi alle domande qui sotto</p>', unsafe_allow_html=True)
+st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown('<div class="question-card">', unsafe_allow_html=True)
+    st.markdown("""<div class="question-card">""", unsafe_allow_html=True)
 
     if st.session_state.gruppo == "A":
-        st.markdown('**Mahatma Gandhi aveva più o meno di 114 anni quando è morto?**')
-        st.radio('', ['Più di 114', 'Meno di 114'], horizontal=True, key='r1')
-        st.markdown('---')
-        st.markdown('**A che età esatta è morto secondo te?**')
-        eta = st.number_input('Inserisci una stima (anni):', 0, 150, 70, key='n1')
+        st.markdown("""**Mahatma Gandhi aveva più o meno di 114 anni quando è morto?**""")
+        st.radio('', ['Più di 114', 'Meno di 114'], horizontal=True, key='r1""")
+        st.markdown("""---""")
+        st.markdown("""**A che età esatta è morto secondo te?**""")
+        eta = st.number_input('Inserisci una stima (anni):', 0, 150, 70, key='n1""")
 
     else:
-        st.markdown('**Mahatma Gandhi aveva più o meno di 35 anni quando è morto?**')
-        st.radio('', ['Più di 35', 'Meno di 35'], horizontal=True, key='r2')
-        st.markdown('---')
-        st.markdown('**A che età esatta è morto secondo te?**')
-        eta = st.number_input('Inserisci una stima (anni):', 0, 150, 70, key='n2')
+        st.markdown("""**Mahatma Gandhi aveva più o meno di 35 anni quando è morto?**""")
+        st.radio('', ['Più di 35', 'Meno di 35'], horizontal=True, key='r2""")
+        st.markdown("""---""")
+        st.markdown("""**A che età esatta è morto secondo te?**""")
+        eta = st.number_input('Inserisci una stima (anni):', 0, 150, 70, key='n2""")
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()
+        supabase.table('Risposte""").insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()
 
         st.session_state[NOME_ESPERIMENTO] = True
         st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''', unsafe_allow_html=True)
+    st.markdown("""''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''""", unsafe_allow_html=True)
