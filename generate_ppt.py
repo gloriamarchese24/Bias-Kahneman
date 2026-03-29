@@ -25,10 +25,10 @@ PAGINE = [
     ("16_Priming_Associativo.py", "16. Priming Associativo", "Priming_Associativo"),
     ("17_Dunning_Kruger.py", "17. Illusione di Superiorità", "Dunning_Kruger"),
     ("18_WYSIATI.py", "18. WYSIATI (Giudizio Processo)", "WYSIATI"),
-    ("19_Base_Rate_Neglect.py", "19. Base Rate Neglect", "Base_Rate_Neglect"),
-    ("20_L_Esca.py", "20. Decoy Effect (L'Esca)", "L_Esca"),
-    ("21_Regressione_Media.py", "21. Regressione alla Media", "Regressione_Media"),
-    ("22_Illusione_Focalizzazione.py", "22. Illusione di Focalizzazione (Felicità)", "Illusione_Focalizzazione")
+    ("19_Illusione_Focalizzazione.py", "19. Illusione di Focalizzazione (Felicità)", "Illusione_Focalizzazione"),
+    ("20_Base_Rate_Neglect.py", "20. Base Rate Neglect", "Base_Rate_Neglect"),
+    ("21_L_Esca.py", "21. Decoy Effect (L'Esca)", "L_Esca"),
+    ("22_Regressione_Media.py", "22. Regressione alla Media", "Regressione_Media")
 ]
 
 os.makedirs("qrcodes", exist_ok=True)
@@ -39,7 +39,7 @@ slide = prs.slides.add_slide(title_slide_layout)
 title = slide.shapes.title
 subtitle = slide.placeholders[1]
 title.text = "Lezione Interattiva sui Bias Cognitivi"
-subtitle.text = "Tutti i 21 Esperimenti Kahneman\n(Inquadra i QR code per rispondere!)"
+subtitle.text = "Tutti i 22 Esperimenti Kahneman\n(Inquadra i QR code per rispondere!)"
 
 for file_name, titolo, url_path in PAGINE:
     url = f"{BASE_URL}/{url_path}"
