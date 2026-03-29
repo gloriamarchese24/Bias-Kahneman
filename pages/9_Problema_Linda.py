@@ -6,9 +6,9 @@ st.set_page_config(page_title="Profilo Persona", page_icon="👩‍🦰", layout
 
 NOME_ESPERIMENTO = "linda"
 
-st.markdown("""''
+st.markdown('''
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap""");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .question-card { background: linear-gradient(135deg, #1A1F2E 0%, #2A2F3E 100%); border-radius: 20px; padding: 2rem; border: 1px solid rgba(108, 99, 255, 0.3); box-shadow: 0 8px 32px rgba(108, 99, 255, 0.2); margin: 1rem 0; }
 .exp-title { font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, #6C63FF, #FF6584); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 0.5rem; }
@@ -19,7 +19,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
 #MainMenu {visibility: hidden;} footer {visibility: hidden;}
 </style>
-''""", unsafe_allow_html=True)
+''', unsafe_allow_html=True)
 
 @st.cache_resource
 def get_supabase():
@@ -47,17 +47,17 @@ if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
-        val = st.slider('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca**?', 0, 100, 50, key='s1""")
+        val = st.slider('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca**?', 0, 100, 50, key='s1')
 
     else:
-        val = st.slider('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca e che sia attiva nel movimento femminista**?', 0, 100, 50, key='s2""")
+        val = st.slider('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca e che sia attiva nel movimento femminista**?', 0, 100, 50, key='s2')
 
     st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        supabase.table('Risposte""").insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
         st.session_state[NOME_ESPERIMENTO] = True
         st.rerun()
 else:
-    st.markdown("""''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''""", unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''', unsafe_allow_html=True)

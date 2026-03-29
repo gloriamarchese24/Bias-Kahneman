@@ -6,9 +6,9 @@ st.set_page_config(page_title="Questionario Benessere", page_icon="😊", layout
 
 NOME_ESPERIMENTO = "focalizzazione"
 
-st.markdown("""''
+st.markdown('''
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap""");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .question-card { background: linear-gradient(135deg, #1A1F2E 0%, #2A2F3E 100%); border-radius: 20px; padding: 2rem; border: 1px solid rgba(108, 99, 255, 0.3); box-shadow: 0 8px 32px rgba(108, 99, 255, 0.2); margin: 1rem 0; }
 .exp-title { font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, #6C63FF, #FF6584); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 0.5rem; }
@@ -16,9 +16,10 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .thanks-box { background: linear-gradient(135deg, #1a2a1a 0%, #2a3a2a 100%); border-radius: 20px; padding: 2rem; text-align: center; border: 1px solid rgba(0, 255, 136, 0.3); box-shadow: 0 8px 32px rgba(0, 255, 136, 0.2); }
 .thanks-emoji { font-size: 4rem; }
 .thanks-text { color: #00FF88; font-size: 1.5rem; font-weight: 700; }
+
 #MainMenu {visibility: hidden;} footer {visibility: hidden;}
 </style>
-''""", unsafe_allow_html=True)
+''', unsafe_allow_html=True)
 
 @st.cache_resource
 def get_supabase():
@@ -46,19 +47,21 @@ if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
-        v1 = st.slider('1. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s1a""")
-        st.markdown("""<br>""", unsafe_allow_html=True)
-        v2 = st.number_input('2. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\\'ultimo mese?', 0, 30, 0, key='n1b""")
+        val = st.slider('1. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s1a')
+        st.markdown('<br>', unsafe_allow_html=True)
+        st.number_input('2. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\'ultimo mese?', 0, 30, 0, key='n1b')
+
     else:
-        v2 = st.number_input('1. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\\'ultimo mese?', 0, 30, 0, key='n2a""")
-        st.markdown("""<br>""", unsafe_allow_html=True)
-        v1 = st.slider('2. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s2b""")
+        st.number_input('1. Quanti appuntamenti romantici o uscite serali di svago hai avuto nell\'ultimo mese?', 0, 30, 0, key='n2a')
+        st.markdown('<br>', unsafe_allow_html=True)
+        val = st.slider('2. Nel complesso, quanto ti ritieni felice della tua vita in questo periodo?', 1, 10, 5, key='s2b')
 
     st.markdown("""</div>""", unsafe_allow_html=True)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        supabase.table('Risposte""").insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v1}).execute()
+        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+
         st.session_state[NOME_ESPERIMENTO] = True
         st.rerun()
 else:
-    st.markdown("""''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''""", unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per la tua risposta!</p><p style="color: #aaa;">I risultati appariranno sulla dashboard del professore.</p></div>''', unsafe_allow_html=True)
