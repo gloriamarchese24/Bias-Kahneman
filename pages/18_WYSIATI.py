@@ -44,15 +44,15 @@ st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", u
 if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.session_state.gruppo == "A":
-        st.markdown("""**Testimonianza (Avvocato Difensore):** \"Il mio cliente è un pilastro della comunità...\""")
+        st.markdown('**Testimonianza (Avvocato Difensore):** "Il mio cliente è un pilastro della comunità..."')
         colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s1a')
-        st.markdown("""**Quanto ti senti sicuro della scelta (1-10)?**""")
+        st.markdown('**Quanto ti senti sicuro della scelta (1-10)?**')
         fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')
 
     else:
-        st.markdown("""**Testimonianza (PM):** \"DNA sulla maschera e cella telefonica...\""")
+        st.markdown('**Testimonianza (PM):** "DNA sulla maschera e cella telefonica..."')
         colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s2a')
-        st.markdown("""**Quanto ti senti sicuro della scelta (1-10)?**""")
+        st.markdown('**Quanto ti senti sicuro della scelta (1-10)?**')
         fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')
 
 

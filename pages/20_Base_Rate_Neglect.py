@@ -33,8 +33,10 @@ st.markdown("""<h1 class="exp-title">🔬 Paradosso Diagnostico</h1>""", unsafe_
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""Malattia genetica 1% pop. Test infallibile 95%. Sei positivo.""")
-    val = st.number_input('Probabilità effettiva (0-100%):', 0, 100, value=None)
+    st.markdown("""**Scenario:** Immagina che Una grave malattia genetica colpisca esattamente l'1% della popolazione mondiale.""")
+    st.markdown("""Un test in grado di individuarla è infallibile al 95% (5% falsi positivi/negativi).""")
+    st.markdown("""Fai il test e risulti **POSITIVO**.""")
+    val = st.number_input('Qual è la probabilità effettiva (0-100%) che tu abbia davvero la malattia?', 0, 100, value=None)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):
         can_submit = True

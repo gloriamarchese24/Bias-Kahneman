@@ -291,8 +291,8 @@ build_ab_page(
 build_ab_page(
     "18_WYSIATI.py", "wysiati", "⚖️", "Giudice", "Verdetto Giudiziario",
     "",
-    "        st.markdown(\"\"\"**Testimonianza (Avvocato Difensore):** \\\"Il mio cliente è un pilastro della comunità...\\\"\"\")\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s1a')\n        st.markdown(\"\"\"**Quanto ti senti sicuro della scelta (1-10)?**\"\"\")\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')\n",
-    "        st.markdown(\"\"\"**Testimonianza (PM):** \\\"DNA sulla maschera e cella telefonica...\\\"\"\")\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s2a')\n        st.markdown(\"\"\"**Quanto ti senti sicuro della scelta (1-10)?**\"\"\")\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')\n",
+    "        st.markdown('**Testimonianza (Avvocato Difensore):** \"Il mio cliente è un pilastro della comunità...\"')\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s1a')\n        st.markdown('**Quanto ti senti sicuro della scelta (1-10)?**')\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')\n",
+    "        st.markdown('**Testimonianza (PM):** \"DNA sulla maschera e cella telefonica...\"')\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s2a')\n        st.markdown('**Quanto ti senti sicuro della scelta (1-10)?**')\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')\n",
     "",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': colpa}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'wysiati_fiducia', 'gruppo': st.session_state.gruppo, 'valore': fiducia}).execute()\n"
 )
@@ -308,7 +308,7 @@ build_ab_page(
 # --- 20. BASE RATE ---
 build_single_page(
     "20_Base_Rate_Neglect.py", "base_rate", "🔬", "Diagnosi Medica", "Paradosso Diagnostico",
-    "    st.markdown(\"\"\"Malattia genetica 1% pop. Test infallibile 95%. Sei positivo.\"\"\")\n    val = st.number_input('Probabilità effettiva (0-100%):', 0, 100, value=None)\n",
+    "    st.markdown(\"\"\"**Scenario:** Immagina che Una grave malattia genetica colpisca esattamente l'1% della popolazione mondiale.\"\"\")\n    st.markdown(\"\"\"Un test in grado di individuarla è infallibile al 95% (5% falsi positivi/negativi).\"\"\")\n    st.markdown(\"\"\"Fai il test e risulti **POSITIVO**.\"\"\")\n    val = st.number_input('Qual è la probabilità effettiva (0-100%) che tu abbia davvero la malattia?', 0, 100, value=None)\n",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()\n"
 )
 # --- 21. DECOY ---
