@@ -134,11 +134,12 @@ else:
         f.write(template)
 
 # --- 1. MACCHINA ---
+# Incorporating user's text edits "di un incidente tra due automobili", "urtate?", "disintegrate?"
 build_ab_page(
     "1_Macchina.py", "macchina", "🚗", "Incidente Auto", "Incidente Stradale",
-    "    st.markdown(\"\"\"**Scenario:** Hai appena visto un breve video della dashcam in cui due automobili si scontrano.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
-    "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono URTATE❓**\"\"\")\n        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')\n",
-    "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono DISINTEGRATE❓**\"\"\")\n        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s2')\n",
+    "    st.markdown(\"\"\"**Scenario:** Hai appena visto un breve video di un incidente tra due automobili.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
+    "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono urtate?**\"\"\")\n        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')\n",
+    "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono disintegrate?**\"\"\")\n        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s2')\n",
     "    st.markdown(\"\"\"**2. Hai notato dei vetri rotti a terra?**\"\"\")\n    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, index=None, key='v')\n",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()\n"
 )
@@ -263,8 +264,8 @@ build_ab_page(
 build_ab_page(
     "15_Effetto_Default.py", "default_organ", "🫀", "Assicurazione", "Modulo Assicurativo",
     "    st.markdown(\"\"\"**Firma del nuovo modulo per dipendenti ospedalieri.**\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
-    "        opt = st.checkbox('⚠️ Spunta la casella se **VUOI** acconsentire a diventare un donatore di organi.', value=False, key='c1')\n        st.session_state['interact_15'] = True # Mocking interaction check if needed\n",
-    "        opt = st.checkbox('⚠️ Spunta la casella se **NON VUOI** diventare un donatore di organi.', value=True, key='c2')\n        st.session_state['interact_15'] = True\n",
+    "        opt = st.checkbox('⚠️ Spunta la casella se **VUOI** acconsentire a diventare un donatore di organi.', value=False, key='c1')\n",
+    "        opt = st.checkbox('⚠️ Spunta la casella se **NON VUOI** diventare un donatore di organi.', value=True, key='c2')\n",
     "",
     "        v = 1 if (st.session_state.gruppo == 'A' and opt == True) or (st.session_state.gruppo == 'B' and opt == False) else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n"
 )
@@ -290,8 +291,8 @@ build_ab_page(
 build_ab_page(
     "18_WYSIATI.py", "wysiati", "⚖️", "Giudice", "Verdetto Giudiziario",
     "",
-    "        st.markdown(\"\"\"**Testimonianza (Avvocato Difensore):** \"Il mio cliente è un pilastro della comunità...\"\"\"\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s1a')\n        st.markdown(\"\"\"**Quanto ti senti sicuro della scelta (1-10)?**\"\"\")\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')\n",
-    "        st.markdown(\"\"\"**Testimonianza (PM):** \"DNA sulla maschera e cella telefonica...\"\"\"\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s2a')\n        st.markdown(\"\"\"**Quanto ti senti sicuro della scelta (1-10)?**\"\"\")\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')\n",
+    "        st.markdown(\"\"\"**Testimonianza (Avvocato Difensore):** \\\"Il mio cliente è un pilastro della comunità...\\\"\"\")\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s1a')\n        st.markdown(\"\"\"**Quanto ti senti sicuro della scelta (1-10)?**\"\"\")\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')\n",
+    "        st.markdown(\"\"\"**Testimonianza (PM):** \\\"DNA sulla maschera e cella telefonica...\\\"\"\")\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s2a')\n        st.markdown(\"\"\"**Quanto ti senti sicuro della scelta (1-10)?**\"\"\")\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')\n",
     "",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': colpa}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'wysiati_fiducia', 'gruppo': st.session_state.gruppo, 'valore': fiducia}).execute()\n"
 )

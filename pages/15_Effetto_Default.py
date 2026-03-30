@@ -47,11 +47,9 @@ if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.session_state.gruppo == "A":
         opt = st.checkbox('⚠️ Spunta la casella se **VUOI** acconsentire a diventare un donatore di organi.', value=False, key='c1')
-        st.session_state['interact_15'] = True # Mocking interaction check if needed
 
     else:
         opt = st.checkbox('⚠️ Spunta la casella se **NON VUOI** diventare un donatore di organi.', value=True, key='c2')
-        st.session_state['interact_15'] = True
 
 
     

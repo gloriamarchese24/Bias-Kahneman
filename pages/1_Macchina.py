@@ -42,15 +42,15 @@ st.markdown("""<h1 class="exp-title">🚗 Incidente Stradale</h1>""", unsafe_all
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** Hai appena visto un breve video della dashcam in cui due automobili si scontrano.""")
+    st.markdown("""**Scenario:** Hai appena visto un breve video di un incidente tra due automobili.""")
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
-        st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono URTATE❓**""")
+        st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono urtate?**""")
         val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')
 
     else:
-        st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono DISINTEGRATE❓**""")
+        st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono disintegrate?**""")
         val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s2')
 
     st.markdown("""**2. Hai notato dei vetri rotti a terra?**""")
