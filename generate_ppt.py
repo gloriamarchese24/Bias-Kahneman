@@ -3,7 +3,6 @@ from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
-from pptx.enum.shapes import MSO_SHAPE
 import os
 
 BASE_URL = "https://bias-kahneman-ms2mgk3bueryreh4vj78ae.streamlit.app"
@@ -11,312 +10,270 @@ BASE_URL = "https://bias-kahneman-ms2mgk3bueryreh4vj78ae.streamlit.app"
 PAGINE_IT = [
     {
         "url_path": "Macchina",
-        "title": "1. Loftus & Palmer — Falsi Ricordi (Velocità Auto)",
-        "scenario": "Hai appena visto un breve video di un incidente tra due automobili.",
-        "group_a": "A che velocità (in km/h) andavano le auto quando si sono urtate?",
-        "group_b": "A che velocità (in km/h) andavano le auto quando si sono disintegrate?",
-        "extra": "Domanda comune: Hai notato dei vetri rotti a terra? (Sì / No)"
+        "title": "1. Incidente Stradale (Loftus & Palmer)",
+        "bias": "Falsi Ricordi & Suggestionabilità (False Memories)",
+        "context": "Guarda il breve video dell'incidente stradale mostrato a lezione.\n\nSuccessivamente, inquadra il QR code per stimare la velocità dei veicoli e rispondere alle domande dal tuo smartphone."
     },
     {
         "url_path": "Malattia_Asiatica",
-        "title": "2. Asian Disease Problem — Framing Effect",
-        "scenario": "Un'epidemia asiatica minaccia 600 persone. Due programmi possibili:",
-        "group_a": "Programma A: 200 salvati di sicuro.\nProgramma B: 1/3 probabilità di salvare tutti e 600, 2/3 nessuno.",
-        "group_b": "Programma A: 400 morti di sicuro.\nProgramma B: 1/3 probabilità che non muoia nessuno, 2/3 che muoiano tutti e 600."
+        "title": "2. Il Paradosso della Malattia Asiatica",
+        "bias": "Effetto Framing / Formulazione della Scelta (Framing Effect)",
+        "context": "Un'epidemia asiatica molto contagiosa rischia di colpire 600 persone. Sono stati proposti due diversi programmi sanitari d'intervento per affrontarla.\n\nInquadra il QR code con il tuo smartphone per scegliere il programma migliore secondo te."
     },
     {
         "url_path": "Framing_AI",
-        "title": "3. Chirurgia Robotica AI — Framing Medico",
-        "scenario": "Un software robotico AI deve eseguire un intervento su 100 pazienti critici.",
-        "group_a": "Dato statistico: 90 pazienti sopravviveranno.\nAutorizzi l'uso del software? (Sì / No)",
-        "group_b": "Dato statistico: 10 pazienti moriranno.\nAutorizzi l'uso del software? (Sì / No)"
+        "title": "3. Chirurgia Robotica con Intelligenza Artificiale",
+        "bias": "Framing Medico (Positive vs Negative Framing)",
+        "context": "Un nuovo software robotico AI deve eseguire un intervento chirurgico ad alto rischio su 100 pazienti in condizioni critiche.\n\nInquadra il QR code per leggere i dati statistici ed esprimere la tua decisione."
     },
     {
         "url_path": "Ancoraggio_Gandhi",
-        "title": "4. Ancoraggio — Età di Gandhi",
-        "scenario": "Stima dell'età di morte di Mahatma Gandhi.",
-        "group_a": "1. Gandhi è morto prima o dopo i 114 anni?\n2. Stima l'età esatta alla morte (anni).",
-        "group_b": "1. Gandhi è morto prima o dopo i 35 anni?\n2. Stima l'età esatta alla morte (anni)."
+        "title": "4. Stima Biografica di Mahatma Gandhi",
+        "bias": "Effetto Ancoraggio (Anchoring Effect)",
+        "context": "Mettiti alla prova con due domande sulla biografia e sulla storia di Mahatma Gandhi.\n\nInquadra il QR code con il tuo smartphone per inserire la tua stima."
     },
     {
         "url_path": "Ancoraggio_Roulette",
-        "title": "5. Ancoraggio Medico — Ruota della Fortuna",
-        "scenario": "Una ruota della fortuna estrae un numero prima della stima diagnostica.",
-        "group_a": "Numero estratto dalla ruota: 12\nDomanda: Qual è la % di diagnosi errate dovute a stanchezza del medico?",
-        "group_b": "Numero estratto dalla ruota: 65\nDomanda: Qual è la % di diagnosi errate dovute a stanchezza del medico?"
+        "title": "5. Valutazione Diagnostica Ospedaliera",
+        "bias": "Ancoraggio Numerico Irrilevante (Arbitrary Anchoring)",
+        "context": "Osserva il numero estratto dalla ruota della fortuna mostrata a lezione.\n\nSuccessivamente, inquadra il QR code per fornire la tua stima sulla percentuale di diagnosi errate in ospedale."
     },
     {
         "url_path": "Avversione_Perdite",
-        "title": "6. Avversione alle Perdite — Scelte Finanziarie",
-        "scenario": "Valutazione del rischio tra vincite certe e perdite certe.",
-        "group_a": "Ricevi 1.000€.\nA) Vinci altri 500€ sicuri (100%)\nB) Lancio moneta: 50% vinci 1.000€, 50% vinci 0€",
-        "group_b": "Ricevi 2.000€.\nA) Perdi 500€ sicuri (100%)\nB) Lancio moneta: 50% perdi 1.000€, 50% perdi 0€"
+        "title": "6. Decisione Finanziaria e Rischio",
+        "bias": "Avversione alle Perdite & Teoria del Prospetto (Loss Aversion)",
+        "context": "Ti viene proposto uno scenario economico con un premio iniziale e due opzioni finanziarie alternative.\n\nInquadra il QR code dal tuo smartphone per scegliere l'opzione che preferisci."
     },
     {
         "url_path": "Illusione_Verita",
-        "title": "7. Illusione di Verità — Effetto Font",
-        "scenario": "Valutazione affermazione: 'L'assunzione di Omega-3 riduce del 15% le infiammazioni corporee.'",
-        "group_a": "Formattazione: Arial grassetto nero ad alta visibilità.",
-        "group_b": "Formattazione: Comic Sans sbiadito grigio a bassa visibilità.",
-        "extra": "Domanda: Da 1 a 10, quanto ti sembra vera e scientifica questa frase?"
+        "title": "7. Valutazione dell'Affermazione Scientifica",
+        "bias": "Illusione di Verità & Fluidità Cognitiva (Illusion of Truth)",
+        "context": "Inquadra il QR code con la fotocamera del tuo smartphone per leggere l'affermazione scientifica proposta e valutare da 1 a 10 quanto ti sembra vera."
     },
     {
         "url_path": "Euristica_Disponibilita",
-        "title": "8. Availability Heuristic — Euristica della Disponibilità",
-        "scenario": "Richiamo alla memoria di comportamenti assertivi.",
-        "group_a": "1. Elenca 2 situazioni in cui sei stato assertivo.\n2. Valuta quanto ti ritieni assertivo (1-10).",
-        "group_b": "1. Elenca 12 situazioni in cui sei stato assertivo.\n2. Valuta quanto ti ritieni assertivo (1-10)."
+        "title": "8. Inventario della Personalità (Assertività)",
+        "bias": "Euristica della Disponibilità & Sforzo Cognitivo (Availability Heuristic)",
+        "context": "Inquadra il QR code dal tuo smartphone per completare un breve esercizio di memoria sui tuoi comportamenti passati e valutare il tuo livello personale di assertività."
     },
     {
         "url_path": "Problema_Linda",
-        "title": "9. Il Problema di Linda — Fallacia della Congiunzione",
-        "scenario": "Linda ha 31 anni, single, brillante, laureata in filosofia, attiva contro la discriminazione e nelle manifestazioni antinucleari.",
-        "group_a": "Qual è la probabilità (0-100%) che Linda sia una cassiera di banca?",
-        "group_b": "Qual è la probabilità (0-100%) che Linda sia una cassiera di banca e attiva nel movimento femminista?"
+        "title": "9. Il Profilo di Linda (Kahneman & Tversky)",
+        "bias": "Fallacia della Congiunzione & Rappresentatività (Conjunction Fallacy)",
+        "context": "Linda ha 31 anni, è single, brillante, laureata in filosofia e da studentessa si è occupata di giustizia sociale e manifestazioni antinucleari.\n\nInquadra il QR code per stimare la probabilità della sua occupazione attuale."
     },
     {
         "url_path": "Effetto_Alone",
-        "title": "10. Effetto Alone — Modello Asch",
-        "scenario": "Valutazione di un collega basata su un elenco ordinato di aggettivi.",
-        "group_a": "Alan: Intelligente, laborioso, impulsivo, critico, ostinato, invidioso.\nValutazione sul lavoro (1-10).",
-        "group_b": "Ben: Invidioso, ostinato, critico, impulsivo, laborioso, intelligente.\nValutazione sul lavoro (1-10)."
+        "title": "10. Valutazione del Profilo Professionale",
+        "bias": "Effetto Alone & Ordine di Presentazione (Halo Effect / Asch)",
+        "context": "Inquadra il QR code per leggere la descrizione dei tratti di personalità del collega fornita dai suoi compagni di lavoro e valutare la tua impressione generale su di lui."
     },
     {
         "url_path": "Effetto_Dote_Tazza",
-        "title": "11. Effetto Dote — Tazza di Thaler",
-        "scenario": "Mercato libero di compravendita di una tazza dell'istituto.",
-        "group_a": "Venditori: Ti è stata regalata la tazza.\nPrezzo minimo (€) a cui la venderesti.",
-        "group_b": "Compratori: Un compagno ha ricevuto la tazza.\nPrezzo massimo (€) che pagheresti."
+        "title": "11. Il Mercato della Tazza (Thaler)",
+        "bias": "Effetto Dote (Endowment Effect)",
+        "context": "Partecipa alla simulazione di mercato per una bellissima tazza del nostro istituto.\n\nInquadra il QR code con il tuo smartphone per scoprire il tuo ruolo e indicare il tuo prezzo."
     },
     {
         "url_path": "Effetto_Dote_AI",
-        "title": "12. Effetto Dote — Licenza Software AI",
-        "scenario": "Mercato per una Licenza Software AI diagnostica.",
-        "group_a": "Proprietario: Hai in regalo la licenza.\nPrezzo minimo (€) richiesto per cederla.",
-        "group_b": "Acquirente: Un ospedale vende la licenza.\nPrezzo massimo (€) che pagheresti."
+        "title": "12. Mercato della Licenza Software AI",
+        "bias": "Effetto Dote applicato ai Beni Digitali (Endowment Effect)",
+        "context": "Partecipa alla trattativa di mercato per una rarissima licenza software diagnostica AI.\n\nInquadra il QR code per scoprire il tuo ruolo nella trattativa e la tua offerta in euro (€)."
     },
     {
         "url_path": "Costi_Sommersi_Teatro",
-        "title": "13. Costi Sommersi — Spettacolo a Teatro",
-        "scenario": "Tormenta di neve la sera dello spettacolo teatrale.",
-        "group_a": "Biglietto acquistato a 50€.\nA) Vado a teatro lo stesso (sfido la tormenta)\nB) Resto a casa al caldo",
-        "group_b": "Biglietto regalato (0€).\nA) Vado a teatro lo stesso\nB) Resto a casa al caldo"
+        "title": "13. Lo Spettacolo a Teatro (Kahneman)",
+        "bias": "Fallacia dei Costi Sommersi (Sunk Cost Fallacy)",
+        "context": "È la sera dello spettacolo teatrale che ti interessava molto, ma improvvisamente scoppia una tormenta di neve spaventosa.\n\nInquadra il QR code dal tuo smartphone per indicare cosa decidi di fare."
     },
     {
         "url_path": "Costi_Sommersi_AI",
-        "title": "14. Costi Sommersi — Progetto di Ricerca AI",
-        "scenario": "Google lancia un algoritmo gratuito e migliore mentre sviluppi il tuo.",
-        "group_a": "Iniziato il progetto OGGI (0 anni investiti).\nA) Continuo a sviluppare il mio\nB) Abbandono il mio progetto",
-        "group_b": "Lavori al progetto da 4 ANNI (al 90%).\nA) Continuo a sviluppare il mio\nB) Abbandono il mio progetto"
+        "title": "14. Gestione Progetto di Ricerca AI",
+        "bias": "Costi Sommersi negli Investimenti di Sviluppo (Sunk Cost in R&D)",
+        "context": "Sei a capo di un team di ricerca per un nuovo algoritmo diagnostico. Durante i lavori, Google rilascia un software gratuito tecnicamente superiore.\n\nInquadra il QR code per decidere il futuro del tuo progetto."
     },
     {
         "url_path": "Effetto_Default",
-        "title": "15. Effetto Default — Donazione Organi",
-        "scenario": "Firma del nuovo modulo per dipendenti ospedalieri.",
-        "group_a": "Modulo Opt-IN: [ ] Spunta se VUOI diventare donatore.",
-        "group_b": "Modulo Opt-OUT: [v] Spunta se NON VUOI diventare donatore."
+        "title": "15. Modulo di Assunzione Ospedaliera",
+        "bias": "Effetto Default & Architettura delle Scelte (Default Effect / Nudge)",
+        "context": "Immagina di compilare i moduli di onboarding per l'assunzione come dipendente ospedaliero.\n\nInquadra il QR code con lo smartphone per completare la tua scelta sul modulo."
     },
     {
         "url_path": "Priming_Associativo",
-        "title": "16. Priming Associativo — Completamento Parole",
-        "scenario": "Priming semantico sul completamento della parola S O _ P.",
-        "group_a": "Lettura veloce: FORCHETTA, PRANZO, FAME.\nCompleta la parola: S O _ P",
-        "group_b": "Lettura veloce: DOCCIA, SCHIUMA, PULITO.\nCompleta la parola: S O _ P"
+        "title": "16. Test di Completamento Parole",
+        "bias": "Priming Semantico / Associativo (Associative Priming)",
+        "context": "Inquadra il QR code per leggere velocemente le parole che appariranno sul tuo schermo e completare la parola mancante nel minor tempo possibile."
     },
     {
         "url_path": "Dunning_Kruger",
-        "title": "17. Illusione di Superiorità — Dunning-Kruger",
-        "scenario": "Autovalutazione delle proprie abilità accademiche.",
-        "group_a": "Ritieni la tua abilità accademica superiore alla media della classe?\n(Sopra la media / Nella media / Sotto la media)",
-        "group_b": "Ritieni la tua abilità accademica superiore a quella di Giorgio Parisi (Nobel)?\n(Sopra la sua / Nella sua / Sotto la sua)"
+        "title": "17. Valutazione delle Abilità Accademiche",
+        "bias": "Illusione di Superiorità & Effetto Dunning-Kruger (Overconfidence)",
+        "context": "Inquadra il QR code con il tuo smartphone per rispondere in modo del tutto anonimo alla domanda di autovalutazione delle tue capacità accademiche."
     },
     {
         "url_path": "WYSIATI",
-        "title": "18. WYSIATI — What You See Is All There Is",
-        "scenario": "Verdetto in un processo penale con evidenze sbilanciate.",
-        "group_a": "Presentata solo la testimonianza della Difesa.\nStima colpevolezza (0-100) e sicurezza (1-10).",
-        "group_b": "Presentata solo la testimonianza del PM.\nStima colpevolezza (0-100) e sicurezza (1-10)."
+        "title": "18. Verdetto in un Processo Penale",
+        "bias": "WYSIATI - What You See Is All There Is (Kahneman)",
+        "context": "Inquadra il QR code per leggere la testimonianza presentata al processo giudiziario e indicare il tuo verdetto di colpevolezza e il tuo livello di sicurezza."
     },
     {
         "url_path": "Illusione_Focalizzazione",
-        "title": "19. Illusione di Focalizzazione — Felicità",
-        "scenario": "Ordine delle domande sul benessere e vita sentimentale.",
-        "group_a": "1. Quanto sei felice (1-10)?\n2. Quante uscite romantiche nell'ultimo mese?",
-        "group_b": "1. Quante uscite romantiche nell'ultimo mese?\n2. Quanto sei felice (1-10)?"
+        "title": "19. Sondaggio sul Benessere Personale",
+        "bias": "Illusione di Focalizzazione (Focusing Illusion)",
+        "context": "Inquadra il QR code per rispondere a un breve sondaggio sul tuo benessere generale e sulla tua soddisfazione di vita."
     },
     {
         "url_path": "Base_Rate_Neglect",
-        "title": "20. Base Rate Neglect — Paradosso Diagnostico",
-        "scenario": "Malattia rara al 1% della popolazione. Test preciso al 95%. Risulti POSITIVO.",
-        "single": "Qual è la probabilità effettiva (0-100%) che tu sia realmente malato?\n(Risposta statistica corretta: ~16%)"
+        "title": "20. Il Paradosso Diagnostico",
+        "bias": "Disattenzione per la Frequenza di Base (Base Rate Neglect)",
+        "context": "Una malattia rara colpisce l'1% della popolazione mondiale. Un test in grado di rilevarla è accurato al 95%. Risulti POSITIVO.\n\nInquadra il QR code per stimare la reale probabilità di avere la malattia."
     },
     {
         "url_path": "L_Esca",
-        "title": "21. Decoy Effect — L'Esca (The Economist)",
-        "scenario": "Scegli un abbonamento alla rivista The Economist:",
-        "single": "A) Solo Web (50€)\nB) Solo Cartaceo (120€ - Opzione Esca)\nC) Web + Cartaceo (120€)"
+        "title": "21. Scelta dell'Abbonamento (The Economist)",
+        "bias": "Effetto Esca / Attrazione (Decoy Effect)",
+        "context": "Devi scegliere la formula d'abbonamento alla rivista The Economist che ritieni più conveniente.\n\nInquadra il QR code con lo smartphone per selezionare la tua scelta."
     },
     {
         "url_path": "Regressione_Media",
-        "title": "22. Regressione alla Media — Lode vs Castigo",
-        "scenario": "Istruttori di volo: sgridare migliora l'atterraggio successivo, lodare lo peggiora.",
-        "single": "A) Intuizione psicologica (la lode vizia, il castigo funziona)\nB) Errore statistico (regressione alla media)"
+        "title": "22. L'Effetto dell'Istruzione di Volo",
+        "bias": "Illusioni Causali vs Regressione alla Media (Regression to the Mean)",
+        "context": "Gli istruttori di volo israeliani notano che sgridare dopo un errore migliora la manovra successiva, mentre lodare la peggiora.\n\nInquadra il QR code per spiegare perché si verifica questo fenomeno."
     }
 ]
 
 PAGINE_EN = [
     {
         "url_path": "Macchina_EN",
-        "title": "1. Loftus & Palmer — Car Crash Experiment (False Memories)",
-        "scenario": "You have just watched a short video clip of an automobile accident.",
-        "group_a": "How fast (in km/h) were the cars going when they HIT each other?",
-        "group_b": "How fast (in km/h) were the cars going when they SMASHED into each other?",
-        "extra": "Common question: Did you see any broken glass on the ground? (Yes / No)"
+        "title": "1. Car Crash Experiment (Loftus & Palmer)",
+        "bias": "False Memories & Misinformation Effect",
+        "context": "Watch the short video clip of the car accident shown in class.\n\nThen, scan the QR code to estimate the speed of the vehicles and answer the questions on your smartphone."
     },
     {
         "url_path": "Malattia_Asiatica_EN",
-        "title": "2. Asian Disease Problem — Framing Effect",
-        "scenario": "An unusual Asian disease is expected to kill 600 people. Two programs proposed:",
-        "group_a": "Program A: 200 people saved for sure.\nProgram B: 1/3 probability 600 saved, 2/3 nobody saved.",
-        "group_b": "Program A: 400 people die for sure.\nProgram B: 1/3 probability nobody dies, 2/3 all 600 die."
+        "title": "2. The Asian Disease Problem",
+        "bias": "Framing Effect (Kahneman & Tversky)",
+        "context": "An unusual contagious disease is expected to kill 600 people. Two alternative healthcare programs have been proposed to combat the disease.\n\nScan the QR code with your smartphone to choose the best program according to you."
     },
     {
         "url_path": "Framing_AI_EN",
-        "title": "3. AI Robotic Surgery — Medical Framing",
-        "scenario": "An AI robotic surgical software will perform surgery on 100 patients in critical condition.",
-        "group_a": "Statistical data: 90 patients will survive. Do you authorize the software? (Yes / No)",
-        "group_b": "Statistical data: 10 patients will die. Do you authorize the software? (Yes / No)"
+        "title": "3. Robotic AI Surgery Authorization",
+        "bias": "Medical Framing Effect (Positive vs Negative)",
+        "context": "A new AI robotic surgical software is set to perform a high-risk operation on 100 critical patients.\n\nScan the QR code to read the statistical data and make your decision."
     },
     {
         "url_path": "Ancoraggio_Gandhi_EN",
-        "title": "4. Anchoring Effect — Gandhi's Age",
-        "scenario": "Estimating Mahatma Gandhi's age at death.",
-        "group_a": "1. Did Gandhi die before or after age 114?\n2. Estimate his exact age at death (years).",
-        "group_b": "1. Did Gandhi die before or after age 35?\n2. Estimate his exact age at death (years)."
+        "title": "4. Mahatma Gandhi Age Estimation",
+        "bias": "Anchoring Effect",
+        "context": "Test your knowledge with two questions regarding Mahatma Gandhi's life and age at death.\n\nScan the QR code with your smartphone to enter your estimates."
     },
     {
         "url_path": "Ancoraggio_Roulette_EN",
-        "title": "5. Medical Anchoring — Roulette Wheel",
-        "scenario": "A roulette wheel spins an apparently random number before diagnostic estimation.",
-        "group_a": "Wheel number: 12\nQuestion: What % of misdiagnoses are caused by doctor fatigue?",
-        "group_b": "Wheel number: 65\nQuestion: What % of misdiagnoses are caused by doctor fatigue?"
+        "title": "5. Hospital Misdiagnosis Estimation",
+        "bias": "Irrelevant Numerical Anchoring",
+        "context": "Observe the number spun on the wheel of fortune shown in class.\n\nThen, scan the QR code to provide your estimate of the percentage of hospital misdiagnoses."
     },
     {
         "url_path": "Avversione_Perdite_EN",
-        "title": "6. Loss Aversion — Financial Risk Decisions",
-        "scenario": "Evaluating risk choices between certain gains and certain losses.",
-        "group_a": "You are given €1,000.\nA) Win €500 more for sure (100%)\nB) Coin flip: 50% win €1,000, 50% win €0",
-        "group_b": "You are given €2,000.\nA) Lose €500 for sure (100%)\nB) Coin flip: 50% lose €1,000, 50% lose €0"
+        "title": "6. Financial Decision & Risk Choice",
+        "bias": "Loss Aversion & Prospect Theory",
+        "context": "You are presented with a financial scenario involving an initial bonus and two alternative financial options.\n\nScan the QR code on your smartphone to pick your preferred option."
     },
     {
         "url_path": "Illusione_Verita_EN",
-        "title": "7. Illusion of Truth — Font Legibility Effect",
-        "scenario": "Evaluation of statement: 'Taking Omega-3 reduces bodily inflammation by 15%.'",
-        "group_a": "Presented in high-contrast bold Arial font.",
-        "group_b": "Presented in low-contrast faded Comic Sans font.",
-        "extra": "Question: On a scale of 1 to 10, how true and scientific does this statement seem?"
+        "title": "7. Scientific Statement Evaluation",
+        "bias": "Illusion of Truth & Cognitive Ease",
+        "context": "Scan the QR code with your smartphone camera to read the scientific statement presented and rate how true it seems to you (1-10)."
     },
     {
         "url_path": "Euristica_Disponibilita_EN",
-        "title": "8. Availability Heuristic — Memory Recall",
-        "scenario": "Recalling assertive personal behaviors.",
-        "group_a": "1. List 2 situations where you were assertive.\n2. Rate how assertive you consider yourself (1-10).",
-        "group_b": "1. List 12 situations where you were assertive.\n2. Rate how assertive you consider yourself (1-10)."
+        "title": "8. Personality Inventory (Assertiveness)",
+        "bias": "Availability Heuristic & Subjective Ease of Recall",
+        "context": "Scan the QR code from your smartphone to complete a short memory recall exercise on your past behaviors and rate your personal level of assertiveness."
     },
     {
         "url_path": "Problema_Linda_EN",
-        "title": "9. The Linda Problem — Conjunction Fallacy",
-        "scenario": "Linda is 31, single, outspoken, bright, philosophy major, deeply concerned with social justice and anti-nuclear protests.",
-        "group_a": "What is the probability (0-100%) that Linda is a bank teller?",
-        "group_b": "What is the probability (0-100%) that Linda is a bank teller and active in the feminist movement?"
+        "title": "9. Linda's Profile (Kahneman & Tversky)",
+        "bias": "Conjunction Fallacy & Representativeness Heuristic",
+        "context": "Linda is 31, single, outspoken, bright, philosophy major, concerned with social justice and anti-nuclear demonstrations.\n\nScan the QR code to estimate the probability of her current occupation."
     },
     {
         "url_path": "Effetto_Alone_EN",
-        "title": "10. Halo Effect — Asch Personality Impression",
-        "scenario": "Rating a colleague based on an ordered list of personality traits.",
-        "group_a": "Alan: Intelligent, industrious, impulsive, critical, stubborn, envious.\nRate Alan as a coworker (1-10).",
-        "group_b": "Ben: Envious, stubborn, critical, impulsive, industrious, intelligent.\nRate Ben as a coworker (1-10)."
+        "title": "10. Workplace Profile Evaluation",
+        "bias": "Halo Effect & Order Effect (Asch Model)",
+        "context": "Scan the QR code to read the personality description of a colleague provided by his coworkers and rate your overall impression of him."
     },
     {
         "url_path": "Effetto_Dote_Tazza_EN",
-        "title": "11. Endowment Effect — Thaler's Mug",
-        "scenario": "Trading market for an official university mug.",
-        "group_a": "Sellers: You were GIVEN the mug.\nWhat is the minimum price (€) you will sell it for?",
-        "group_b": "Buyers: A classmate has the mug.\nWhat is the maximum price (€) you are willing to pay?"
+        "title": "11. The University Mug Market (Thaler)",
+        "bias": "Endowment Effect",
+        "context": "Participate in the market simulation for an official university mug.\n\nScan the QR code with your smartphone to discover your role and submit your price."
     },
     {
         "url_path": "Effetto_Dote_AI_EN",
-        "title": "12. Endowment Effect — AI Software License",
-        "scenario": "Market for a rare AI diagnostic software license.",
-        "group_a": "Owner: You were GIFTED the license.\nMinimum price (€) demanded to sell it.",
-        "group_b": "Buyer: A hospital is selling the license.\nMaximum price (€) willing to pay."
+        "title": "12. AI Diagnostic Software License Market",
+        "bias": "Endowment Effect in Digital Assets",
+        "context": "Participate in the market negotiation for a rare AI diagnostic software license.\n\nScan the QR code to discover your negotiation role and enter your valuation in Euros (€)."
     },
     {
         "url_path": "Costi_Sommersi_Teatro_EN",
-        "title": "13. Sunk Cost Fallacy — Theater Ticket",
-        "scenario": "A severe snowstorm hits on the night of the theater performance.",
-        "group_a": "Ticket bought for €50.\nA) Go to the theater anyway\nB) Stay home warm",
-        "group_b": "Ticket received for free (€0).\nA) Go to the theater anyway\nB) Stay home warm"
+        "title": "13. The Theater Ticket Scenario (Kahneman)",
+        "bias": "Sunk Cost Fallacy",
+        "context": "It is the evening of a theater show you really want to see, but a severe snowstorm suddenly strikes.\n\nScan the QR code from your smartphone to indicate what you decide to do."
     },
     {
         "url_path": "Costi_Sommersi_AI_EN",
-        "title": "14. Sunk Cost Fallacy — AI Research Project",
-        "scenario": "Google releases a free superior algorithm while your team works on one.",
-        "group_a": "Project started TODAY (0 years invested).\nA) Continue developing mine\nB) Abandon my project",
-        "group_b": "Worked for 4 YEARS on the algorithm (90% done).\nA) Continue developing mine\nB) Abandon my project"
+        "title": "14. AI Research Project Management",
+        "bias": "Sunk Cost Fallacy in R&D",
+        "context": "You lead an AI research team working on a new diagnostic algorithm. During development, Google releases a free superior algorithm.\n\nScan the QR code to decide the future of your project."
     },
     {
         "url_path": "Effetto_Default_EN",
-        "title": "15. Default Effect — Organ Donation",
-        "scenario": "Signing hospital employee onboarding consent form.",
-        "group_a": "Opt-IN Form: [ ] Check the box if you WANT to become an organ donor.",
-        "group_b": "Opt-OUT Form: [v] Check the box if you DO NOT WANT to become an organ donor."
+        "title": "15. Hospital Employee Onboarding Form",
+        "bias": "Default Effect & Choice Architecture (Nudge)",
+        "context": "Imagine completing your onboarding consent forms as a new hospital employee.\n\nScan the QR code with your smartphone to make your choice on the form."
     },
     {
         "url_path": "Priming_Associativo_EN",
-        "title": "16. Associative Priming — Word Completion",
-        "scenario": "Effect of semantic priming on completing the word S O _ P.",
-        "group_a": "Quick reading: FORK, LUNCH, HUNGER.\nComplete the word: S O _ P",
-        "group_b": "Quick reading: SHOWER, FOAM, CLEAN.\nComplete the word: S O _ P"
+        "title": "16. Word Completion Test",
+        "bias": "Associative / Conceptual Priming",
+        "context": "Scan the QR code to quickly read the trigger words that will appear on your screen and complete the missing word as fast as possible."
     },
     {
         "url_path": "Dunning_Kruger_EN",
-        "title": "17. Illusion of Superiority — Dunning-Kruger",
-        "scenario": "Self-evaluation of personal academic ability.",
-        "group_a": "Do you consider your academic ability above class average?\n(Above average / Average / Below average)",
-        "group_b": "Do you consider your academic ability superior to Giorgio Parisi (Nobel)?\n(Above his / Equal to his / Below his)"
+        "title": "17. Academic Ability Self-Assessment",
+        "bias": "Illusion of Superiority & Dunning-Kruger Effect",
+        "context": "Scan the QR code with your smartphone to anonymously answer a self-evaluation question about your academic abilities."
     },
     {
         "url_path": "WYSIATI_EN",
-        "title": "18. WYSIATI — What You See Is All There Is",
-        "scenario": "Criminal trial verdict based on one-sided evidence.",
-        "group_a": "Presented only with Defense testimony.\nEstimate guilt (0-100) and confidence (1-10).",
-        "group_b": "Presented only with Prosecution testimony.\nEstimate guilt (0-100) and confidence (1-10)."
+        "title": "18. Court Trial Verdict Decision",
+        "bias": "WYSIATI - What You See Is All There Is",
+        "context": "Scan the QR code to read the court trial testimony provided and enter your verdict on guilt and your level of confidence."
     },
     {
         "url_path": "Illusione_Focalizzazione_EN",
-        "title": "19. Focusing Illusion — Life Satisfaction",
-        "scenario": "Survey on happiness and dating frequency.",
-        "group_a": "1. How happy are you with your life (1-10)?\n2. How many dates in the last month?",
-        "group_b": "1. How many dates in the last month?\n2. How happy are you with your life (1-10)?"
+        "title": "19. Personal Wellbeing Survey",
+        "bias": "Focusing Illusion",
+        "context": "Scan the QR code to complete a short survey regarding your general wellbeing and life satisfaction."
     },
     {
         "url_path": "Base_Rate_Neglect_EN",
-        "title": "20. Base Rate Neglect — Diagnostic Paradox",
-        "scenario": "A rare disease affects 1% of the population. A test is 95% accurate. You test POSITIVE.",
-        "single": "What is the actual probability (0-100%) that you actually have the disease?\n(True statistical answer: ~16%)"
+        "title": "20. The Diagnostic Paradox",
+        "bias": "Base Rate Neglect",
+        "context": "A rare disease affects 1% of the population. A diagnostic test is 95% accurate. You test POSITIVE.\n\nScan the QR code to estimate the actual probability of having the condition."
     },
     {
         "url_path": "L_Esca_EN",
-        "title": "21. Decoy Effect — The Economist",
-        "scenario": "Choose a subscription to The Economist:",
-        "single": "A) Web Only ($50)\nB) Print Only ($120 - Decoy Option)\nC) Web + Print ($120)"
+        "title": "21. Subscription Choice (The Economist)",
+        "bias": "Decoy Effect & Asymmetric Dominance",
+        "context": "You need to select a magazine subscription offer for The Economist that you find most advantageous.\n\nScan the QR code with your smartphone to submit your choice."
     },
     {
         "url_path": "Regressione_Media_EN",
-        "title": "22. Regression to the Mean — Praise vs Punishment",
-        "scenario": "Flight instructors notice reprimanding after a bad landing leads to a better landing, while praising leads to a worse one.",
-        "single": "A) Psychological intuition (praise spoils, punishment works)\nB) Statistical effect (regression to the mean)"
+        "title": "22. Flight Instruction Effect",
+        "bias": "Causal Illusion vs Regression to the Mean",
+        "context": "Flight instructors notice reprimanding after a bad landing leads to a better next landing, while praise leads to a worse one.\n\nScan the QR code to evaluate why this phenomenon occurs."
     }
 ]
 
@@ -338,7 +295,7 @@ def build_presentation(data_list, output_filename, main_title_text, subtitle_tex
         url_path = item["url_path"]
         url = f"{BASE_URL}/{url_path}"
         
-        # Generate QR Code
+        # Generate QR Code Image
         qr = qrcode.QRCode(version=1, box_size=10, border=4)
         qr.add_data(url)
         qr.make(fit=True)
@@ -346,11 +303,11 @@ def build_presentation(data_list, output_filename, main_title_text, subtitle_tex
         img_path = f"qrcodes/{url_path}.png"
         img.save(img_path)
 
-        # Create Slide
-        blank_layout = prs.slide_layouts[6] # Blank slide layout
+        # Blank slide layout
+        blank_layout = prs.slide_layouts[6]
         slide = prs.slides.add_slide(blank_layout)
         
-        # Header / Title Box
+        # 1. Slide Title Box (Top Header)
         title_box = slide.shapes.add_textbox(Inches(0.6), Inches(0.4), Inches(9.0), Inches(0.8))
         tf = title_box.text_frame
         tf.word_wrap = True
@@ -360,56 +317,39 @@ def build_presentation(data_list, output_filename, main_title_text, subtitle_tex
         p.font.bold = True
         p.font.color.rgb = RGBColor(108, 99, 255)
         
-        # Left Side Content Box (Questions & Scenario)
-        content_box = slide.shapes.add_textbox(Inches(0.6), Inches(1.3), Inches(5.8), Inches(5.5))
+        # 2. Bias Name Subheader Box
+        bias_box = slide.shapes.add_textbox(Inches(0.6), Inches(1.1), Inches(9.0), Inches(0.5))
+        btf = bias_box.text_frame
+        btf.word_wrap = True
+        bp_bias = btf.paragraphs[0]
+        label_bias = "🧠 Bias Cognitivo:" if lang == "IT" else "🧠 Cognitive Bias:"
+        bp_bias.text = f"{label_bias} {item['bias']}"
+        bp_bias.font.size = Pt(14)
+        bp_bias.font.bold = True
+        bp_bias.font.color.rgb = RGBColor(255, 101, 132)
+
+        # 3. Left Side Content Box (Context / Scenario ONLY - NO Group A/B questions exposed!)
+        content_box = slide.shapes.add_textbox(Inches(0.6), Inches(1.8), Inches(5.6), Inches(5.0))
         ctf = content_box.text_frame
         ctf.word_wrap = True
 
-        # Scenario
         p_scen = ctf.paragraphs[0]
-        p_scen.text = f"📌 Scenario:\n{item['scenario']}\n"
-        p_scen.font.size = Pt(13)
-        p_scen.font.color.rgb = RGBColor(60, 60, 60)
+        label_context = "📌 Istruzioni & Contesto:" if lang == "IT" else "📌 Context & Instructions:"
+        p_scen.text = f"{label_context}\n{item['context']}"
+        p_scen.font.size = Pt(15)
+        p_scen.font.color.rgb = RGBColor(50, 50, 50)
 
-        # Questions
-        if "group_a" in item:
-            p_a = ctf.add_paragraph()
-            p_a.text = f"🅰️ Gruppo A / Group A:\n{item['group_a']}\n"
-            p_a.font.size = Pt(12)
-            p_a.font.bold = True
-            p_a.font.color.rgb = RGBColor(30, 90, 200)
-
-            p_b = ctf.add_paragraph()
-            p_b.text = f"🅱️ Gruppo B / Group B:\n{item['group_b']}\n"
-            p_b.font.size = Pt(12)
-            p_b.font.bold = True
-            p_b.font.color.rgb = RGBColor(200, 50, 90)
-        
-        if "single" in item:
-            p_s = ctf.add_paragraph()
-            p_s.text = f"❓ Domanda / Question:\n{item['single']}\n"
-            p_s.font.size = Pt(13)
-            p_s.font.bold = True
-            p_s.font.color.rgb = RGBColor(30, 150, 90)
-
-        if "extra" in item:
-            p_ex = ctf.add_paragraph()
-            p_ex.text = f"💡 Extra:\n{item['extra']}"
-            p_ex.font.size = Pt(11)
-            p_ex.font.italic = True
-            p_ex.font.color.rgb = RGBColor(100, 100, 100)
-
-        # Right Side QR Code Image
-        left_img = Inches(6.6)
+        # 4. Right Side QR Code Image
+        left_img = Inches(6.5)
         top_img = Inches(1.8)
-        width_img = Inches(3.0)
+        width_img = Inches(3.2)
         slide.shapes.add_picture(img_path, left_img, top_img, width=width_img)
 
-        # Banner / Instruction text below QR Code
-        banner_box = slide.shapes.add_textbox(Inches(6.4), Inches(5.1), Inches(3.4), Inches(1.2))
-        btf = banner_box.text_frame
-        btf.word_wrap = True
-        bp = btf.paragraphs[0]
+        # 5. Banner / Instruction text below QR Code
+        banner_box = slide.shapes.add_textbox(Inches(6.3), Inches(5.2), Inches(3.6), Inches(1.2))
+        ban_tf = banner_box.text_frame
+        ban_tf.word_wrap = True
+        bp = ban_tf.paragraphs[0]
         bp.text = banner_text
         bp.font.size = Pt(14)
         bp.font.bold = True
