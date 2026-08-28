@@ -139,6 +139,12 @@ PAGINE_IT = [
         "title": "22. L'Effetto dell'Istruzione di Volo",
         "bias": "Illusioni Causali vs Regressione alla Media (Regression to the Mean)",
         "context": "Gli istruttori di volo israeliani notano che sgridare dopo un errore migliora la manovra successiva, mentre lodare la peggiora.\n\nInquadra il QR code per spiegare perché si verifica questo fenomeno."
+    },
+    {
+        "url_path": "Bias_Conferma_Wason",
+        "title": "23. Il Compito 2 - 4 - 6",
+        "bias": "Bias di Conferma / Verifica delle Ipotesi (Wason, 1960)",
+        "context": "Ti viene mostrata la sequenza numerica 2 - 4 - 6, che segue una regola segreta inventata dal docente.\n\nInquadra il QR code per scegliere la terzetta di numeri che intendi testare per scoprire la regola."
     }
 ]
 
@@ -274,6 +280,12 @@ PAGINE_EN = [
         "title": "22. Flight Instruction Effect",
         "bias": "Causal Illusion vs Regression to the Mean",
         "context": "Flight instructors notice reprimanding after a bad landing leads to a better next landing, while praise leads to a worse one.\n\nScan the QR code to evaluate why this phenomenon occurs."
+    },
+    {
+        "url_path": "Bias_Conferma_Wason_EN",
+        "title": "23. The 2 - 4 - 6 Task",
+        "bias": "Confirmation Bias & Hypothesis Testing (Wason, 1960)",
+        "context": "You are shown the number sequence 2 - 4 - 6, which follows a secret rule created by the instructor.\n\nScan the QR code to choose which triplet of numbers you will test first to discover the rule."
     }
 ]
 

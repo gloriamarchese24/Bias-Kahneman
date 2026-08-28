@@ -61,6 +61,7 @@ ESPERIMENTI = {
     "base_rate": {"titolo": "20. 🔬 Base Rate Neglect (Paradosso Medico)", "desc": "Test al 95%, malattia all'1% (Vero: 16%).", "tipo": "single_num", "unita": "Probabilità Stimata", "verita": 16},
     "decoy": {"titolo": "21. 🗞️ Decoy Effect (L'Esca)", "desc": "L'opzione inutile per pilotare verso la costosa.", "tipo": "single_cat", "val_map": {1: "Solo Web", 2: "Solo Carta (ESCA)", 3: "Entrambi"}},
     "regression": {"titolo": "22. 🧑‍✈️ Regressione alla Media", "desc": "Istinto causale vs Istinto statistico (Lode/Castighi).", "tipo": "single_cat", "val_map": {1: "Causale (Psicologica)", 2: "Statistica (Regressione)"}},
+    "wason_246": {"titolo": "23. 🧮 Bias di Conferma (Compito 2-4-6 Wason)", "desc": "La trappola della verifica delle ipotesi (Wason, 1960).", "tipo": "single_cat", "val_map": {1: "Conferma (8 - 10 - 12)", 2: "Test Dispari (1 - 3 - 5)", 3: "Test Generico (1 - 2 - 3)", 4: "Falsificazione (6 - 4 - 2)"}},
 }
 
 # ─── SIDEBAR ──────────────────────────────────────────────────────────

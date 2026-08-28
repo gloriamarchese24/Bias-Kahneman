@@ -364,6 +364,13 @@ build_single_page(
     lang="IT"
 )
 
+build_single_page(
+    "23_Bias_Conferma_Wason.py", "wason_246", "🧮", "Bias di Conferma", "Compito 2-4-6 (Wason, 1960)",
+    "    st.markdown(\"\"\"**Scenario:** Ti viene mostrata la sequenza numerica: **2 - 4 - 6**.\"\"\")\n    st.markdown(\"\"\"Questa sequenza rispetta una **regola segreta** inventata dal docente.\"\"\")\n    st.markdown(\"\"\"Quale tra queste terterne di numeri proveresti per prima per verificare se la tua ipotesi sulla regola è corretta?\"\"\")\n    scelta_dom = st.radio('', ['A) 8 - 10 - 12 (Continua la serie dei numeri pari)', 'B) 1 - 3 - 5 (Prova numeri dispari con passo +2)', 'C) 1 - 2 - 3 (Prova sequenza generica crescente)', 'D) 6 - 4 - 2 (Prova sequenza decrescente)'], index=None)\n",
+    "        v = 1 if 'A)' in scelta_dom else (2 if 'B)' in scelta_dom else (3 if 'C)' in scelta_dom else 4))\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n",
+    lang="IT"
+)
+
 
 # ==========================================
 # ENGLISH PAGES (1-22)
@@ -580,6 +587,13 @@ build_single_page(
     "22_Regressione_Media_EN.py", "regression", "🧑‍✈️", "Human Behavior", "Praise vs Punishment Effect",
     "    st.markdown(\"\"\"Flight instructors notice: reprimanding leads to better subsequent maneuvers, while praising leads to worse ones. Do you believe this is:\"\"\")\n    scelta_dom = st.radio('', ['A) Correct psychological intuition.', 'B) Statistical mistake (regression to the mean).'], index=None)\n",
     "        v = 1 if 'A)' in scelta_dom else 2\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+build_single_page(
+    "23_Bias_Conferma_Wason_EN.py", "wason_246", "🧮", "Confirmation Bias", "2-4-6 Task (Wason, 1960)",
+    "    st.markdown(\"\"\"**Scenario:** You are shown the number sequence: **2 - 4 - 6**.\"\"\")\n    st.markdown(\"\"\"This sequence conforms to a **secret rule** created by the instructor.\"\"\")\n    st.markdown(\"\"\"Which of the following triplets of numbers would you test first to check if your hypothesis about the rule is correct?\"\"\")\n    scelta_dom = st.radio('', ['A) 8 - 10 - 12 (Continue even numbers sequence)', 'B) 1 - 3 - 5 (Test odd numbers sequence)', 'C) 1 - 2 - 3 (Test generic increasing sequence)', 'D) 6 - 4 - 2 (Test decreasing sequence)'], index=None)\n",
+    "        v = 1 if 'A)' in scelta_dom else (2 if 'B)' in scelta_dom else (3 if 'C)' in scelta_dom else 4))\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n",
     lang="EN"
 )
 
