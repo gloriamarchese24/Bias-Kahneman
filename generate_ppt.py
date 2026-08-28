@@ -114,7 +114,7 @@ PAGINE_IT = [
         "url_path": "WYSIATI",
         "title": "18. WYSIATI — Persistenza dell'Ipotesi (Bruner & Potter)",
         "bias": "WYSIATI ('What You See Is All There Is') & Bias di Conferma Visivo",
-        "context": "Guarda con attenzione l'immagine visiva mostrata sul tuo smartphone dopo aver inquadrato il QR code.\n\nIndica cosa ritieni rappresenti principalmente l'immagine (es. Un Minion vs Un Idrante/Estintore)."
+        "context": "Guarda con attenzione l'immagine visiva mostrata sul tuo smartphone dopo aver inquadrato il QR code.\n\nNel Gruppo A l'immagine parte da un'estrema sfocatura e si schiarisce progressivamente (9s); nel Gruppo B si presenta direttamente a un livello intermedio (via di mezzo statica)."
     },
     {
         "url_path": "Illusione_Focalizzazione",
@@ -249,7 +249,7 @@ PAGINE_EN = [
         "url_path": "WYSIATI_EN",
         "title": "18. WYSIATI — Hypothesis Persistence (Bruner & Potter)",
         "bias": "WYSIATI ('What You See Is All There Is') & Belief Perseverance",
-        "context": "Observe the image shown on your smartphone after scanning the QR code.\n\nIndicate what you believe the image primarily depicts (e.g. A Minion vs A Fire Hydrant/Extinguisher)."
+        "context": "Observe the image shown on your smartphone after scanning the QR code.\n\nIn Group A the image starts extremely blurred and sharpens progressively (9s); in Group B it appears directly at a static medium focus (intermediate blur)."
     },
     {
         "url_path": "Illusione_Focalizzazione_EN",
