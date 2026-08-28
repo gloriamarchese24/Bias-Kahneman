@@ -2,6 +2,7 @@ import streamlit as st
 import random
 import base64
 import os
+import streamlit.components.v1 as components
 from supabase import create_client
 
 st.set_page_config(page_title="Loss Aversion", page_icon="💶", layout="centered")
