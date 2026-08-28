@@ -1,5 +1,7 @@
 import streamlit as st
 import random
+import base64
+import os
 from supabase import create_client
 
 st.set_page_config(page_title="WYSIATI Visivo", page_icon="👁️", layout="centered")
@@ -42,15 +44,28 @@ st.markdown("""<h1 class="exp-title">👁️ Riconoscimento Immagine (Bruner & P
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** Guarda con attenzione l'immagine visiva qui sotto che ti viene mostrata.""")
+    st.markdown("""**Scenario:** Guarda con attenzione l'immagine visiva qui sotto.""")
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
-        st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Messa a fuoco graduale a micro-passaggi]</p></div>""", unsafe_allow_html=True)
+        st.markdown("""<style>@keyframes gradualUnblur { 0% { filter: blur(22px) contrast(120%); } 25% { filter: blur(16px); } 50% { filter: blur(11px); } 75% { filter: blur(7px); } 100% { filter: blur(4px); } } .gradual-anim { width:240px; border-radius:16px; animation: gradualUnblur 9s ease-in-out forwards; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }</style>""", unsafe_allow_html=True)
+        img_path = 'fire_hydrant.jpg'
+        if os.path.exists(img_path):
+            with open(img_path, 'rb') as f:
+                b64_img = base64.b64encode(f.read()).decode('utf-8')
+            st.markdown(f'''<div style="text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;"><img src="data:image/jpeg;base64,{b64_img}" class="gradual-anim" /><p style="color:#6C63FF; font-weight:600; font-size:0.9rem; margin-top:12px;">⏳ Messa a fuoco graduale in corso (9s)...</p></div>''', unsafe_allow_html=True)
+        else:
+            st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div></div>""")
         scelta = st.radio('Cosa ritieni rappresenti principalmente questa immagine?', ['A) Un Minion / Personaggio animato', 'B) Un Idrante antincendio / Estintore'], index=None, key='r1')
 
     else:
-        st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(1px); line-height:1;'>🧯🔴</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Messa a fuoco diretta nitida]</p></div>""", unsafe_allow_html=True)
+        img_path = 'fire_hydrant.jpg'
+        if os.path.exists(img_path):
+            with open(img_path, 'rb') as f:
+                b64_img = base64.b64encode(f.read()).decode('utf-8')
+            st.markdown(f'''<div style="text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;"><img src="data:image/jpeg;base64,{b64_img}" style="width:240px; border-radius:16px; filter:blur(1px); box-shadow:0 8px 32px rgba(0,0,0,0.5);" /><p style="color:#00FF88; font-weight:600; font-size:0.9rem; margin-top:12px;">⚡ Messa a fuoco nitida diretta</p></div>''', unsafe_allow_html=True)
+        else:
+            st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(1px); line-height:1;'>🧯🔴</div></div>""")
         scelta = st.radio('Cosa ritieni rappresenti principalmente questa immagine?', ['A) Un Minion / Personaggio animato', 'B) Un Idrante antincendio / Estintore'], index=None, key='r2')
 
 

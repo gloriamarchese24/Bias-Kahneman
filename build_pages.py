@@ -15,6 +15,8 @@ def build_ab_page(filename, id, icon, titolo_breve, titolo_lungo, scenario, dom_
     
     template = f"""import streamlit as st
 import random
+import base64
+import os
 from supabase import create_client
 
 st.set_page_config(page_title="{titolo_breve}", page_icon="{icon}", layout="centered")
@@ -318,12 +320,12 @@ build_ab_page(
     lang="IT"
 )
 
-# 18. WYSIATI / BRUNER & POTTER (Idrante vs Minion)
+# 18. WYSIATI / BRUNER & POTTER (Fire Hydrant vs Minion with CSS Animation) IT
 build_ab_page(
     "18_WYSIATI.py", "wysiati", "👁️", "WYSIATI Visivo", "Riconoscimento Immagine (Bruner & Potter)",
-    "    st.markdown(\"\"\"**Scenario:** Guarda con attenzione l'immagine visiva qui sotto che ti viene mostrata.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
-    "        st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Messa a fuoco graduale a micro-passaggi]</p></div>\"\"\", unsafe_allow_html=True)\n        scelta = st.radio('Cosa ritieni rappresenti principalmente questa immagine?', ['A) Un Minion / Personaggio animato', 'B) Un Idrante antincendio / Estintore'], index=None, key='r1')\n",
-    "        st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(1px); line-height:1;'>🧯🔴</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Messa a fuoco diretta nitida]</p></div>\"\"\", unsafe_allow_html=True)\n        scelta = st.radio('Cosa ritieni rappresenti principalmente questa immagine?', ['A) Un Minion / Personaggio animato', 'B) Un Idrante antincendio / Estintore'], index=None, key='r2')\n",
+    "    st.markdown(\"\"\"**Scenario:** Guarda con attenzione l'immagine visiva qui sotto.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
+    "        st.markdown(\"\"\"<style>@keyframes gradualUnblur { 0% { filter: blur(22px) contrast(120%); } 25% { filter: blur(16px); } 50% { filter: blur(11px); } 75% { filter: blur(7px); } 100% { filter: blur(4px); } } .gradual-anim { width:240px; border-radius:16px; animation: gradualUnblur 9s ease-in-out forwards; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }</style>\"\"\", unsafe_allow_html=True)\n        img_path = 'fire_hydrant.jpg'\n        if os.path.exists(img_path):\n            with open(img_path, 'rb') as f:\n                b64_img = base64.b64encode(f.read()).decode('utf-8')\n            st.markdown(f'''<div style=\"text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;\"><img src=\"data:image/jpeg;base64,{b64_img}\" class=\"gradual-anim\" /><p style=\"color:#6C63FF; font-weight:600; font-size:0.9rem; margin-top:12px;\">⏳ Messa a fuoco graduale in corso (9s)...</p></div>''', unsafe_allow_html=True)\n        else:\n            st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div></div>\"\"\")\n        scelta = st.radio('Cosa ritieni rappresenti principalmente questa immagine?', ['A) Un Minion / Personaggio animato', 'B) Un Idrante antincendio / Estintore'], index=None, key='r1')\n",
+    "        img_path = 'fire_hydrant.jpg'\n        if os.path.exists(img_path):\n            with open(img_path, 'rb') as f:\n                b64_img = base64.b64encode(f.read()).decode('utf-8')\n            st.markdown(f'''<div style=\"text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;\"><img src=\"data:image/jpeg;base64,{b64_img}\" style=\"width:240px; border-radius:16px; filter:blur(1px); box-shadow:0 8px 32px rgba(0,0,0,0.5);\" /><p style=\"color:#00FF88; font-weight:600; font-size:0.9rem; margin-top:12px;\">⚡ Messa a fuoco nitida diretta</p></div>''', unsafe_allow_html=True)\n        else:\n            st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(1px); line-height:1;'>🧯🔴</div></div>\"\"\")\n        scelta = st.radio('Cosa ritieni rappresenti principalmente questa immagine?', ['A) Un Minion / Personaggio animato', 'B) Un Idrante antincendio / Estintore'], index=None, key='r2')\n",
     "",
     "        v = 0 if 'Minion' in scelta else 1\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
     lang="IT"
@@ -535,12 +537,12 @@ build_ab_page(
     lang="EN"
 )
 
-# 18. WYSIATI / BRUNER & POTTER (Fire Hydrant vs Minion) EN
+# 18. WYSIATI / BRUNER & POTTER (Fire Hydrant vs Minion with CSS Animation) EN
 build_ab_page(
     "18_WYSIATI_EN.py", "wysiati", "👁️", "Visual WYSIATI", "Image Recognition (Bruner & Potter)",
     "    st.markdown(\"\"\"**Scenario:** Carefully observe the visual image shown below.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
-    "        st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Gradual micro-step focus]</p></div>\"\"\", unsafe_allow_html=True)\n        scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r1')\n",
-    "        st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(1px); line-height:1;'>🧯🔴</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Direct sharp focus]</p></div>\"\"\", unsafe_allow_html=True)\n        scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r2')\n",
+    "        st.markdown(\"\"\"<style>@keyframes gradualUnblur {{ 0% {{ filter: blur(22px) contrast(120%); }} 25% {{ filter: blur(16px); }} 50% {{ filter: blur(11px); }} 75% {{ filter: blur(7px); }} 100% {{ filter: blur(4px); }} }} .gradual-anim {{ width:240px; border-radius:16px; animation: gradualUnblur 9s ease-in-out forwards; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }}</style>\"\"\", unsafe_allow_html=True)\n        img_path = 'fire_hydrant.jpg'\n        if os.path.exists(img_path):\n            with open(img_path, 'rb') as f:\n                b64_img = base64.b64encode(f.read()).decode('utf-8')\n            st.markdown(f'''<div style=\"text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;\"><img src=\"data:image/jpeg;base64,{{b64_img}}\" class=\"gradual-anim\" /><p style=\"color:#6C63FF; font-weight:600; font-size:0.9rem; margin-top:12px;\">⏳ Gradual unblurring in progress (9s)...</p></div>''', unsafe_allow_html=True)\n        else:\n            st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div></div>\"\"\")\n        scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r1')\n",
+    "        img_path = 'fire_hydrant.jpg'\n        if os.path.exists(img_path):\n            with open(img_path, 'rb') as f:\n                b64_img = base64.b64encode(f.read()).decode('utf-8')\n            st.markdown(f'''<div style=\"text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;\"><img src=\"data:image/jpeg;base64,{{b64_img}}\" style=\"width:240px; border-radius:16px; filter:blur(1px); box-shadow:0 8px 32px rgba(0,0,0,0.5);\" /><p style=\"color:#00FF88; font-weight:600; font-size:0.9rem; margin-top:12px;\">⚡ Direct sharp focus</p></div>''', unsafe_allow_html=True)\n        else:\n            st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(1px); line-height:1;'>🧯🔴</div></div>\"\"\")\n        scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r2')\n",
     "",
     "        v = 0 if 'Minion' in scelta else 1\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
     lang="EN"
@@ -577,4 +579,4 @@ build_single_page(
     lang="EN"
 )
 
-print("Tutti i 44 file (22 IT + 22 EN) con il nuovo Esperimento #18 WYSIATI sono stati generati con successo!")
+print("Pagine animate rigenerate con successo!")

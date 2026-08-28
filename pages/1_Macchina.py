@@ -1,5 +1,7 @@
 import streamlit as st
 import random
+import base64
+import os
 from supabase import create_client
 
 st.set_page_config(page_title="Incidente Auto", page_icon="🚗", layout="centered")
