@@ -57,7 +57,7 @@ st.markdown("""<h1 class="exp-title">👁️ Image Recognition (Bruner & Potter)
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** Carefully observe the visual sequence shown below.""")
+    st.markdown("""**Scenario:** Carefully observe the visual sequence shown below.\n\n⚡ **IMPORTANT:** Select and submit your answer **AS SOON AS POSSIBLE** as soon as you think you recognize what the image depicts!""")
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":

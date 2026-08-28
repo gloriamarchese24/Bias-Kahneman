@@ -114,7 +114,7 @@ PAGINE_IT = [
         "url_path": "WYSIATI",
         "title": "18. WYSIATI — Persistenza dell'Ipotesi (Bruner & Potter)",
         "bias": "WYSIATI ('What You See Is All There Is') & Bias di Conferma Visivo",
-        "context": "Guarda con attenzione l'immagine visiva mostrata sul tuo smartphone dopo aver inquadrato il QR code.\n\nNel Gruppo A l'immagine ha una transizione fluida e continua (video di 8s); nel Gruppo B si mostra attraverso 4 frame discreti presi dal processo di messa a fuoco (scatti netti ogni 2s)."
+        "context": "Guarda con attenzione la sequenza visiva mostrata sul tuo smartphone dopo aver inquadrato il QR code.\n\n⚡ IMPORTANTISSIMO: Seleziona e invia la tua risposta il PRIMA POSSIBILE non appena pensi di aver riconosciuto cosa raffigura l'immagine!"
     },
     {
         "url_path": "Illusione_Focalizzazione",
@@ -255,7 +255,7 @@ PAGINE_EN = [
         "url_path": "WYSIATI_EN",
         "title": "18. WYSIATI — Hypothesis Persistence (Bruner & Potter)",
         "bias": "WYSIATI ('What You See Is All There Is') & Belief Perseverance",
-        "context": "Observe the image shown on your smartphone after scanning the QR code.\n\nIn Group A the image sharpens smoothly and continuously (video-like over 8s); in Group B it transitions through 4 discrete step frames (discrete jumps every 2s)."
+        "context": "Observe the visual sequence shown on your smartphone after scanning the QR code.\n\n⚡ VERY IMPORTANT: Select and submit your response AS SOON AS POSSIBLE as soon as you think you recognize what the image depicts!"
     },
     {
         "url_path": "Illusione_Focalizzazione_EN",

@@ -57,7 +57,7 @@ st.markdown("""<h1 class="exp-title">👁️ Riconoscimento Immagine (Bruner & P
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** Guarda con attenzione la sequenza visiva qui sotto.""")
+    st.markdown("""**Scenario:** Guarda con attenzione la sequenza visiva qui sotto.\n\n⚡ **IMPORTANTE:** Seleziona e invia la tua risposta il **PRIMA POSSIBILE**, non appena pensi di aver riconosciuto cosa raffigura l'immagine!""")
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
