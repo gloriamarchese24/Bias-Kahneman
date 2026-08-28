@@ -48,22 +48,23 @@ if not st.session_state[NOME_ESPERIMENTO]:
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
-        st.markdown("""<style>@keyframes gradualUnblur {{ 0% {{ filter: blur(24px) contrast(120%); }} 25% {{ filter: blur(17px); }} 50% {{ filter: blur(12px); }} 75% {{ filter: blur(7px); }} 100% {{ filter: blur(4px); }} }} .gradual-anim {{ width:240px; border-radius:16px; animation: gradualUnblur 9s ease-in-out forwards; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }}</style>""", unsafe_allow_html=True)
+        st.markdown("""<style>@keyframes fluidUnblur {{ 0% {{ filter: blur(24px) contrast(120%); }} 100% {{ filter: blur(3px); }} }} .fluid-anim {{ width:240px; border-radius:16px; animation: fluidUnblur 8s linear forwards; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }}</style>""", unsafe_allow_html=True)
         img_path = 'fire_hydrant.jpg'
         if os.path.exists(img_path):
             with open(img_path, 'rb') as f:
                 b64_img = base64.b64encode(f.read()).decode('utf-8')
-            st.markdown(f'''<div style="text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;"><img src="data:image/jpeg;base64,{{b64_img}}" class="gradual-anim" /><p style="color:#6C63FF; font-weight:600; font-size:0.9rem; margin-top:12px;">⏳ Gradual unblurring in progress (9s)...</p></div>''', unsafe_allow_html=True)
+            st.markdown(f'''<div style="text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;"><img src="data:image/jpeg;base64,{{b64_img}}" class="fluid-anim" /><p style="color:#6C63FF; font-weight:600; font-size:0.9rem; margin-top:12px;">🎥 Continuous fluid transition (video-like - 8s)</p></div>''', unsafe_allow_html=True)
         else:
             st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div></div>""")
         scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r1')
 
     else:
+        st.markdown("""<style>@keyframes discreteFrames {{ 0%, 24% {{ filter: blur(24px) contrast(120%); }} 25%, 49% {{ filter: blur(16px) contrast(110%); }} 50%, 74% {{ filter: blur(10px); }} 75%, 100% {{ filter: blur(3px); }} }} .discrete-anim {{ width:240px; border-radius:16px; animation: discreteFrames 8s steps(1, end) forwards; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }}</style>""", unsafe_allow_html=True)
         img_path = 'fire_hydrant.jpg'
         if os.path.exists(img_path):
             with open(img_path, 'rb') as f:
                 b64_img = base64.b64encode(f.read()).decode('utf-8')
-            st.markdown(f'''<div style="text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;"><img src="data:image/jpeg;base64,{{b64_img}}" style="width:240px; border-radius:16px; filter:blur(9px); box-shadow:0 8px 32px rgba(0,0,0,0.5);" /><p style="color:#FFA600; font-weight:600; font-size:0.9rem; margin-top:12px;">📷 Medium focus (static intermediate blur)</p></div>''', unsafe_allow_html=True)
+            st.markdown(f'''<div style="text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;"><img src="data:image/jpeg;base64,{{b64_img}}" class="discrete-anim" /><p style="color:#FFA600; font-weight:600; font-size:0.9rem; margin-top:12px;">🖼️ 4 Discrete step frames (discrete jumps every 2s)</p></div>''', unsafe_allow_html=True)
         else:
             st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(5px); line-height:1;'>🧯🔴</div></div>""")
         scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r2')

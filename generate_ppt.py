@@ -114,7 +114,7 @@ PAGINE_IT = [
         "url_path": "WYSIATI",
         "title": "18. WYSIATI — Persistenza dell'Ipotesi (Bruner & Potter)",
         "bias": "WYSIATI ('What You See Is All There Is') & Bias di Conferma Visivo",
-        "context": "Guarda con attenzione l'immagine visiva mostrata sul tuo smartphone dopo aver inquadrato il QR code.\n\nNel Gruppo A l'immagine parte da un'estrema sfocatura e si schiarisce progressivamente (9s); nel Gruppo B si presenta direttamente a un livello intermedio (via di mezzo statica)."
+        "context": "Guarda con attenzione l'immagine visiva mostrata sul tuo smartphone dopo aver inquadrato il QR code.\n\nNel Gruppo A l'immagine ha una transizione fluida e continua (video di 8s); nel Gruppo B si mostra attraverso 4 frame discreti presi dal processo di messa a fuoco (scatti netti ogni 2s)."
     },
     {
         "url_path": "Illusione_Focalizzazione",
@@ -249,7 +249,7 @@ PAGINE_EN = [
         "url_path": "WYSIATI_EN",
         "title": "18. WYSIATI — Hypothesis Persistence (Bruner & Potter)",
         "bias": "WYSIATI ('What You See Is All There Is') & Belief Perseverance",
-        "context": "Observe the image shown on your smartphone after scanning the QR code.\n\nIn Group A the image starts extremely blurred and sharpens progressively (9s); in Group B it appears directly at a static medium focus (intermediate blur)."
+        "context": "Observe the image shown on your smartphone after scanning the QR code.\n\nIn Group A the image sharpens smoothly and continuously (video-like over 8s); in Group B it transitions through 4 discrete step frames (discrete jumps every 2s)."
     },
     {
         "url_path": "Illusione_Focalizzazione_EN",
@@ -356,13 +356,17 @@ def build_presentation(data_list, output_filename, main_title_text, subtitle_tex
         bp.font.color.rgb = RGBColor(108, 99, 255)
         bp.alignment = PP_ALIGN.CENTER
 
-    try:
-        prs.save(output_filename)
-        print(f"Presentazione {output_filename} generata con successo!")
-    except PermissionError:
-        alt_filename = output_filename.replace(".pptx", "_v2.pptx")
-        prs.save(alt_filename)
-        print(f"File {output_filename} aperto in PowerPoint. Salvata copia aggiornata in {alt_filename}!")
+    saved = False
+    count = 1
+    target_name = output_filename
+    while not saved:
+        try:
+            prs.save(target_name)
+            print(f"Presentazione {target_name} generata con successo!")
+            saved = True
+        except PermissionError:
+            count += 1
+            target_name = output_filename.replace(".pptx", f"_v{count}.pptx")
 
 # Build Italian PowerPoint
 build_presentation(
