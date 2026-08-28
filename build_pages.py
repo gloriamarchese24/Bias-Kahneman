@@ -5,8 +5,13 @@ if os.path.exists("pages"):
     shutil.rmtree("pages")
 os.makedirs("pages")
 
-def build_ab_page(filename, id, icon, titolo_breve, titolo_lungo, scenario, dom_a, dom_b, extra_comune, salvataggio, extra_css=""):
+def build_ab_page(filename, id, icon, titolo_breve, titolo_lungo, scenario, dom_a, dom_b, extra_comune, salvataggio, lang="IT", extra_css=""):
     salvataggio_indented = salvataggio.replace("\n        ", "\n            ").replace("        ", "            ", 1)
+    
+    sub_title = "Rispondi alle domande qui sotto" if lang == "IT" else "Please answer the questions below"
+    btn_text = "📨 Invia risposta" if lang == "IT" else "📨 Submit response"
+    warn_text = "⚠️ Per favore, rispondi alla domanda prima di inviare." if lang == "IT" else "⚠️ Please answer the question before submitting."
+    thanks_text = "Grazie per aver risposto!" if lang == "IT" else "Thank you for participating!"
     
     template = f"""import streamlit as st
 import random
@@ -49,7 +54,7 @@ if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
 st.markdown(\"\"\"<h1 class="exp-title">{icon} {titolo_lungo}</h1>\"\"\", unsafe_allow_html=True)
-st.markdown(\"\"\"<p class="exp-subtitle">Rispondi alle domande qui sotto</p>\"\"\", unsafe_allow_html=True)
+st.markdown(\"\"\"<p class="exp-subtitle">{sub_title}</p>\"\"\", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
 {scenario}
@@ -59,11 +64,11 @@ if not st.session_state[NOME_ESPERIMENTO]:
 {dom_b}
 {extra_comune}
     
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+    if st.button("{btn_text}", type="primary", use_container_width=True):
         can_submit = True
         for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                st.warning("{warn_text}")
                 can_submit = False
                 break
         
@@ -72,13 +77,19 @@ if not st.session_state[NOME_ESPERIMENTO]:
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">{thanks_text}</p></div>''', unsafe_allow_html=True)
 """
     with open(os.path.join("pages", filename), "w", encoding="utf-8") as f:
         f.write(template)
 
-def build_single_page(filename, id, icon, titolo_breve, titolo_lungo, dom, salvataggio, extra_css=""):
+def build_single_page(filename, id, icon, titolo_breve, titolo_lungo, dom, salvataggio, lang="IT", extra_css=""):
     salvataggio_indented = salvataggio.replace("\n        ", "\n            ").replace("        ", "            ", 1)
+    
+    sub_title = "Rispondi alle domande qui sotto" if lang == "IT" else "Please answer the questions below"
+    btn_text = "📨 Invia risposta" if lang == "IT" else "📨 Submit response"
+    warn_text = "⚠️ Per favore, rispondi alla domanda prima di inviare." if lang == "IT" else "⚠️ Please answer the question before submitting."
+    thanks_text = "Grazie per aver risposto!" if lang == "IT" else "Thank you for participating!"
+    
     template = f"""import streamlit as st
 from supabase import create_client
 
@@ -111,15 +122,15 @@ if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
 st.markdown(\"\"\"<h1 class="exp-title">{icon} {titolo_lungo}</h1>\"\"\", unsafe_allow_html=True)
-st.markdown(\"\"\"<p class="exp-subtitle">Rispondi alle domande qui sotto</p>\"\"\", unsafe_allow_html=True)
+st.markdown(\"\"\"<p class="exp-subtitle">{sub_title}</p>\"\"\", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
 {dom}
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+    if st.button("{btn_text}", type="primary", use_container_width=True):
         can_submit = True
         for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                st.warning("{warn_text}")
                 can_submit = False
                 break
         
@@ -128,200 +139,440 @@ if not st.session_state[NOME_ESPERIMENTO]:
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">{thanks_text}</p></div>''', unsafe_allow_html=True)
 """
     with open(os.path.join("pages", filename), "w", encoding="utf-8") as f:
         f.write(template)
 
-# --- 1. MACCHINA ---
-# Incorporating user's text edits "di un incidente tra due automobili", "urtate?", "disintegrate?"
+# ==========================================
+# ITALIAN PAGES (1-22)
+# ==========================================
+
 build_ab_page(
     "1_Macchina.py", "macchina", "🚗", "Incidente Auto", "Incidente Stradale",
     "    st.markdown(\"\"\"**Scenario:** Hai appena visto un breve video di un incidente tra due automobili.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
     "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono urtate?**\"\"\")\n        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')\n",
     "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono disintegrate?**\"\"\")\n        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s2')\n",
     "    st.markdown(\"\"\"**2. Hai notato dei vetri rotti a terra?**\"\"\")\n    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, index=None, key='v')\n",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()\n",
+    lang="IT"
 )
-# --- 2. MALATTIA ASIATICA ---
+
 build_ab_page(
     "2_Malattia_Asiatica.py", "asian_disease", "🦠", "Malattia Asiatica", "La Malattia Asiatica",
     "    st.markdown(\"\"\"**Scenario:** Immagina che l'Italia si stia preparando ad affrontare una malattia molto contagiosa asiatica, che dovrebbe uccidere 600 persone. Hai due programmi per affrontarla.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
     "        st.markdown(\"\"\"Quale programma scegli?\"\"\")\n        scelta = st.radio('', ['Programma A: Saranno salvate 200 persone (risultato certo).', 'Programma B: C\\'è 1/3 di probabilità di salvare tutte e 600 le persone, e 2/3 di non salvare nessuno.'], index=None, key='r1')\n",
     "        st.markdown(\"\"\"Quale programma scegli?\"\"\")\n        scelta = st.radio('', ['Programma A: Moriranno 400 persone (risultato certo).', 'Programma B: C\\'è 1/3 di probabilità che non muoia nessuno, e 2/3 che muoiano tutte e 600 le persone.'], index=None, key='r2')\n",
     "",
-    "        v = 0 if 'A:' in scelta else 1\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n"
+    "        v = 0 if 'A:' in scelta else 1\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="IT"
 )
-# --- 3. FRAMING AI ---
+
 build_ab_page(
     "3_Framing_AI.py", "framing_ai", "🤖", "Software Medico", "Chirurgia Robotica AI",
     "    st.markdown(\"\"\"**Scenario:** Un nuovo software robotico AI deve compiere un'operazione complessa su 100 pazienti in condizioni critiche.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
     "        st.markdown(\"\"\"**Dato statistico:** Se usi l'Intelligenza Artificiale, **90 pazienti sopravviveranno**.\\n\\nAutorizzi l'uso del software?\"\"\")\n        scelta = st.radio('', ['Sì', 'No'], horizontal=True, index=None, key='r1')\n",
     "        st.markdown(\"\"\"**Dato statistico:** Se usi l'Intelligenza Artificiale, **10 pazienti moriranno**.\\n\\nAutorizzi l'uso del software?\"\"\")\n        scelta = st.radio('', ['Sì', 'No'], horizontal=True, index=None, key='r2')\n",
     "",
-    "        v = 1 if scelta == 'Sì' else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n"
+    "        v = 1 if scelta == 'Sì' else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="IT"
 )
-# --- 4. GANDHI ---
+
 build_ab_page(
     "4_Ancoraggio_Gandhi.py", "gandhi", "👴", "Biografia Età", "Età di Gandhi",
     "",
     "        st.markdown(\"\"\"**Mahatma Gandhi aveva più o meno di 114 anni quando è morto?**\"\"\")\n        st.radio('', ['Più di 114', 'Meno di 114'], horizontal=True, index=None, key='r1')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**A che età esatta è morto secondo te?**\"\"\")\n        eta = st.number_input('Inserisci una stima (anni):', 0, 150, value=None, key='n1')\n",
     "        st.markdown(\"\"\"**Mahatma Gandhi aveva più o meno di 35 anni quando è morto?**\"\"\")\n        st.radio('', ['Più di 35', 'Meno di 35'], horizontal=True, index=None, key='r2')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**A che età esatta è morto secondo te?**\"\"\")\n        eta = st.number_input('Inserisci una stima (anni):', 0, 150, value=None, key='n2')\n",
     "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()\n",
+    lang="IT"
 )
-# --- 5. ROULETTE ---
+
 build_ab_page(
     "5_Ancoraggio_Roulette.py", "roulette", "🎰", "Ruota della Fortuna", "Statistica Ospedaliera",
     "",
     "        val = st.number_input('Secondo te, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, value=None, key='s1')\n",
     "        val = st.number_input('Secondo te, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, value=None, key='s2')\n",
     "    st.markdown(\"\"\"---\"\"\")\n    st.markdown(\"\"\"### Il numero estratto dalla ruota oggi è: **12**\"\"\" if st.session_state.gruppo == 'A' else \"\"\"### Il numero estratto dalla ruota oggi è: **65**\"\"\")\n",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="IT"
 )
-# --- 6. LOSS AVERSION ---
+
 build_ab_page(
     "6_Avversione_Perdite.py", "loss_aversion", "💶", "Scommessa", "Decisioni Finanziarie",
     "",
     "        st.markdown(\"\"\"**Scenario:** Hai appena ricevuto 1.000€ in premio. Quale di queste due opzioni scegli ora?\"\"\")\n        scelta = st.radio('', ['A) Vinci altri 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di vincere altri 1000€, e 50% di vincere 0€.'], index=None, key='r1')\n",
     "        st.markdown(\"\"\"**Scenario:** Hai appena ricevuto 2.000€ in premio. Quale di queste due opzioni scegli ora?\"\"\")\n        scelta = st.radio('', ['A) Perdi 500€ sicuri al 100%', 'B) Lanci una moneta: 50% di probabilità di perdere 1000€, e 50% di perdere 0€.'], index=None, key='r2')\n",
     "",
-    "        v = 0 if 'sicuri' in scelta else 1\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n"
+    "        v = 0 if 'sicuri' in scelta else 1\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="IT"
 )
-# --- 7. TRUTH ILLUSION ---
+
 build_ab_page(
     "7_Illusione_Verita.py", "illusione_verita", "👁️", "Scienza e Verità", "Valuta l'Affermazione",
     "",
     "        st.markdown(\"\"\"<p style=\"font-size:32px; font-weight:900; color:#FAFAFA; font-family:Arial; text-align:center;\">L'assunzione di Omega-3 riduce<br>del 15% le infiammazioni corporee.</p>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**Da 1 a 10, quanto ti sembra vera e scientifica questa frase?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')\n",
     "        st.markdown(\"\"\"<p style=\"font-size:16px; font-weight:300; color:#AAAAAA; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;\">L'assunzione di omega-3 riduce del 15% le infiammazioni corporee.</p>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**Da 1 a 10, quanto ti sembra vera e scientifica questa frase?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')\n",
     "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="IT"
 )
-# --- 8. ASSERTIVE ---
+
 build_ab_page(
     "8_Euristica_Disponibilita.py", "availability", "🧠", "Ricordo", "Inventario della Personalità",
     "",
     "        st.markdown(\"\"\"1. Pensa ed elenca **2 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).\"\"\")\n        st.text_area('Scrivi in breve le 2 situazioni:', height=100, key='t1')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**In generale nella tua vita, quanto ritieni di essere una persona assertiva (1-10)?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')\n",
     "        st.markdown(\"\"\"1. Pensa ed elenca **12 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).\"\"\")\n        st.text_area('Scrivi in breve le 12 situazioni:', height=200, key='t2')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**In generale nella tua vita, quanto ritieni di essere una persona assertiva (1-10)?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')\n",
     "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="IT"
 )
-# --- 9. LINDA PROBLEM ---
+
 build_ab_page(
     "9_Problema_Linda.py", "linda", "👩‍🦰", "Profilo Persona", "Il Profilo di Linda",
     "    st.markdown(\"\"\"**Profilo:** Linda ha 31 anni, è single, molto schietta e brillante. È laureata in filosofia. Da studentessa era profondamente preoccupata per le questioni relative alla discriminazione e alla giustizia sociale, e ha anche partecipato a manifestazioni antinucleari.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
     "        val = st.number_input('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca**?', 0, 100, value=None, key='s1')\n",
     "        val = st.number_input('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca e che sia attiva nel movimento femminista**?', 0, 100, value=None, key='s2')\n",
     "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="IT"
 )
-# --- 10. HALO ASCH ---
+
 build_ab_page(
     "10_Effetto_Alone.py", "halo_asch", "👤", "Valutazione", "Valutazione del Profilo",
     "",
     "        st.markdown(\"\"\"Considera **Alan**. I suoi colleghi lo descrivono così:\"\"\")\n        st.markdown(\"\"\"> *Intelligente, laborioso, impulsivo, critico, ostinato, invidioso.*\"\"\")\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**Da 1 a 10, quanto valuti positivamente Alan come persona sul posto di lavoro?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')\n",
     "        st.markdown(\"\"\"Considera **Ben**. I suoi colleghi lo descrivono così:\"\"\")\n        st.markdown(\"\"\"> *Invidioso, ostinato, critico, impulsivo, laborioso, intelligente.*\"\"\")\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**Da 1 a 10, quanto valuti positivamente Ben come persona sul posto di lavoro?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')\n",
     "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="IT"
 )
-# --- 11. ENDOWMENT TAZZA ---
+
 build_ab_page(
     "11_Effetto_Dote_Tazza.py", "endow_mug", "☕", "Mercato Libre", "Il Mercato delle Tazze",
     "",
     "        st.markdown(\"\"\"**Scenario:** Complimenti! Ti è appena stata **REGALATA** questa bellissima tazza del nostro istituto (ora è rigorosamente di tua proprietà).\"\"\")\n        st.markdown(\"\"\"<div style=\"text-align: center; font-size: 60px;\">☕🎓</div>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"Un tuo compagno arriva e vorrebbe comprarla da te. Qual è il **PREZZO MINIMO** a cui saresti disposto a vendergliela?\"\"\")\n        val = st.number_input('Prezzo in Euro (€):', 0.0, 50.0, value=None, key='n1')\n",
     "        st.markdown(\"\"\"**Scenario:** Un tuo compagno ha appena ricevuto in regalo una bellissima tazza del nostro istituto. Tu al momento sei a mani vuote.\"\"\")\n        st.markdown(\"\"\"<div style=\"text-align: center; font-size: 60px;\">☕🎓</div>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"Lui è disposto a venderla. Qual è il **PREZZO MASSIMO** che saresti disposto a sborsare ORA per acquistarla da lui?\"\"\")\n        val = st.number_input('Prezzo in Euro (€):', 0.0, 50.0, value=None, key='n2')\n",
     "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="IT"
 )
-# --- 12. ENDOWMENT SOFTWARE ---
+
 build_ab_page(
     "12_Effetto_Dote_AI.py", "endow_ai", "💻", "Licenze AI", "Software Medicale",
     "",
     "        st.markdown(\"\"\"**Scenario:** Ti abbiamo regalato a vita una rarissima Licenza Software per diagnosi AI (è tua di diritto).\"\"\")\n        st.markdown(\"\"\"Un ospedale vorrebbe comprarla da te. Qual è il **prezzo minimo** che pretendi per cederla?\"\"\")\n        val = st.number_input('Valore in Euro (€):', 0, 50000, value=None, key='n1')\n",
     "        st.markdown(\"\"\"**Scenario:** Un ospedale ha appena messo in vendita una rarissima Licenza Software per diagnosi AI.\"\"\")\n        st.markdown(\"\"\"A te farebbe molto comodo. Qual è il **prezzo massimo** che sei disposto a pagare per averla?\"\"\")\n        val = st.number_input('Valore in Euro (€):', 0, 50000, value=None, key='n2')\n",
     "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="IT"
 )
-# --- 13. SUNK COST THEATER ---
+
 build_ab_page(
     "13_Costi_Sommersi_Teatro.py", "sunk_theater", "🎭", "Spettacolo", "Lo Spettacolo a Teatro",
     "",
     "        st.markdown(\"\"\"**Scenario:** Hai acquistato a tue spese un biglietto da 50€ per vedere uno spettacolo teatrale che ti interessava.\"\"\")\n        st.markdown(\"\"\"Arriva la sera dello spettacolo ma c'è una tormenta di neve spaventosa.\"\"\")\n        scelta = st.radio('Cosa decidi di fare?', ['A) Vado a teatro lo stesso (sfido la tormenta per non buttare i 50€).', 'B) Resto a casa al caldo rinunciando allo spettacolo.'], index=None, key='r1')\n",
     "        st.markdown(\"\"\"**Scenario:** Un amico ti ha **regalato** un biglietto per vedere uno spettacolo teatrale che ti interessava (costo per te: 0€).\"\"\")\n        st.markdown(\"\"\"Arriva la sera dello spettacolo ma c'è una tormenta di neve spaventosa.\"\"\")\n        scelta = st.radio('Cosa decidi di fare?', ['A) Vado a teatro lo stesso.', 'B) Resto a casa al caldo.'], index=None, key='r2')\n",
     "",
-    "        v = 1 if 'Vado' in scelta else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n"
+    "        v = 1 if 'Vado' in scelta else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="IT"
 )
-# --- 14. SUNK COST AI ---
+
 build_ab_page(
     "14_Costi_Sommersi_AI.py", "sunk_ai", "🏭", "Progetto Ricerca", "Investimento Ricerca",
     "",
     "        st.markdown(\"\"\"**Scenario:** Sei il capo di un team. Hai deciso proprio OGGI di iniziare a programmare un nuovo algoritmo diagnostico.\"\"\")\n        st.markdown(\"\"\"Mentre bevi il caffè, vedi una news: Google ha appena rilasciato un algoritmo gratuito tecnicamente superiore al tuo.\"\"\")\n        scelta = st.radio('Che decisione prendi?', ['Continuo a sviluppare il mio', 'Abbandono il mio progetto'], index=None, key='r1')\n",
     "        st.markdown(\"\"\"**Scenario:** Sei il capo di un team. Da **4 anni precisi** tu e i tuoi uomini lavorate senza sosta a un nuovo algoritmo (siete al 90% dell'opera).\"\"\")\n        st.markdown(\"\"\"Mentre bevi il caffè, vedi una news: Google ha appena rilasciato un algoritmo gratuito tecnicamente superiore al tuo.\"\"\")\n        scelta = st.radio('Che decisione prendi?', ['Continuo a sviluppare il mio', 'Abbandono il mio progetto'], index=None, key='r2')\n",
     "",
-    "        v = 1 if 'Continuo' in scelta else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n"
+    "        v = 1 if 'Continuo' in scelta else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="IT"
 )
-# --- 15. EFFETTO DEFAULT ---
+
 build_ab_page(
     "15_Effetto_Default.py", "default_organ", "🫀", "Assicurazione", "Modulo Assicurativo",
     "    st.markdown(\"\"\"**Firma del nuovo modulo per dipendenti ospedalieri.**\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
     "        opt = st.checkbox('⚠️ Spunta la casella se **VUOI** acconsentire a diventare un donatore di organi.', value=False, key='c1')\n",
     "        opt = st.checkbox('⚠️ Spunta la casella se **NON VUOI** diventare un donatore di organi.', value=True, key='c2')\n",
     "",
-    "        v = 1 if (st.session_state.gruppo == 'A' and opt == True) or (st.session_state.gruppo == 'B' and opt == False) else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n"
+    "        v = 1 if (st.session_state.gruppo == 'A' and opt == True) or (st.session_state.gruppo == 'B' and opt == False) else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="IT"
 )
-# --- 16. PRIMING ---
+
 build_ab_page(
     "16_Priming_Associativo.py", "priming", "🍝", "Associazioni", "Parole e Associazioni",
     "",
     "        st.markdown(\"\"\"Leggi veloce: FORCHETTA, PRANZO, FAME.\"\"\")\n        val = st.text_input('Completa la parola: S O _ P', key='t1')\n",
     "        st.markdown(\"\"\"Leggi veloce: DOCCIA, SCHIUMA, PULITO.\"\"\")\n        val = st.text_input('Completa la parola: S O _ P', key='t2')\n",
     "",
-    "        v = 1 if 'sapore' in val.lower() or 'soup' in val.lower() else (2 if 'sapone' in val.lower() or 'soap' in val.lower() else 0)\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n"
+    "        v = 1 if 'sapore' in val.lower() or 'soup' in val.lower() else (2 if 'sapone' in val.lower() or 'soap' in val.lower() else 0)\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="IT"
 )
-# --- 17. DUNNING KRUGER ---
+
 build_ab_page(
     "17_Dunning_Kruger.py", "dunning", "🎓", "Stima di Sé", "Autovalutazione",
     "",
     "        scelta = st.radio('Ritieni la tua abilità accademica superiore alla media della classe?', ['Sopra la media', 'Nella media', 'Sotto la media'], index=None, key='r1')\n",
     "        scelta = st.radio('Ritieni la tua abilità accademica superiore a quella di Giorgio Parisi (Premio Nobel)?', ['Sopra la sua', 'Nella sua', 'Sotto la sua'], index=None, key='r2')\n",
     "",
-    "        v = 1 if 'Sopra' in scelta else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n"
+    "        v = 1 if 'Sopra' in scelta else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="IT"
 )
-# --- 18. WYSIATI ---
+
 build_ab_page(
     "18_WYSIATI.py", "wysiati", "⚖️", "Giudice", "Verdetto Giudiziario",
     "",
     "        st.markdown('**Testimonianza (Avvocato Difensore):** \"Il mio cliente è un pilastro della comunità...\"')\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s1a')\n        st.markdown('**Quanto ti senti sicuro della scelta (1-10)?**')\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')\n",
     "        st.markdown('**Testimonianza (PM):** \"DNA sulla maschera e cella telefonica...\"')\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s2a')\n        st.markdown('**Quanto ti senti sicuro della scelta (1-10)?**')\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')\n",
     "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': colpa}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'wysiati_fiducia', 'gruppo': st.session_state.gruppo, 'valore': fiducia}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': colpa}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'wysiati_fiducia', 'gruppo': st.session_state.gruppo, 'valore': fiducia}).execute()\n",
+    lang="IT"
 )
-# --- 19. FOCALIZZAZIONE ---
+
 build_ab_page(
     "19_Illusione_Focalizzazione.py", "focalizzazione", "😊", "Questionario Benessere", "Sondaggio sul Benessere",
     "",
     "        st.markdown(\"\"\"**1. Quanto sei felice (1-10)?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1a')\n        eta = st.number_input('2. Quante uscite romantiche nell\\'ultimo mese?', 0, 30, value=None, key='n1b')\n",
     "        eta = st.number_input('1. Quante uscite romantiche nell\\'ultimo mese?', 0, 30, value=None, key='n2a')\n        st.markdown(\"\"\"**2. Quanto sei felice (1-10)?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')\n",
     "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="IT"
 )
-# --- 20. BASE RATE ---
+
 build_single_page(
     "20_Base_Rate_Neglect.py", "base_rate", "🔬", "Diagnosi Medica", "Paradosso Diagnostico",
     "    st.markdown(\"\"\"**Scenario:** Immagina che Una grave malattia genetica colpisca esattamente l'1% della popolazione mondiale.\"\"\")\n    st.markdown(\"\"\"Un test in grado di individuarla è infallibile al 95% (5% falsi positivi/negativi).\"\"\")\n    st.markdown(\"\"\"Fai il test e risulti **POSITIVO**.\"\"\")\n    val = st.number_input('Qual è la probabilità effettiva (0-100%) che tu abbia davvero la malattia?', 0, 100, value=None)\n",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()\n"
-)
-# --- 21. DECOY ---
-build_single_page(
-    "21_L_Esca.py", "decoy", "🗞️", "Abbonamento", "Rivista The Economist",
-    "    scelta = st.radio('Scegli:', ['A) Web (50€)', 'B) Cartaceo (120€)', 'C) Web+Cartaceo (120€)'], index=None)\n",
-    "        v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n"
-)
-# --- 22. REGRESSIONE ---
-build_single_page(
-    "22_Regressione_Media.py", "regression", "🧑‍✈️", "Psicologia Umana", "L'Effetto Lode/Castigo",
-    "    st.markdown(\"\"\"Istruttori israeliani: sgridare migliora, lodare peggiora. Credi che:\"\"\")\n    scelta_dom = st.radio('', ['A) Sia intuizione corretta.', 'B) Sia errore statistico.'], index=None)\n",
-    "        v = 1 if 'A)' in scelta_dom else 2\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n"
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()\n",
+    lang="IT"
 )
 
-print("Tutti i 22 file sono stati RIGENERATI SENZA BIAS (Slider rimossi/sostituiti)!")
+build_single_page(
+    "21_L_Esca.py", "decoy", "🗞️", "Abbonamento", "Rivista The Economist",
+    "    scelta = st.radio('Scegli:', ['A) Solo Web (50€)', 'B) Cartaceo (120€)', 'C) Web+Cartaceo (120€)'], index=None)\n",
+    "        v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n",
+    lang="IT"
+)
+
+build_single_page(
+    "22_Regressione_Media.py", "regression", "🧑‍✈️", "Psicologia Umana", "L'Effetto Lode/Castigo",
+    "    st.markdown(\"\"\"Istruttori israeliani: sgridare migliora, lodare peggiora. Credi che sia:\"\"\")\n    scelta_dom = st.radio('', ['A) Sia intuizione corretta.', 'B) Sia errore statistico.'], index=None)\n",
+    "        v = 1 if 'A)' in scelta_dom else 2\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n",
+    lang="IT"
+)
+
+
+# ==========================================
+# ENGLISH PAGES (1-22)
+# ==========================================
+
+build_ab_page(
+    "1_Macchina_EN.py", "macchina", "🚗", "Car Crash", "Car Crash Experiment",
+    "    st.markdown(\"\"\"**Scenario:** You have just watched a short video clip of an automobile accident.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
+    "        st.markdown(\"\"\"**How fast (in km/h) were the cars going when they HIT each other?**\"\"\")\n        val = st.number_input('Estimate speed (km/h):', 0, 200, value=None, key='s1')\n",
+    "        st.markdown(\"\"\"**How fast (in km/h) were the cars going when they SMASHED into each other?**\"\"\")\n        val = st.number_input('Estimate speed (km/h):', 0, 200, value=None, key='s2')\n",
+    "    st.markdown(\"\"\"**2. Did you see any broken glass on the ground?**\"\"\")\n    vetri = st.radio('Choose:', ['Yes', 'No'], horizontal=True, index=None, key='v')\n",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri in ['Sì', 'Yes'] else 0}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "2_Malattia_Asiatica_EN.py", "asian_disease", "🦠", "Asian Disease", "The Asian Disease Problem",
+    "    st.markdown(\"\"\"**Scenario:** Imagine that your country is preparing for the outbreak of an unusual Asian disease, which is expected to kill 600 people. Two alternative programs to combat the disease have been proposed.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
+    "        st.markdown(\"\"\"Which program do you choose?\"\"\")\n        scelta = st.radio('', ['Program A: 200 people will be saved (certain outcome).', 'Program B: 1/3 probability that 600 people will be saved, and 2/3 probability that no people will be saved.'], index=None, key='r1')\n",
+    "        st.markdown(\"\"\"Which program do you choose?\"\"\")\n        scelta = st.radio('', ['Program A: 400 people will die (certain outcome).', 'Program B: 1/3 probability that nobody will die, and 2/3 probability that 600 people will die.'], index=None, key='r2')\n",
+    "",
+    "        v = 0 if 'Program A:' in scelta else 1\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "3_Framing_AI_EN.py", "framing_ai", "🤖", "Medical AI", "AI Robotic Surgery",
+    "    st.markdown(\"\"\"**Scenario:** A new AI robotic surgical software is set to perform a complex procedure on 100 patients in critical condition.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
+    "        st.markdown(\"\"\"**Statistical Data:** If you use the AI software, **90 patients will survive**.\\n\\nDo you authorize the software's use?\"\"\")\n        scelta = st.radio('', ['Yes', 'No'], horizontal=True, index=None, key='r1')\n",
+    "        st.markdown(\"\"\"**Statistical Data:** If you use the AI software, **10 patients will die**.\\n\\nDo you authorize the software's use?\"\"\")\n        scelta = st.radio('', ['Yes', 'No'], horizontal=True, index=None, key='r2')\n",
+    "",
+    "        v = 1 if scelta == 'Yes' else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "4_Ancoraggio_Gandhi_EN.py", "gandhi", "👴", "Gandhi's Age", "Gandhi's Age Anchoring",
+    "",
+    "        st.markdown(\"\"\"**Did Mahatma Gandhi die before or after the age of 114?**\"\"\")\n        st.radio('', ['After 114', 'Before 114'], horizontal=True, index=None, key='r1')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**How old was he when he died according to your estimate?**\"\"\")\n        eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n1')\n",
+    "        st.markdown(\"\"\"**Did Mahatma Gandhi die before or after the age of 35?**\"\"\")\n        st.radio('', ['After 35', 'Before 35'], horizontal=True, index=None, key='r2')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**How old was he when he died according to your estimate?**\"\"\")\n        eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n2')\n",
+    "",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "5_Ancoraggio_Roulette_EN.py", "roulette", "🎰", "Roulette Wheel", "Hospital Misdiagnosis Statistics",
+    "",
+    "        val = st.number_input('In your opinion, what is the exact percentage of misdiagnoses caused by physician fatigue?', 0, 100, value=None, key='s1')\n",
+    "        val = st.number_input('In your opinion, what is the exact percentage of misdiagnoses caused by physician fatigue?', 0, 100, value=None, key='s2')\n",
+    "    st.markdown(\"\"\"---\"\"\")\n    st.markdown(\"\"\"### The number spun on the wheel today is: **12**\"\"\" if st.session_state.gruppo == 'A' else \"\"\"### The number spun on the wheel today is: **65**\"\"\")\n",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "6_Avversione_Perdite_EN.py", "loss_aversion", "💶", "Loss Aversion", "Financial Decisions",
+    "",
+    "        st.markdown(\"\"\"**Scenario:** You have just been given €1,000 as a bonus. Which of these two options do you choose?\"\"\")\n        scelta = st.radio('', ['A) Win an additional €500 for sure (100% certainty)', 'B) Flip a coin: 50% chance to win €1,000, and 50% chance to win €0.'], index=None, key='r1')\n",
+    "        st.markdown(\"\"\"**Scenario:** You have just been given €2,000 as a bonus. Which of these two options do you choose?\"\"\")\n        scelta = st.radio('', ['A) Lose €500 for sure (100% certainty)', 'B) Flip a coin: 50% chance to lose €1,000, and 50% chance to lose €0.'], index=None, key='r2')\n",
+    "",
+    "        v = 0 if 'for sure' in scelta else 1\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "7_Illusione_Verita_EN.py", "illusione_verita", "👁️", "Truth Illusion", "Evaluate the Statement",
+    "",
+    "        st.markdown(\"\"\"<p style=\"font-size:32px; font-weight:900; color:#FAFAFA; font-family:Arial; text-align:center;\">Taking Omega-3 reduces<br>bodily inflammation by 15%.</p>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**On a scale of 1 to 10, how true and scientifically valid does this statement seem?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')\n",
+    "        st.markdown(\"\"\"<p style=\"font-size:16px; font-weight:300; color:#AAAAAA; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;\">Taking omega-3 reduces bodily inflammation by 15%.</p>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**On a scale of 1 to 10, how true and scientifically valid does this statement seem?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')\n",
+    "",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "8_Euristica_Disponibilita_EN.py", "availability", "🧠", "Memory Recall", "Personality Inventory",
+    "",
+    "        st.markdown(\"\"\"1. Think of and list **2 situations** in which you managed to behave very assertively (standing up firmly for your point of view).\"\"\")\n        st.text_area('Briefly list the 2 situations:', height=100, key='t1')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**In general, how assertive do you consider yourself to be (1-10)?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')\n",
+    "        st.markdown(\"\"\"1. Think of and list **12 situations** in which you managed to behave very assertively (standing up firmly for your point of view).\"\"\")\n        st.text_area('Briefly list the 12 situations:', height=200, key='t2')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**In general, how assertive do you consider yourself to be (1-10)?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')\n",
+    "",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "9_Problema_Linda_EN.py", "linda", "👩‍🦰", "Profile Evaluation", "Linda's Profile",
+    "    st.markdown(\"\"\"**Profile:** Linda is 31 years old, single, outspoken, and very bright. She majored in philosophy. As a student, she was deeply concerned with issues of discrimination and social justice, and also participated in anti-nuclear demonstrations.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
+    "        val = st.number_input('In light of her description, what is the probability (0-100%) that Linda is today **a bank teller**?', 0, 100, value=None, key='s1')\n",
+    "        val = st.number_input('In light of her description, what is the probability (0-100%) that Linda is today **a bank teller and active in the feminist movement**?', 0, 100, value=None, key='s2')\n",
+    "",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "10_Effetto_Alone_EN.py", "halo_asch", "👤", "Impression", "Profile Evaluation",
+    "",
+    "        st.markdown(\"\"\"Consider **Alan**. His colleagues describe him as:\"\"\")\n        st.markdown(\"\"\"> *Intelligent, industrious, impulsive, critical, stubborn, envious.*\"\"\")\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**On a scale of 1 to 10, how favorably do you rate Alan as a coworker?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')\n",
+    "        st.markdown(\"\"\"Consider **Ben**. His colleagues describe him as:\"\"\")\n        st.markdown(\"\"\"> *Envious, stubborn, critical, impulsive, industrious, intelligent.*\"\"\")\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**On a scale of 1 to 10, how favorably do you rate Ben as a coworker?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')\n",
+    "",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "11_Effetto_Dote_Tazza_EN.py", "endow_mug", "☕", "Mug Market", "Thaler's Mug Experiment",
+    "",
+    "        st.markdown(\"\"\"**Scenario:** Congratulations! You have just been **GIVEN** this official university mug (it is now your property).\"\"\")\n        st.markdown(\"\"\"<div style=\"text-align: center; font-size: 60px;\">☕🎓</div>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"A classmate wants to buy it from you. What is the **MINIMUM PRICE** at which you are willing to sell it?\"\"\")\n        val = st.number_input('Price in Euros (€):', 0.0, 50.0, value=None, key='n1')\n",
+    "        st.markdown(\"\"\"**Scenario:** A classmate has just been given an official university mug. You currently do not have one.\"\"\")\n        st.markdown(\"\"\"<div style=\"text-align: center; font-size: 60px;\">☕🎓</div>\"\"\", unsafe_allow_html=True)\n        st.markdown(\"\"\"They are willing to sell it. What is the **MAXIMUM PRICE** you are willing to pay right now to buy it from them?\"\"\")\n        val = st.number_input('Price in Euros (€):', 0.0, 50.0, value=None, key='n2')\n",
+    "",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "12_Effetto_Dote_AI_EN.py", "endow_ai", "💻", "AI Software", "Medical Software License",
+    "",
+    "        st.markdown(\"\"\"**Scenario:** You have been gifted a lifetime license for a rare AI diagnostic software (it belongs to you).\"\"\")\n        st.markdown(\"\"\"A hospital wants to buy it. What is the **minimum price** you demand to sell it?\"\"\")\n        val = st.number_input('Value in Euros (€):', 0, 50000, value=None, key='n1')\n",
+    "        st.markdown(\"\"\"**Scenario:** A hospital has just put up for sale a rare AI diagnostic software license.\"\"\")\n        st.markdown(\"\"\"It would be very useful to you. What is the **maximum price** you are willing to pay to buy it?\"\"\")\n        val = st.number_input('Value in Euros (€):', 0, 50000, value=None, key='n2')\n",
+    "",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "13_Costi_Sommersi_Teatro_EN.py", "sunk_theater", "🎭", "Theater Show", "The Theater Ticket Scenario",
+    "",
+    "        st.markdown(\"\"\"**Scenario:** You purchased a €50 ticket for a theater show you were really interested in seeing.\"\"\")\n        st.markdown(\"\"\"On the evening of the show, a severe snowstorm strikes.\"\"\")\n        scelta = st.radio('What do you decide to do?', ['A) Go to the theater anyway (brave the storm to not waste €50).', 'B) Stay home warm and miss the show.'], index=None, key='r1')\n",
+    "        st.markdown(\"\"\"**Scenario:** A friend **gave you a free ticket** (€0 cost to you) for a theater show you were interested in seeing.\"\"\")\n        st.markdown(\"\"\"On the evening of the show, a severe snowstorm strikes.\"\"\")\n        scelta = st.radio('What do you decide to do?', ['A) Go to the theater anyway.', 'B) Stay home warm.'], index=None, key='r2')\n",
+    "",
+    "        v = 1 if 'Go' in scelta else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "14_Costi_Sommersi_AI_EN.py", "sunk_ai", "🏭", "Research Project", "AI Research Investment",
+    "",
+    "        st.markdown(\"\"\"**Scenario:** You are the lead of a research team. TODAY you decided to start coding a new diagnostic algorithm.\"\"\")\n        st.markdown(\"\"\"While drinking coffee, you read a news story: Google has just released a free algorithm that is technically superior to yours.\"\"\")\n        scelta = st.radio('What decision do you make?', ['Continue developing mine', 'Abandon my project'], index=None, key='r1')\n",
+    "        st.markdown(\"\"\"**Scenario:** You are the lead of a research team. For **4 full years** you and your team have worked tirelessly on a new algorithm (90% complete).\"\"\")\n        st.markdown(\"\"\"While drinking coffee, you read a news story: Google has just released a free algorithm that is technically superior to yours.\"\"\")\n        scelta = st.radio('What decision do you make?', ['Continue developing mine', 'Abandon my project'], index=None, key='r2')\n",
+    "",
+    "        v = 1 if 'Continue' in scelta else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "15_Effetto_Default_EN.py", "default_organ", "🫀", "Employee Form", "Organ Donor Agreement",
+    "    st.markdown(\"\"\"**Signing the new hospital employee onboarding form.**\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
+    "        opt = st.checkbox('⚠️ Check the box if you **WANT** to consent to becoming an organ donor.', value=False, key='c1')\n",
+    "        opt = st.checkbox('⚠️ Check the box if you **DO NOT WANT** to become an organ donor.', value=True, key='c2')\n",
+    "",
+    "        v = 1 if (st.session_state.gruppo == 'A' and opt == True) or (st.session_state.gruppo == 'B' and opt == False) else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "16_Priming_Associativo_EN.py", "priming", "🍝", "Word Associations", "Words and Associations",
+    "",
+    "        st.markdown(\"\"\"Read quickly: FORK, LUNCH, HUNGER.\"\"\")\n        val = st.text_input('Complete the word: S O _ P', key='t1')\n",
+    "        st.markdown(\"\"\"Read quickly: SHOWER, FOAM, CLEAN.\"\"\")\n        val = st.text_input('Complete the word: S O _ P', key='t2')\n",
+    "",
+    "        v = 1 if 'soup' in val.lower() or 'sapore' in val.lower() else (2 if 'soap' in val.lower() or 'sapone' in val.lower() else 0)\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "17_Dunning_Kruger_EN.py", "dunning", "🎓", "Self-Assessment", "Academic Self-Evaluation",
+    "",
+    "        scelta = st.radio('Do you consider your academic ability to be above average compared to your classmates?', ['Above average', 'Average', 'Below average'], index=None, key='r1')\n",
+    "        scelta = st.radio('Do you consider your academic ability to be superior to that of Giorgio Parisi (Nobel Laureate)?', ['Above his', 'Equal to his', 'Below his'], index=None, key='r2')\n",
+    "",
+    "        v = 1 if 'Above' in scelta else 0\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "18_WYSIATI_EN.py", "wysiati", "⚖️", "Trial Verdict", "Judicial Verdict",
+    "",
+    "        st.markdown('**Testimony (Defense Attorney):** \"My client is a pillar of the community...\"')\n        colpa = st.number_input('How guilty do you rate the defendant (0-100)?', 0, 100, value=None, key='s1a')\n        st.markdown('**How confident are you in your judgment (1-10)?**')\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')\n",
+    "        st.markdown('**Testimony (Prosecutor):** \"DNA matching on mask and phone location...\"')\n        colpa = st.number_input('How guilty do you rate the defendant (0-100)?', 0, 100, value=None, key='s2a')\n        st.markdown('**How confident are you in your judgment (1-10)?**')\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')\n",
+    "",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': colpa}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'wysiati_fiducia', 'gruppo': st.session_state.gruppo, 'valore': fiducia}).execute()\n",
+    lang="EN"
+)
+
+build_ab_page(
+    "19_Illusione_Focalizzazione_EN.py", "focalizzazione", "😊", "Wellbeing Survey", "Life Satisfaction Survey",
+    "",
+    "        st.markdown(\"\"\"**1. How happy are you with your life (1-10)?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1a')\n        eta = st.number_input('2. How many dates did you go on in the last month?', 0, 30, value=None, key='n1b')\n",
+    "        eta = st.number_input('1. How many dates did you go on in the last month?', 0, 30, value=None, key='n2a')\n        st.markdown(\"\"\"**2. How happy are you with your life (1-10)?**\"\"\")\n        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')\n",
+    "",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n",
+    lang="EN"
+)
+
+build_single_page(
+    "20_Base_Rate_Neglect_EN.py", "base_rate", "🔬", "Medical Diagnosis", "Diagnostic Paradox",
+    "    st.markdown(\"\"\"**Scenario:** Imagine that a serious genetic condition affects exactly 1% of the world population.\"\"\")\n    st.markdown(\"\"\"A diagnostic test for it is 95% accurate (5% false positive/negative rate).\"\"\")\n    st.markdown(\"\"\"You take the test and result **POSITIVE**.\"\"\")\n    val = st.number_input('What is the actual probability (0-100%) that you actually have the condition?', 0, 100, value=None)\n",
+    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()\n",
+    lang="EN"
+)
+
+build_single_page(
+    "21_L_Esca_EN.py", "decoy", "🗞️", "Subscription", "The Economist Subscription",
+    "    scelta = st.radio('Choose:', ['A) Web Only ($50)', 'B) Print Only ($120)', 'C) Web + Print ($120)'], index=None)\n",
+    "        v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+build_single_page(
+    "22_Regressione_Media_EN.py", "regression", "🧑‍✈️", "Human Behavior", "Praise vs Punishment Effect",
+    "    st.markdown(\"\"\"Flight instructors notice: reprimanding leads to better subsequent maneuvers, while praising leads to worse ones. Do you believe this is:\"\"\")\n    scelta_dom = st.radio('', ['A) Correct psychological intuition.', 'B) Statistical mistake (regression to the mean).'], index=None)\n",
+    "        v = 1 if 'A)' in scelta_dom else 2\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()\n",
+    lang="EN"
+)
+
+print("Tutti i 44 file (22 IT + 22 EN) sono stati generati con successo!")

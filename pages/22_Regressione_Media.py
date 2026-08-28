@@ -33,7 +33,7 @@ st.markdown("""<h1 class="exp-title">🧑‍✈️ L'Effetto Lode/Castigo</h1>""
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""Istruttori israeliani: sgridare migliora, lodare peggiora. Credi che:""")
+    st.markdown("""Istruttori israeliani: sgridare migliora, lodare peggiora. Credi che sia:""")
     scelta_dom = st.radio('', ['A) Sia intuizione corretta.', 'B) Sia errore statistico.'], index=None)
 
     if st.button("📨 Invia risposta", type="primary", use_container_width=True):

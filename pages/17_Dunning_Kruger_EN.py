@@ -1,9 +1,10 @@
 import streamlit as st
+import random
 from supabase import create_client
 
-st.set_page_config(page_title="Abbonamento", page_icon="🗞️", layout="centered")
+st.set_page_config(page_title="Self-Assessment", page_icon="🎓", layout="centered")
 
-NOME_ESPERIMENTO = "decoy"
+NOME_ESPERIMENTO = "dunning"
 
 st.markdown('''
 <style>
@@ -26,28 +27,43 @@ def get_supabase():
 
 supabase = get_supabase()
 
+if "gruppo" not in st.session_state:
+    try:
+        res = supabase.table("Risposte").select("gruppo").eq("esperimento", NOME_ESPERIMENTO).execute()
+        gruppi = [r["gruppo"] for r in res.data]
+        st.session_state.gruppo = "A" if gruppi.count("A") <= gruppi.count("B") else "B"
+    except Exception:
+        st.session_state.gruppo = random.choice(["A", "B"])
+
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
-st.markdown("""<h1 class="exp-title">🗞️ Rivista The Economist</h1>""", unsafe_allow_html=True)
-st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
+st.markdown("""<h1 class="exp-title">🎓 Academic Self-Evaluation</h1>""", unsafe_allow_html=True)
+st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    scelta = st.radio('Scegli:', ['A) Solo Web (50€)', 'B) Cartaceo (120€)', 'C) Web+Cartaceo (120€)'], index=None)
 
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+    if st.session_state.gruppo == "A":
+        scelta = st.radio('Do you consider your academic ability to be above average compared to your classmates?', ['Above average', 'Average', 'Below average'], index=None, key='r1')
+
+    else:
+        scelta = st.radio('Do you consider your academic ability to be superior to that of Giorgio Parisi (Nobel Laureate)?', ['Above his', 'Equal to his', 'Below his'], index=None, key='r2')
+
+
+    
+    if st.button("📨 Submit response", type="primary", use_container_width=True):
         can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
+        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                st.warning("⚠️ Please answer the question before submitting.")
                 can_submit = False
                 break
         
         if can_submit:
-            v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
+            v = 1 if 'Above' in scelta else 0
+            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

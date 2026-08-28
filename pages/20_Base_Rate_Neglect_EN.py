@@ -1,9 +1,9 @@
 import streamlit as st
 from supabase import create_client
 
-st.set_page_config(page_title="Abbonamento", page_icon="🗞️", layout="centered")
+st.set_page_config(page_title="Medical Diagnosis", page_icon="🔬", layout="centered")
 
-NOME_ESPERIMENTO = "decoy"
+NOME_ESPERIMENTO = "base_rate"
 
 st.markdown('''
 <style>
@@ -29,25 +29,27 @@ supabase = get_supabase()
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
-st.markdown("""<h1 class="exp-title">🗞️ Rivista The Economist</h1>""", unsafe_allow_html=True)
-st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
+st.markdown("""<h1 class="exp-title">🔬 Diagnostic Paradox</h1>""", unsafe_allow_html=True)
+st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    scelta = st.radio('Scegli:', ['A) Solo Web (50€)', 'B) Cartaceo (120€)', 'C) Web+Cartaceo (120€)'], index=None)
+    st.markdown("""**Scenario:** Imagine that a serious genetic condition affects exactly 1% of the world population.""")
+    st.markdown("""A diagnostic test for it is 95% accurate (5% false positive/negative rate).""")
+    st.markdown("""You take the test and result **POSITIVE**.""")
+    val = st.number_input('What is the actual probability (0-100%) that you actually have the condition?', 0, 100, value=None)
 
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
+    if st.button("📨 Submit response", type="primary", use_container_width=True):
         can_submit = True
         for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
             if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                st.warning("⚠️ Please answer the question before submitting.")
                 can_submit = False
                 break
         
         if can_submit:
-            v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
+            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()
 else:
-    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)
+    st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)
