@@ -27,6 +27,18 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 def get_supabase():
     return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
 
+def load_hydrant_b64():
+    candidates = [
+        'fire_hydrant.jpg',
+        os.path.join(os.path.dirname(__file__), '..', 'fire_hydrant.jpg'),
+        os.path.join(os.path.dirname(__file__), 'fire_hydrant.jpg')
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            with open(c, 'rb') as f:
+                return base64.b64encode(f.read()).decode('utf-8')
+    return ''
+
 supabase = get_supabase()
 
 if "gruppo" not in st.session_state:

@@ -27,6 +27,18 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 def get_supabase():
     return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
 
+def load_hydrant_b64():
+    candidates = [
+        'fire_hydrant.jpg',
+        os.path.join(os.path.dirname(__file__), '..', 'fire_hydrant.jpg'),
+        os.path.join(os.path.dirname(__file__), 'fire_hydrant.jpg')
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            with open(c, 'rb') as f:
+                return base64.b64encode(f.read()).decode('utf-8')
+    return ''
+
 supabase = get_supabase()
 
 if "gruppo" not in st.session_state:
@@ -52,7 +64,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
 
     else:
         st.markdown("""**Scenario:** Sei il capo di un team. Da **4 anni precisi** tu e i tuoi uomini lavorate senza sosta a un nuovo algoritmo (siete al 90% dell'opera).""")
-        st.markdown("""Mentre bevi il caffè, vedi una news: Google ha appena rilasciato un algoritmo gratuito tecnicamente superior al tuo.""")
+        st.markdown("""Mentre bevi il caffè, vedi una news: Google ha appena rilasciato un algoritmo gratuito tecnicamente superiore al tuo.""")
         scelta = st.radio('Che decisione prendi?', ['Continuo a sviluppare il mio', 'Abbandono il mio progetto'], index=None, key='r2')
 
 
