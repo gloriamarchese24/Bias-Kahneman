@@ -57,7 +57,7 @@ st.markdown("""<h1 class="exp-title">👁️ Riconoscimento Immagine (Bruner & P
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** Guarda con attenzione la sequenza visiva qui sotto.\n\n⚡ **IMPORTANTE:** Seleziona e invia la tua risposta il **PRIMA POSSIBILE**, non appena pensi di aver riconosciuto cosa raffigura l'immagine!""")
+    st.markdown("""**Scenario:** Guarda con attenzione la sequenza visiva qui sotto.\n\n⚡ **IMPORTANTE:** Scrivi nello spazio sottostante **LA PRIMA COSA CHE VEDI** (la tua primissima impressione non appena l'immagine compare) e invia subito la risposta!""")
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
@@ -67,7 +67,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
             components.html(html_a, height=360)
         else:
             st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div></div>""")
-        scelta = st.radio('Cosa ritieni rappresenti principalmente questa immagine?', ['A) Un Minion / Personaggio animato', 'B) Un Idrante antincendio / Estintore'], index=None, key='r1')
+        scelta = st.text_input('Scrivi qui la PRIMA COSA che vedi / prima impressione:', key='t_wys1')
 
     else:
         b64_img = load_hydrant_b64()
@@ -76,7 +76,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
             components.html(html_b, height=360)
         else:
             st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(5px); line-height:1;'>🧯🔴</div></div>""")
-        scelta = st.radio('Cosa ritieni rappresenti principalmente questa immagine?', ['A) Un Minion / Personaggio animato', 'B) Un Idrante antincendio / Estintore'], index=None, key='r2')
+        scelta = st.text_input('Scrivi qui la PRIMA COSA che vedi / prima impressione:', key='t_wys2')
 
 
     
@@ -89,7 +89,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-            v = 0 if 'Minion' in scelta else 1
+            v = 1 if any(w in scelta.lower() for w in ['idrante', 'estintore', 'hydrant', 'extinguisher']) else 0
             supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True
