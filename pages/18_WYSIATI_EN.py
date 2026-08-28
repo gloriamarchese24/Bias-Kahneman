@@ -44,27 +44,47 @@ st.markdown("""<h1 class="exp-title">👁️ Image Recognition (Bruner & Potter)
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** Carefully observe the visual image shown below.""")
+    st.markdown("""**Scenario:** Carefully observe the visual sequence shown below.""")
     st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
-        st.markdown("""<style>@keyframes fluidUnblur {{ 0% {{ filter: blur(24px) contrast(120%); }} 100% {{ filter: blur(3px); }} }} .fluid-anim {{ width:240px; border-radius:16px; animation: fluidUnblur 8s linear forwards; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }}</style>""", unsafe_allow_html=True)
-        img_path = 'fire_hydrant.jpg'
-        if os.path.exists(img_path):
-            with open(img_path, 'rb') as f:
-                b64_img = base64.b64encode(f.read()).decode('utf-8')
-            st.markdown(f'''<div style="text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;"><img src="data:image/jpeg;base64,{{b64_img}}" class="fluid-anim" /><p style="color:#6C63FF; font-weight:600; font-size:0.9rem; margin-top:12px;">🎥 Continuous fluid transition (video-like - 8s)</p></div>''', unsafe_allow_html=True)
+        
+def load_hydrant_b64():
+    candidates = [
+        'fire_hydrant.jpg',
+        os.path.join(os.path.dirname(__file__), '..', 'fire_hydrant.jpg'),
+        os.path.join(os.path.dirname(__file__), 'fire_hydrant.jpg')
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            with open(c, 'rb') as f:
+                return base64.b64encode(f.read()).decode('utf-8')
+    return ''
+b64_img = load_hydrant_b64()
+
+        if b64_img:
+            st.markdown(f'''<div style="text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem; border:1px solid rgba(108,99,255,0.3);"><img id="hImgA" src="data:image/jpeg;base64,{b64_img}" style="width:240px; border-radius:16px; filter:blur(24px); box-shadow:0 8px 32px rgba(0,0,0,0.5); transition: filter 0.1s linear;" /><p style="color:#6C63FF; font-weight:600; font-size:0.9rem; margin-top:12px;" id="txtA">🎥 Continuous fluid video unblurring in progress (8s)...</p><button onclick="playA()" style="background:#6C63FF; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:600; cursor:pointer; margin-top:6px;">▶️ Play again</button></div><script>function playA(){{var img=document.getElementById('hImgA');var txt=document.getElementById('txtA');var start=null;var dur=8000;txt.innerText="🎥 Continuous fluid video unblurring in progress (8s)...";function step(ts){{if(!start)start=ts;var progress=(ts-start)/dur;if(progress>1)progress=1;var curBlur=24-(progress*21);if(img)img.style.filter="blur("+curBlur+"px)";if(progress<1){{window.requestAnimationFrame(step);}}else{{txt.innerText="✅ Focus sequence completed.";}}}}window.requestAnimationFrame(step);}}setTimeout(playA, 400);</script>''', unsafe_allow_html=True)
         else:
             st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div></div>""")
         scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r1')
 
     else:
-        st.markdown("""<style>@keyframes discreteFrames {{ 0%, 24% {{ filter: blur(24px) contrast(120%); }} 25%, 49% {{ filter: blur(16px) contrast(110%); }} 50%, 74% {{ filter: blur(10px); }} 75%, 100% {{ filter: blur(3px); }} }} .discrete-anim {{ width:240px; border-radius:16px; animation: discreteFrames 8s steps(1, end) forwards; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }}</style>""", unsafe_allow_html=True)
-        img_path = 'fire_hydrant.jpg'
-        if os.path.exists(img_path):
-            with open(img_path, 'rb') as f:
-                b64_img = base64.b64encode(f.read()).decode('utf-8')
-            st.markdown(f'''<div style="text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem;"><img src="data:image/jpeg;base64,{{b64_img}}" class="discrete-anim" /><p style="color:#FFA600; font-weight:600; font-size:0.9rem; margin-top:12px;">🖼️ 4 Discrete step frames (discrete jumps every 2s)</p></div>''', unsafe_allow_html=True)
+        
+def load_hydrant_b64():
+    candidates = [
+        'fire_hydrant.jpg',
+        os.path.join(os.path.dirname(__file__), '..', 'fire_hydrant.jpg'),
+        os.path.join(os.path.dirname(__file__), 'fire_hydrant.jpg')
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            with open(c, 'rb') as f:
+                return base64.b64encode(f.read()).decode('utf-8')
+    return ''
+b64_img = load_hydrant_b64()
+
+        if b64_img:
+            st.markdown(f'''<div style="text-align:center; padding:1.5rem; background:#111; border-radius:20px; margin-bottom:1.5rem; border:1px solid rgba(255,166,0,0.3);"><img id="hImgB" src="data:image/jpeg;base64,{b64_img}" style="width:240px; border-radius:16px; filter:blur(24px); box-shadow:0 8px 32px rgba(0,0,0,0.5); transition: filter 0.3s ease;" /><p style="color:#FFA600; font-weight:600; font-size:0.9rem; margin-top:12px;" id="txtB">🖼️ Frame 1 of 4 (Initial blur 24px)...</p><button onclick="playB()" style="background:#FFA600; color:black; border:none; padding:8px 16px; border-radius:8px; font-weight:600; cursor:pointer; margin-top:6px;">▶️ Play again</button></div><script>function playB(){{var img=document.getElementById('hImgB');var txt=document.getElementById('txtB');var frames=[{{b:24,l:"🖼️ Frame 1 of 4 (Initial blur 24px)"}},{{b:16,l:"🖼️ Frame 2 of 4 (Heavy blur 16px)"}},{{b:10,l:"🖼️ Frame 3 of 4 (Medium blur 10px)"}},{{b:3,l:"🖼️ Frame 4 of 4 (Final focus 3px)"}}];var stepIdx=0;function show(){{if(img)img.style.filter="blur("+frames[stepIdx].b+"px)";if(txt)txt.innerText=frames[stepIdx].l;stepIdx++;if(stepIdx<frames.length){{setTimeout(show,2000);}}}}show();}}setTimeout(playB, 400);</script>''', unsafe_allow_html=True)
         else:
             st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(5px); line-height:1;'>🧯🔴</div></div>""")
         scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r2')

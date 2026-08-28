@@ -52,7 +52,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
 
     else:
         st.markdown("""**Scenario:** Sei il capo di un team. Da **4 anni precisi** tu e i tuoi uomini lavorate senza sosta a un nuovo algoritmo (siete al 90% dell'opera).""")
-        st.markdown("""Mentre bevi il caffè, vedi una news: Google ha appena rilasciato un algoritmo gratuito tecnicamente superiore al tuo.""")
+        st.markdown("""Mentre bevi il caffè, vedi una news: Google ha appena rilasciato un algoritmo gratuito tecnicamente superior al tuo.""")
         scelta = st.radio('Che decisione prendi?', ['Continuo a sviluppare il mio', 'Abbandono il mio progetto'], index=None, key='r2')
 
 
