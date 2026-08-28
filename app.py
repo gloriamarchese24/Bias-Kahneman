@@ -54,7 +54,7 @@ ESPERIMENTI = {
     "default_organ": {"titolo": "15. 🫀 Effetto Default (Organ Donation)", "desc": "Scelta opt-in vs opt-out nel modulo.", "gruppo_a": "Opt-IN (Deve spuntare per aderire)", "gruppo_b": "Opt-OUT (Deve spuntare per NON aderire)", "unita": "% Efficace Donatore", "tipo": "ab_cat", "val_map": {0: "NON Donatore", 1: "DIVENTA Donatore"}},
     "priming": {"titolo": "16. 🍝 Priming (Associativo)", "desc": "Cibo vs Detersivo.", "gruppo_a": "Pausa Pranzo", "gruppo_b": "Pausa Doccia", "unita": "% Scelta", "tipo": "ab_cat", "val_map": {0: "-", 1: "SAPORE/SOUP", 2: "SAPONE/SOAP"}},
     "dunning": {"titolo": "17. 🎓 Illusione di Superiorità", "desc": "Confronti tra coetanei vs confronto limite.", "gruppo_a": "vs Colleghi", "gruppo_b": "vs Premio Nobel", "unita": "% Si sente Superiore", "tipo": "ab_cat", "val_map": {0: "Uguale/Inf", 1: "Sopra Media"}},
-    "wysiati": {"titolo": "18. ⚖️ WYSIATI", "desc": "Testimonianze parziali vs piene e sicurezza.", "gruppo_a": "Difesa", "gruppo_b": "Difesa+Accusa", "unita": "Colpevolezza", "tipo": "ab_num"},
+    "wysiati": {"titolo": "18. 👁️ WYSIATI (Bruner & Potter - Idrante vs Minion)", "desc": "Immagina sfocata e persistenza della prima impressione (WYSIATI).", "gruppo_a": "Graduale (Micro-passaggi)", "gruppo_b": "Diretto (Nitido)", "unita": "% Risposte", "tipo": "ab_cat", "val_map": {0: "Errore (Minion)", 1: "Corretto (Idrante)"}},
     "focalizzazione": {"titolo": "19. 😊 Illusione di Focalizzazione", "desc": "L'ordine delle domande sulla felicità (Kahneman).", "gruppo_a": "Felicità -> Uscite", "gruppo_b": "Uscite -> Felicità", "unita": "Voto Felicità (1-10)", "tipo": "ab_num"},
     
     # SINGLE DEMOS

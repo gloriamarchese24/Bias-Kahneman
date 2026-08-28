@@ -112,9 +112,9 @@ PAGINE_IT = [
     },
     {
         "url_path": "WYSIATI",
-        "title": "18. Verdetto in un Processo Penale",
-        "bias": "WYSIATI - What You See Is All There Is (Kahneman)",
-        "context": "Inquadra il QR code per leggere la testimonianza presentata al processo giudiziario e indicare il tuo verdetto di colpevolezza e il tuo livello di sicurezza."
+        "title": "18. WYSIATI — Persistenza dell'Ipotesi (Bruner & Potter)",
+        "bias": "WYSIATI ('What You See Is All There Is') & Bias di Conferma Visivo",
+        "context": "Guarda con attenzione l'immagine visiva mostrata sul tuo smartphone dopo aver inquadrato il QR code.\n\nIndica cosa ritieni rappresenti principalmente l'immagine (es. Un Minion vs Un Idrante/Estintore)."
     },
     {
         "url_path": "Illusione_Focalizzazione",
@@ -247,9 +247,9 @@ PAGINE_EN = [
     },
     {
         "url_path": "WYSIATI_EN",
-        "title": "18. Court Trial Verdict Decision",
-        "bias": "WYSIATI - What You See Is All There Is",
-        "context": "Scan the QR code to read the court trial testimony provided and enter your verdict on guilt and your level of confidence."
+        "title": "18. WYSIATI — Hypothesis Persistence (Bruner & Potter)",
+        "bias": "WYSIATI ('What You See Is All There Is') & Belief Perseverance",
+        "context": "Observe the image shown on your smartphone after scanning the QR code.\n\nIndicate what you believe the image primarily depicts (e.g. A Minion vs A Fire Hydrant/Extinguisher)."
     },
     {
         "url_path": "Illusione_Focalizzazione_EN",
@@ -356,8 +356,13 @@ def build_presentation(data_list, output_filename, main_title_text, subtitle_tex
         bp.font.color.rgb = RGBColor(108, 99, 255)
         bp.alignment = PP_ALIGN.CENTER
 
-    prs.save(output_filename)
-    print(f"Presentazione {output_filename} generata con successo!")
+    try:
+        prs.save(output_filename)
+        print(f"Presentazione {output_filename} generata con successo!")
+    except PermissionError:
+        alt_filename = output_filename.replace(".pptx", "_v2.pptx")
+        prs.save(alt_filename)
+        print(f"File {output_filename} aperto in PowerPoint. Salvata copia aggiornata in {alt_filename}!")
 
 # Build Italian PowerPoint
 build_presentation(

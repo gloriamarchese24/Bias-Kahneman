@@ -318,13 +318,14 @@ build_ab_page(
     lang="IT"
 )
 
+# 18. WYSIATI / BRUNER & POTTER (Idrante vs Minion)
 build_ab_page(
-    "18_WYSIATI.py", "wysiati", "⚖️", "Giudice", "Verdetto Giudiziario",
+    "18_WYSIATI.py", "wysiati", "👁️", "WYSIATI Visivo", "Riconoscimento Immagine (Bruner & Potter)",
+    "    st.markdown(\"\"\"**Scenario:** Guarda con attenzione l'immagine visiva qui sotto che ti viene mostrata.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
+    "        st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Messa a fuoco graduale a micro-passaggi]</p></div>\"\"\", unsafe_allow_html=True)\n        scelta = st.radio('Cosa ritieni rappresenti principalmente questa immagine?', ['A) Un Minion / Personaggio animato', 'B) Un Idrante antincendio / Estintore'], index=None, key='r1')\n",
+    "        st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(1px); line-height:1;'>🧯🔴</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Messa a fuoco diretta nitida]</p></div>\"\"\", unsafe_allow_html=True)\n        scelta = st.radio('Cosa ritieni rappresenti principalmente questa immagine?', ['A) Un Minion / Personaggio animato', 'B) Un Idrante antincendio / Estintore'], index=None, key='r2')\n",
     "",
-    "        st.markdown('**Testimonianza (Avvocato Difensore):** \"Il mio cliente è un pilastro della comunità...\"')\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s1a')\n        st.markdown('**Quanto ti senti sicuro della scelta (1-10)?**')\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')\n",
-    "        st.markdown('**Testimonianza (PM):** \"DNA sulla maschera e cella telefonica...\"')\n        colpa = st.number_input('Quanto ritieni sia colpevole (0-100)?', 0, 100, value=None, key='s2a')\n        st.markdown('**Quanto ti senti sicuro della scelta (1-10)?**')\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')\n",
-    "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': colpa}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'wysiati_fiducia', 'gruppo': st.session_state.gruppo, 'valore': fiducia}).execute()\n",
+    "        v = 0 if 'Minion' in scelta else 1\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
     lang="IT"
 )
 
@@ -534,13 +535,14 @@ build_ab_page(
     lang="EN"
 )
 
+# 18. WYSIATI / BRUNER & POTTER (Fire Hydrant vs Minion) EN
 build_ab_page(
-    "18_WYSIATI_EN.py", "wysiati", "⚖️", "Trial Verdict", "Judicial Verdict",
+    "18_WYSIATI_EN.py", "wysiati", "👁️", "Visual WYSIATI", "Image Recognition (Bruner & Potter)",
+    "    st.markdown(\"\"\"**Scenario:** Carefully observe the visual image shown below.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
+    "        st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Gradual micro-step focus]</p></div>\"\"\", unsafe_allow_html=True)\n        scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r1')\n",
+    "        st.markdown(\"\"\"<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(1px); line-height:1;'>🧯🔴</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Direct sharp focus]</p></div>\"\"\", unsafe_allow_html=True)\n        scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r2')\n",
     "",
-    "        st.markdown('**Testimony (Defense Attorney):** \"My client is a pillar of the community...\"')\n        colpa = st.number_input('How guilty do you rate the defendant (0-100)?', 0, 100, value=None, key='s1a')\n        st.markdown('**How confident are you in your judgment (1-10)?**')\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')\n",
-    "        st.markdown('**Testimony (Prosecutor):** \"DNA matching on mask and phone location...\"')\n        colpa = st.number_input('How guilty do you rate the defendant (0-100)?', 0, 100, value=None, key='s2a')\n        st.markdown('**How confident are you in your judgment (1-10)?**')\n        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')\n",
-    "",
-    "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': colpa}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'wysiati_fiducia', 'gruppo': st.session_state.gruppo, 'valore': fiducia}).execute()\n",
+    "        v = 0 if 'Minion' in scelta else 1\n        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()\n",
     lang="EN"
 )
 
@@ -575,4 +577,4 @@ build_single_page(
     lang="EN"
 )
 
-print("Tutti i 44 file (22 IT + 22 EN) sono stati generati con successo!")
+print("Tutti i 44 file (22 IT + 22 EN) con il nuovo Esperimento #18 WYSIATI sono stati generati con successo!")

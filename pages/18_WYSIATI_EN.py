@@ -2,7 +2,7 @@ import streamlit as st
 import random
 from supabase import create_client
 
-st.set_page_config(page_title="Trial Verdict", page_icon="⚖️", layout="centered")
+st.set_page_config(page_title="Visual WYSIATI", page_icon="👁️", layout="centered")
 
 NOME_ESPERIMENTO = "wysiati"
 
@@ -38,22 +38,20 @@ if "gruppo" not in st.session_state:
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
 
-st.markdown("""<h1 class="exp-title">⚖️ Judicial Verdict</h1>""", unsafe_allow_html=True)
+st.markdown("""<h1 class="exp-title">👁️ Image Recognition (Bruner & Potter)</h1>""", unsafe_allow_html=True)
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    st.markdown("""**Scenario:** Carefully observe the visual image shown below.""")
+    st.markdown("""---""")
 
     if st.session_state.gruppo == "A":
-        st.markdown('**Testimony (Defense Attorney):** "My client is a pillar of the community..."')
-        colpa = st.number_input('How guilty do you rate the defendant (0-100)?', 0, 100, value=None, key='s1a')
-        st.markdown('**How confident are you in your judgment (1-10)?**')
-        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1b')
+        st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Gradual micro-step focus]</p></div>""", unsafe_allow_html=True)
+        scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r1')
 
     else:
-        st.markdown('**Testimony (Prosecutor):** "DNA matching on mask and phone location..."')
-        colpa = st.number_input('How guilty do you rate the defendant (0-100)?', 0, 100, value=None, key='s2a')
-        st.markdown('**How confident are you in your judgment (1-10)?**')
-        fiducia = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2b')
+        st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(1px); line-height:1;'>🧯🔴</div><p style='color:#888; font-size:12px; margin-top:10px;'>[Direct sharp focus]</p></div>""", unsafe_allow_html=True)
+        scelta = st.radio('What do you believe this image primarily depicts?', ['A) A Minion / Animated character', 'B) A Fire Hydrant / Fire Extinguisher'], index=None, key='r2')
 
 
     
@@ -66,8 +64,8 @@ if not st.session_state[NOME_ESPERIMENTO]:
                 break
         
         if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': colpa}).execute()
-            supabase.table('Risposte').insert({'esperimento': 'wysiati_fiducia', 'gruppo': st.session_state.gruppo, 'valore': fiducia}).execute()
+            v = 0 if 'Minion' in scelta else 1
+            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
             st.session_state[NOME_ESPERIMENTO] = True
             st.rerun()
