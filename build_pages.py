@@ -55,13 +55,20 @@ def load_hydrant_b64():
                 return base64.b64encode(f.read()).decode('utf-8')
     return ''
 
-supabase = get_supabase()
+@st.cache_resource
+def get_group_counter():
+    return {{"count": 0}}
+
+def get_next_group():
+    c = get_group_counter()
+    c["count"] += 1
+    return "A" if c["count"] % 2 == 1 else "B"
 
 if "gruppo" not in st.session_state:
     if "g" in st.query_params and st.query_params["g"] in ["A", "B"]:
         st.session_state.gruppo = st.query_params["g"]
     else:
-        st.session_state.gruppo = random.choice(["A", "B"])
+        st.session_state.gruppo = get_next_group()
 
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
