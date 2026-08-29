@@ -28,9 +28,9 @@ PAGINE_IT = [
     },
     {
         "url_path": "Ancoraggio_Gandhi",
-        "title": "4. Stima Biografica di Mahatma Gandhi",
-        "bias": "Effetto Ancoraggio (Anchoring Effect)",
-        "context": "Mettiti alla prova con due domande sulla biografia e sulla storia di Mahatma Gandhi.\n\nInquadra il QR code con il tuo smartphone per inserire la tua stima."
+        "title": "4. Stima Biografica di Gandhi",
+        "bias": "Effetto Ancoraggio / Valutazione di Riferimento (Anchoring Effect)",
+        "context": "Mettiti alla prova con due domande sulla biografia e sulla storia di Gandhi.\n\nInquadra il QR code con il tuo smartphone per inserire la tua stima."
     },
     {
         "url_path": "Ancoraggio_Roulette",
@@ -169,9 +169,9 @@ PAGINE_EN = [
     },
     {
         "url_path": "Ancoraggio_Gandhi_EN",
-        "title": "4. Mahatma Gandhi Age Estimation",
+        "title": "4. Gandhi Age Estimation",
         "bias": "Anchoring Effect",
-        "context": "Test your knowledge with two questions regarding Mahatma Gandhi's life and age at death.\n\nScan the QR code with your smartphone to enter your estimates."
+        "context": "Test your knowledge with two questions regarding Gandhi's life and age at death.\n\nScan the QR code with your smartphone to enter your estimates."
     },
     {
         "url_path": "Ancoraggio_Roulette_EN",

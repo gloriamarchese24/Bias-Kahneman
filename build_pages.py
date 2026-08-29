@@ -196,8 +196,8 @@ build_ab_page(
 build_ab_page(
     "4_Ancoraggio_Gandhi.py", "gandhi", "👴", "Biografia Età", "Età di Gandhi",
     "",
-    "        st.markdown(\"\"\"**Mahatma Gandhi aveva più o meno di 114 anni quando è morto?**\"\"\")\n        st.radio('', ['Più di 114', 'Meno di 114'], horizontal=True, index=None, key='r1')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**A che età esatta è morto secondo te?**\"\"\")\n        eta = st.number_input('Inserisci una stima (anni):', 0, 150, value=None, key='n1')\n",
-    "        st.markdown(\"\"\"**Mahatma Gandhi aveva più o meno di 35 anni quando è morto?**\"\"\")\n        st.radio('', ['Più di 35', 'Meno di 35'], horizontal=True, index=None, key='r2')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**A che età esatta è morto secondo te?**\"\"\")\n        eta = st.number_input('Inserisci una stima (anni):', 0, 150, value=None, key='n2')\n",
+    "        st.markdown(\"\"\"**Gandhi aveva più o meno di 114 anni quando è morto?**\"\"\")\n        st.radio('', ['Più di 114', 'Meno di 114'], horizontal=True, index=None, key='r1')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**A che età esatta è morto secondo te?**\"\"\")\n        eta = st.number_input('Inserisci una stima (anni):', 0, 150, value=None, key='n1')\n",
+    "        st.markdown(\"\"\"**Gandhi aveva più o meno di 35 anni quando è morto?**\"\"\")\n        st.radio('', ['Più di 35', 'Meno di 35'], horizontal=True, index=None, key='r2')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**A che età esatta è morto secondo te?**\"\"\")\n        eta = st.number_input('Inserisci una stima (anni):', 0, 150, value=None, key='n2')\n",
     "",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()\n",
     lang="IT"
@@ -421,8 +421,8 @@ build_ab_page(
 build_ab_page(
     "4_Ancoraggio_Gandhi_EN.py", "gandhi", "👴", "Gandhi's Age", "Gandhi's Age Anchoring",
     "",
-    "        st.markdown(\"\"\"**Did Mahatma Gandhi die before or after the age of 114?**\"\"\")\n        st.radio('', ['After 114', 'Before 114'], horizontal=True, index=None, key='r1')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**How old was he when he died according to your estimate?**\"\"\")\n        eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n1')\n",
-    "        st.markdown(\"\"\"**Did Mahatma Gandhi die before or after the age of 35?**\"\"\")\n        st.radio('', ['After 35', 'Before 35'], horizontal=True, index=None, key='r2')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**How old was he when he died according to your estimate?**\"\"\")\n        eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n2')\n",
+    "        st.markdown(\"\"\"**Did Gandhi die before or after the age of 114?**\"\"\")\n        st.radio('', ['After 114', 'Before 114'], horizontal=True, index=None, key='r1')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**How old was he when he died according to your estimate?**\"\"\")\n        eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n1')\n",
+    "        st.markdown(\"\"\"**Did Gandhi die before or after the age of 35?**\"\"\")\n        st.radio('', ['After 35', 'Before 35'], horizontal=True, index=None, key='r2')\n        st.markdown(\"\"\"---\"\"\")\n        st.markdown(\"\"\"**How old was he when he died according to your estimate?**\"\"\")\n        eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n2')\n",
     "",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()\n",
     lang="EN"

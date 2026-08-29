@@ -59,14 +59,14 @@ st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", u
 if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.session_state.gruppo == "A":
-        st.markdown("""**Mahatma Gandhi aveva più o meno di 114 anni quando è morto?**""")
+        st.markdown("""**Gandhi aveva più o meno di 114 anni quando è morto?**""")
         st.radio('', ['Più di 114', 'Meno di 114'], horizontal=True, index=None, key='r1')
         st.markdown("""---""")
         st.markdown("""**A che età esatta è morto secondo te?**""")
         eta = st.number_input('Inserisci una stima (anni):', 0, 150, value=None, key='n1')
 
     else:
-        st.markdown("""**Mahatma Gandhi aveva più o meno di 35 anni quando è morto?**""")
+        st.markdown("""**Gandhi aveva più o meno di 35 anni quando è morto?**""")
         st.radio('', ['Più di 35', 'Meno di 35'], horizontal=True, index=None, key='r2')
         st.markdown("""---""")
         st.markdown("""**A che età esatta è morto secondo te?**""")

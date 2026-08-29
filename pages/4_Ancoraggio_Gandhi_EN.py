@@ -59,14 +59,14 @@ st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""",
 if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.session_state.gruppo == "A":
-        st.markdown("""**Did Mahatma Gandhi die before or after the age of 114?**""")
+        st.markdown("""**Did Gandhi die before or after the age of 114?**""")
         st.radio('', ['After 114', 'Before 114'], horizontal=True, index=None, key='r1')
         st.markdown("""---""")
         st.markdown("""**How old was he when he died according to your estimate?**""")
         eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n1')
 
     else:
-        st.markdown("""**Did Mahatma Gandhi die before or after the age of 35?**""")
+        st.markdown("""**Did Gandhi die before or after the age of 35?**""")
         st.radio('', ['After 35', 'Before 35'], horizontal=True, index=None, key='r2')
         st.markdown("""---""")
         st.markdown("""**How old was he when he died according to your estimate?**""")
