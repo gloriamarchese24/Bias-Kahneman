@@ -58,11 +58,9 @@ def load_hydrant_b64():
 supabase = get_supabase()
 
 if "gruppo" not in st.session_state:
-    try:
-        res = supabase.table("Risposte").select("gruppo").eq("esperimento", NOME_ESPERIMENTO).execute()
-        gruppi = [r["gruppo"] for r in res.data]
-        st.session_state.gruppo = "A" if gruppi.count("A") <= gruppi.count("B") else "B"
-    except Exception:
+    if "g" in st.query_params and st.query_params["g"] in ["A", "B"]:
+        st.session_state.gruppo = st.query_params["g"]
+    else:
         st.session_state.gruppo = random.choice(["A", "B"])
 
 if NOME_ESPERIMENTO not in st.session_state:
