@@ -85,14 +85,20 @@ with st.sidebar:
         writer.writerows(data)
         st.download_button(label="📥 Scarica Dati (CSV)", data=output.getvalue().encode('utf-8'), file_name=f"risposte_{esperimento_sel}.csv", mime="text/csv", use_container_width=True)
     
-    with st.expander("🗑️ Cancella risposte"):
-        st.warning("Azione irreversibile!")
-        conferma = st.text_input("Scrivi CANCELLA:")
-        if st.button("Elimina", type="primary"):
-            if conferma == "CANCELLA":
+    with st.expander("🗑️ Cancella Risposte / Clear Data"):
+        st.warning("⚠️ Azione Irreversibile / Irreversible Action")
+        chk = st.checkbox("Confermo cancellazione / Confirm deletion", key="del_chk")
+        if st.button("🗑️ CANCELLA ORA / DELETE NOW", type="primary", use_container_width=True):
+            if chk:
                 supabase.table("Risposte").delete().eq("esperimento", esperimento_sel).execute()
-                st.success("Cancellato!")
+                if esperimento_sel == "macchina":
+                    supabase.table("Risposte").delete().eq("esperimento", "macchina_vetri").execute()
+                st.cache_data.clear()
+                st.success("✅ Risposte cancellate con successo!")
+                time.sleep(0.5)
                 st.rerun()
+            else:
+                st.error("Spunta la casella di conferma sopra!")
 
 # ─── MAIN ─────────────────────────────────────────────────────────────
 exp = ESPERIMENTI[esperimento_sel]
