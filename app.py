@@ -73,8 +73,15 @@ with st.sidebar:
     if st.button("🔄 Aggiorna ora"): st.rerun()
     st.markdown("---")
     
-    @st.cache_data(ttl=5)
+    @st.cache_data(ttl=3)
     def fetch_data(exp):
+        try:
+            res_reset = supabase.table("Risposte").select("created_at").eq("esperimento", exp + "_reset").order("created_at", desc=True).limit(1).execute()
+            if res_reset.data:
+                latest_reset = res_reset.data[0]["created_at"]
+                return supabase.table("Risposte").select("*").eq("esperimento", exp).gt("created_at", latest_reset).execute().data
+        except Exception:
+            pass
         return supabase.table("Risposte").select("*").eq("esperimento", exp).execute().data
     
     data = fetch_data(esperimento_sel)
@@ -91,9 +98,9 @@ with st.sidebar:
         if st.button("🗑️ CANCELLA ORA / DELETE NOW", type="primary", use_container_width=True):
             if chk:
                 try:
-                    supabase.table("Risposte").delete().eq("esperimento", esperimento_sel).execute()
+                    supabase.table("Risposte").insert({"esperimento": esperimento_sel + "_reset", "gruppo": "RESET", "valore": 0}).execute()
                     if esperimento_sel == "macchina":
-                        supabase.table("Risposte").delete().eq("esperimento", "macchina_vetri").execute()
+                        supabase.table("Risposte").insert({"esperimento": "macchina_vetri_reset", "gruppo": "RESET", "valore": 0}).execute()
                 except Exception:
                     pass
                 st.cache_data.clear()
