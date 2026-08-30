@@ -39,7 +39,6 @@ html, body, [class*="css"] {{ font-family: 'Inter', sans-serif; }}
 </style>
 ''', unsafe_allow_html=True)
 
-@st.cache_resource
 def get_supabase():
     return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
 
@@ -60,17 +59,19 @@ if "gruppo" not in st.session_state:
         st.session_state.gruppo = st.query_params["g"]
     else:
         assigned = False
-        try:
-            r = supabase.table("Risposte").insert({{"esperimento": NOME_ESPERIMENTO + "_visit", "gruppo": "PENDING", "valore": 0}}).execute()
-            if r.data and len(r.data) > 0 and "id" in r.data[0]:
-                row_id = r.data[0]["id"]
-                st.session_state.gruppo = "A" if row_id % 2 == 1 else "B"
-                assigned = True
-        except Exception:
-            pass
+        for attempt in range(3):
+            try:
+                sb_client = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
+                r = sb_client.table("Risposte").insert({{"esperimento": NOME_ESPERIMENTO + "_visit", "gruppo": "PENDING", "valore": 0}}).execute()
+                if r.data and len(r.data) > 0 and "id" in r.data[0]:
+                    row_id = r.data[0]["id"]
+                    st.session_state.gruppo = "A" if row_id % 2 == 1 else "B"
+                    assigned = True
+                    break
+            except Exception:
+                time.sleep(0.05)
         if not assigned:
-            import time
-            st.session_state.gruppo = "A" if (time.time_ns() + random.SystemRandom().randint(0, 1)) % 2 == 1 else "B"
+            st.session_state.gruppo = "A" if int(time.time() * 1000) % 2 == 1 else "B"
 
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
