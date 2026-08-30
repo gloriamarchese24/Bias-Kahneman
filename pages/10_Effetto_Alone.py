@@ -44,12 +44,18 @@ if "gruppo" not in st.session_state:
     if "g" in st.query_params and st.query_params["g"] in ["A", "B"]:
         st.session_state.gruppo = st.query_params["g"]
     else:
+        assigned = False
         try:
             r = supabase.table("Risposte").insert({"esperimento": NOME_ESPERIMENTO + "_visit", "gruppo": "PENDING", "valore": 0}).execute()
-            row_id = r.data[0]["id"]
-            st.session_state.gruppo = "A" if row_id % 2 == 1 else "B"
+            if r.data and len(r.data) > 0 and "id" in r.data[0]:
+                row_id = r.data[0]["id"]
+                st.session_state.gruppo = "A" if row_id % 2 == 1 else "B"
+                assigned = True
         except Exception:
-            st.session_state.gruppo = random.choice(["A", "B"])
+            pass
+        if not assigned:
+            import time
+            st.session_state.gruppo = "A" if (time.time_ns() + random.SystemRandom().randint(0, 1)) % 2 == 1 else "B"
 
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
