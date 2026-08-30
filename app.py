@@ -90,12 +90,14 @@ with st.sidebar:
         chk = st.checkbox("Confermo cancellazione / Confirm deletion", key="del_chk")
         if st.button("🗑️ CANCELLA ORA / DELETE NOW", type="primary", use_container_width=True):
             if chk:
-                supabase.table("Risposte").delete().eq("esperimento", esperimento_sel).execute()
-                supabase.table("Risposte").delete().eq("esperimento", esperimento_sel + "_visit").execute()
-                if esperimento_sel == "macchina":
-                    supabase.table("Risposte").delete().eq("esperimento", "macchina_vetri").execute()
-                    supabase.table("Risposte").delete().eq("esperimento", "macchina_vetri_visit").execute()
+                try:
+                    supabase.table("Risposte").delete().eq("esperimento", esperimento_sel).execute()
+                    if esperimento_sel == "macchina":
+                        supabase.table("Risposte").delete().eq("esperimento", "macchina_vetri").execute()
+                except Exception:
+                    pass
                 st.cache_data.clear()
+                st.cache_resource.clear()
                 st.success("✅ Risposte cancellate con successo!")
                 time.sleep(0.5)
                 st.rerun()
