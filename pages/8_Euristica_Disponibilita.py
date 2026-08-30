@@ -60,14 +60,14 @@ st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", u
 if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.session_state.gruppo == "A":
-        st.markdown("""1. Pensa ed elenca **6 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
+        st.markdown("""1. Richiama alla memoria ed elenca **6 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
         st.text_area('Scrivi in breve le 6 situazioni:', height=140, key='t1')
         st.markdown("""---""")
         st.markdown("""**In generale nella tua vita, quanto ritieni di essere una persona assertiva (1-10)?**""")
         val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')
 
     else:
-        st.markdown("""1. Pensa ed elenca **12 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
+        st.markdown("""1. Richiama alla memoria ed elenca **12 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
         st.text_area('Scrivi in breve le 12 situazioni:', height=200, key='t2')
         st.markdown("""---""")
         st.markdown("""**In generale nella tua vita, quanto ritieni di essere una persona assertiva (1-10)?**""")

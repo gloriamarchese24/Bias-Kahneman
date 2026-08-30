@@ -60,14 +60,14 @@ st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""",
 if not st.session_state[NOME_ESPERIMENTO]:
 
     if st.session_state.gruppo == "A":
-        st.markdown("""1. Think of and list **6 situations** in which you managed to behave very assertively (standing up firmly for your point of view).""")
+        st.markdown("""1. Recall and list **6 situations** in which you managed to behave very assertively (standing up firmly for your point of view).""")
         st.text_area('Briefly list the 6 situations:', height=140, key='t1')
         st.markdown("""---""")
         st.markdown("""**In general, how assertive do you consider yourself to be (1-10)?**""")
         val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')
 
     else:
-        st.markdown("""1. Think of and list **12 situations** in which you managed to behave very assertively (standing up firmly for your point of view).""")
+        st.markdown("""1. Recall and list **12 situations** in which you managed to behave very assertively (standing up firmly for your point of view).""")
         st.text_area('Briefly list the 12 situations:', height=200, key='t2')
         st.markdown("""---""")
         st.markdown("""**In general, how assertive do you consider yourself to be (1-10)?**""")
