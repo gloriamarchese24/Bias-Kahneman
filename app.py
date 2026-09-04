@@ -112,8 +112,10 @@ with st.sidebar:
 
 # ─── MAIN ─────────────────────────────────────────────────────────────
 exp = ESPERIMENTI[esperimento_sel]
+
 st.markdown(f'<h1 class="main-title">{exp["titolo"][4:]}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="sub-title">{exp["desc"]}</p>', unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #FF6584; font-weight: bold;'>⚠️ Sta visualizzando i risultati di: " + exp['titolo'] + "<br><span style='font-size: 0.8em; color: #888;'>Se hai selezionato un altro esperimento nel menu ma continui a vedere questo, togli la spunta da 'Auto-refresh' a sinistra e riprova!</span></p>", unsafe_allow_html=True)
 st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
 
 if not data:
