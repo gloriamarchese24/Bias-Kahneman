@@ -92,7 +92,6 @@ with st.sidebar:
         st.download_button(label="📥 Scarica Dati (CSV)", data=output.getvalue().encode('utf-8'), file_name=f"risposte_{esperimento_sel}.csv", mime="text/csv", use_container_width=True)
     
     with st.expander("🗑️ Cancella Risposte / Clear Data"):
-        st.warning("⚠️ Azione Irreversibile / Irreversible Action")
         chk = st.checkbox("Confermo cancellazione / Confirm deletion", key="del_chk")
         if st.button("🗑️ CANCELLA ORA / DELETE NOW", type="primary", use_container_width=True):
             if chk:
@@ -115,7 +114,6 @@ exp = ESPERIMENTI[esperimento_sel]
 
 st.markdown(f'<h1 class="main-title">{exp["titolo"][4:]}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="sub-title">{exp["desc"]}</p>', unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #FF6584; font-weight: bold;'>⚠️ Sta visualizzando i risultati di: " + exp['titolo'] + "<br><span style='font-size: 0.8em; color: #888;'>Se hai selezionato un altro esperimento nel menu ma continui a vedere questo, togli la spunta da 'Auto-refresh' a sinistra e riprova!</span></p>", unsafe_allow_html=True)
 st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
 
 if not data:
@@ -123,8 +121,8 @@ if not data:
 else:
     # ─── A/B EXPERIMENTS ──────────────────────────────────────────────
     if exp["tipo"].startswith("ab"):
-        val_a = [r["valore"] for r in data if r["gruppo"] == "A"]
-        val_b = [r["valore"] for r in data if r["gruppo"] == "B"]
+        val_a = [r["valore"] for r in data if r["gruppo"] == "A" and r["valore"] is not None]
+        val_b = [r["valore"] for r in data if r["gruppo"] == "B" and r["valore"] is not None]
         
         # Metriche Medie
         media_a = sum(val_a)/len(val_a) if val_a else 0
@@ -168,27 +166,31 @@ else:
                 fB.update_layout(title=exp["gruppo_b"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
                 st.plotly_chart(fB, use_container_width=True)
 
+        vetri_container = st.empty()
         if esperimento_sel == "macchina":
-            st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
-            st.markdown('<h2 style="text-align:center;">Did you see any broken glass?</h2>', unsafe_allow_html=True)
-            
-            data_vetri = fetch_data("macchina_vetri")
-            if data_vetri:
-                val_vetri_a = [r["valore"] for r in data_vetri if r["gruppo"] == "A"]
-                val_vetri_b = [r["valore"] for r in data_vetri if r["gruppo"] == "B"]
+            with vetri_container.container():
+                st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
+                st.markdown('<h2 style="text-align:center;">Did you see any broken glass?</h2>', unsafe_allow_html=True)
                 
-                counts_a = {"Yes": val_vetri_a.count(1), "No": val_vetri_a.count(0)}
-                counts_b = {"Yes": val_vetri_b.count(1), "No": val_vetri_b.count(0)}
-                
-                c1_v, c2_v = st.columns(2)
-                with c1_v:
-                    fA_v = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
-                    fA_v.update_layout(title=exp['gruppo_a'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                    st.plotly_chart(fA_v, use_container_width=True)
-                with c2_v:
-                    fB_v = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
-                    fB_v.update_layout(title=exp['gruppo_b'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                    st.plotly_chart(fB_v, use_container_width=True)
+                data_vetri = fetch_data("macchina_vetri")
+                if data_vetri:
+                    val_vetri_a = [r["valore"] for r in data_vetri if r["gruppo"] == "A"]
+                    val_vetri_b = [r["valore"] for r in data_vetri if r["gruppo"] == "B"]
+                    
+                    counts_a = {"Yes": val_vetri_a.count(1), "No": val_vetri_a.count(0)}
+                    counts_b = {"Yes": val_vetri_b.count(1), "No": val_vetri_b.count(0)}
+                    
+                    c1_v, c2_v = st.columns(2)
+                    with c1_v:
+                        fA_v = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
+                        fA_v.update_layout(title=exp['gruppo_a'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+                        st.plotly_chart(fA_v, use_container_width=True)
+                    with c2_v:
+                        fB_v = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
+                        fB_v.update_layout(title=exp['gruppo_b'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+                        st.plotly_chart(fB_v, use_container_width=True)
+        else:
+            vetri_container.empty()
 
     # ─── SINGLE DEMOS ─────────────────────────────────────────────────
     else:
