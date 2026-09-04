@@ -27,6 +27,8 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 def get_supabase():
     return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
 
+supabase = get_supabase()
+
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
