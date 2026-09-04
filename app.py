@@ -151,29 +151,7 @@ else:
                 fB.add_vline(x=media_b, line_dash="dash", line_color="#FFF")
                 fB.update_layout(title=exp["gruppo_b"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
                 st.plotly_chart(fB, use_container_width=True)
-
-            if esperimento_sel == "macchina":
-                st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
-                st.markdown('<h2 style="text-align:center;">Did you see any broken glass?</h2>', unsafe_allow_html=True)
                 
-                data_vetri = fetch_data("macchina_vetri")
-                if data_vetri:
-                    val_vetri_a = [r["valore"] for r in data_vetri if r["gruppo"] == "A"]
-                    val_vetri_b = [r["valore"] for r in data_vetri if r["gruppo"] == "B"]
-                    
-                    counts_a = {"Yes": val_vetri_a.count(1), "No": val_vetri_a.count(0)}
-                    counts_b = {"Yes": val_vetri_b.count(1), "No": val_vetri_b.count(0)}
-                    
-                    c1_v, c2_v = st.columns(2)
-                    with c1_v:
-                        fA_v = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
-                        fA_v.update_layout(title=exp['gruppo_a'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                        st.plotly_chart(fA_v, use_container_width=True)
-                    with c2_v:
-                        fB_v = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
-                        fB_v.update_layout(title=exp['gruppo_b'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                        st.plotly_chart(fB_v, use_container_width=True)
-        
         elif exp["tipo"] == "ab_cat":
             map_dict = exp["val_map"]
             counts_a = {map_dict[k]: val_a.count(k) for k in map_dict}
@@ -187,6 +165,28 @@ else:
                 fB = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#444', '#FF6584'])])
                 fB.update_layout(title=exp["gruppo_b"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
                 st.plotly_chart(fB, use_container_width=True)
+
+        if esperimento_sel == "macchina":
+            st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
+            st.markdown('<h2 style="text-align:center;">Did you see any broken glass?</h2>', unsafe_allow_html=True)
+            
+            data_vetri = fetch_data("macchina_vetri")
+            if data_vetri:
+                val_vetri_a = [r["valore"] for r in data_vetri if r["gruppo"] == "A"]
+                val_vetri_b = [r["valore"] for r in data_vetri if r["gruppo"] == "B"]
+                
+                counts_a = {"Yes": val_vetri_a.count(1), "No": val_vetri_a.count(0)}
+                counts_b = {"Yes": val_vetri_b.count(1), "No": val_vetri_b.count(0)}
+                
+                c1_v, c2_v = st.columns(2)
+                with c1_v:
+                    fA_v = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
+                    fA_v.update_layout(title=exp['gruppo_a'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+                    st.plotly_chart(fA_v, use_container_width=True)
+                with c2_v:
+                    fB_v = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
+                    fB_v.update_layout(title=exp['gruppo_b'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+                    st.plotly_chart(fB_v, use_container_width=True)
 
     # ─── SINGLE DEMOS ─────────────────────────────────────────────────
     else:
