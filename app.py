@@ -65,11 +65,11 @@ ESPERIMENTI = {
 
 # ─── SIDEBAR ──────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## 🧠 Elenco")
-    esperimento_sel = st.selectbox("Scegli esperimento:", options=list(ESPERIMENTI.keys()), format_func=lambda x: ESPERIMENTI[x]["titolo"])
+    st.markdown("## 🧠 Experiments List")
+    esperimento_sel = st.selectbox("Choose experiment:", options=list(ESPERIMENTI.keys()), format_func=lambda x: ESPERIMENTI[x]["titolo"])
     st.markdown("---")
     auto_refresh = st.checkbox("🔄 Auto-refresh (5s)", value=True)
-    if st.button("🔄 Aggiorna ora"): st.rerun()
+    if st.button("🔄 Refresh now"): st.rerun()
     st.markdown("---")
     
     @st.cache_data(ttl=3)
@@ -89,11 +89,11 @@ with st.sidebar:
         writer = csv.DictWriter(output, fieldnames=data[0].keys())
         writer.writeheader()
         writer.writerows(data)
-        st.download_button(label="📥 Scarica Dati (CSV)", data=output.getvalue().encode('utf-8'), file_name=f"risposte_{esperimento_sel}.csv", mime="text/csv", use_container_width=True)
+        st.download_button(label="📥 Download Data (CSV)", data=output.getvalue().encode('utf-8'), file_name=f"risposte_{esperimento_sel}.csv", mime="text/csv", use_container_width=True)
     
-    with st.expander("🗑️ Cancella Risposte / Clear Data"):
-        chk = st.checkbox("Confermo cancellazione / Confirm deletion", key="del_chk")
-        if st.button("🗑️ CANCELLA ORA / DELETE NOW", type="primary", use_container_width=True):
+    with st.expander("🗑️ Clear Data"):
+        chk = st.checkbox("Confirm deletion", key="del_chk")
+        if st.button("🗑️ DELETE NOW", type="primary", use_container_width=True):
             if chk:
                 try:
                     supabase.table("Risposte").insert({"esperimento": esperimento_sel + "_reset", "gruppo": "RESET", "valore": 0}).execute()
@@ -103,11 +103,11 @@ with st.sidebar:
                     pass
                 st.cache_data.clear()
                 st.cache_resource.clear()
-                st.success("✅ Risposte cancellate con successo!")
+                st.success("✅ Data cleared successfully!")
                 time.sleep(0.5)
                 st.rerun()
             else:
-                st.error("Spunta la casella di conferma sopra!")
+                st.error("Please check the confirmation box above!")
 
 # ─── MAIN ─────────────────────────────────────────────────────────────
 exp = ESPERIMENTI[esperimento_sel]
@@ -117,7 +117,7 @@ st.markdown(f'<p class="sub-title">{exp["desc"]}</p>', unsafe_allow_html=True)
 st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
 
 if not data:
-    st.markdown('<div class="info-box"><h3>📱 In attesa di risposte...</h3><p>Fai Scannerizzare il QR Code! I risultati appariranno in tempo reale.</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="info-box"><h3>📱 Waiting for responses...</h3><p>Scan the QR Code! Results will appear here in real time.</p></div>', unsafe_allow_html=True)
 else:
     # ─── A/B EXPERIMENTS ──────────────────────────────────────────────
     if exp["tipo"].startswith("ab"):
@@ -131,7 +131,7 @@ else:
         
         c1, c2, c3 = st.columns(3)
         c1.markdown(f'<div class="metric-card"><p class="metric-label">{exp.get("gruppo_a", "A")}</p><p class="metric-value" style="color:#6C63FF">{media_a:.1f}</p><span class="count-badge">📊 {len(val_a)} resp</span></div>', unsafe_allow_html=True)
-        c2.markdown(f'<div class="diff-card"><p class="metric-label">Differenza</p><p class="diff-value">Δ {diff:.1f}</p></div>', unsafe_allow_html=True)
+        c2.markdown(f'<div class="diff-card"><p class="metric-label">Difference</p><p class="diff-value">Δ {diff:.1f}</p></div>', unsafe_allow_html=True)
         c3.markdown(f'<div class="metric-card"><p class="metric-label">{exp.get("gruppo_b", "B")}</p><p class="metric-value" style="color:#FF6584">{media_b:.1f}</p><span class="count-badge">📊 {len(val_b)} resp</span></div>', unsafe_allow_html=True)
         
         st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
@@ -139,30 +139,29 @@ else:
         c1, c2 = st.columns(2)
         
         if exp["tipo"] == "ab_num":
-            with c1:
-                fA = go.Figure()
-                fA.add_trace(go.Histogram(x=val_a, marker_color='#6C63FF'))
-                fA.add_vline(x=media_a, line_dash="dash", line_color="#FFF")
-                fA.update_layout(title=exp["gruppo_a"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fA, use_container_width=True)
-            with c2:
-                fB = go.Figure()
-                fB.add_trace(go.Histogram(x=val_b, marker_color='#FF6584'))
-                fB.add_vline(x=media_b, line_dash="dash", line_color="#FFF")
-                fB.update_layout(title=exp["gruppo_b"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fB, use_container_width=True)
+            fig = go.Figure(data=[
+                go.Bar(name=exp.get("gruppo_a", "A"), x=[exp.get("gruppo_a", "A")], y=[media_a], marker_color='#6C63FF', text=[f"{media_a:.1f}"], textposition='auto'),
+                go.Bar(name=exp.get("gruppo_b", "B"), x=[exp.get("gruppo_b", "B")], y=[media_b], marker_color='#FF6584', text=[f"{media_b:.1f}"], textposition='auto')
+            ])
+            fig.update_layout(title="Average Comparison", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", yaxis_title=exp.get("unita", ""))
+            st.plotly_chart(fig, use_container_width=True)
                 
         elif exp["tipo"] == "ab_cat":
             map_dict = exp["val_map"]
             counts_a = {map_dict[k]: val_a.count(k) for k in map_dict}
             counts_b = {map_dict[k]: val_b.count(k) for k in map_dict}
             
+            labels = list(counts_a.keys())
+            vals_a = list(counts_a.values())
+            vals_b = list(counts_b.values())
+            colors = ['#6C63FF', '#FF6584', '#00FF88', '#FFA600']
+            
             with c1:
-                fA = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#444', '#6C63FF'])])
+                fA = go.Figure(data=[go.Pie(labels=labels, values=vals_a, hole=.3, marker_colors=colors)])
                 fA.update_layout(title=exp["gruppo_a"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
                 st.plotly_chart(fA, use_container_width=True)
             with c2:
-                fB = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#444', '#FF6584'])])
+                fB = go.Figure(data=[go.Pie(labels=labels, values=vals_b, hole=.3, marker_colors=colors)])
                 fB.update_layout(title=exp["gruppo_b"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
                 st.plotly_chart(fB, use_container_width=True)
 
@@ -195,20 +194,20 @@ else:
     # ─── SINGLE DEMOS ─────────────────────────────────────────────────
     else:
         vals = [r["valore"] for r in data]
-        st.markdown(f'<div class="metric-card"><p class="metric-label">PARTECIPANTI TOTALI</p><p class="metric-value">{len(vals)}</p></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="metric-card"><p class="metric-label">TOTAL PARTICIPANTS</p><p class="metric-value">{len(vals)}</p></div>', unsafe_allow_html=True)
         
         st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
         
         if exp["tipo"] == "single_num":
             fig = go.Figure(data=[go.Histogram(x=vals, marker_color='#00FF88')])
-            fig.update_layout(title="Distribuzione Risposte", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+            fig.update_layout(title="Responses Distribution", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig, use_container_width=True)
             
         elif exp["tipo"] == "single_cat":
             map_dict = exp["val_map"]
             counts = {map_dict[k]: vals.count(k) for k in map_dict}
-            fig = go.Figure(data=[go.Pie(labels=list(counts.keys()), values=list(counts.values()), hole=.4, marker_colors=['#444', '#00FF88', '#6C63FF'])])
-            fig.update_layout(title="Voti Classe", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+            fig = go.Figure(data=[go.Pie(labels=list(counts.keys()), values=list(counts.values()), hole=.4, marker_colors=['#6C63FF', '#FF6584', '#00FF88', '#FFA600'])])
+            fig.update_layout(title="Group Votes", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig, use_container_width=True)
 
 if auto_refresh:
