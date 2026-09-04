@@ -166,11 +166,11 @@ else:
                     
                     c1_v, c2_v = st.columns(2)
                     with c1_v:
-                        fA_v = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#6C63FF', '#444'])])
+                        fA_v = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#00FF88', '#444'])])
                         fA_v.update_layout(title=exp['gruppo_a'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
                         st.plotly_chart(fA_v, use_container_width=True)
                     with c2_v:
-                        fB_v = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#FF6584', '#444'])])
+                        fB_v = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#00FF88', '#444'])])
                         fB_v.update_layout(title=exp['gruppo_b'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
                         st.plotly_chart(fB_v, use_container_width=True)
         
