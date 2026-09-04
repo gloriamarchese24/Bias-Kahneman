@@ -53,7 +53,7 @@ ESPERIMENTI = {
     "default_organ": {"titolo": "15. 🫀 Default Effect (Organ Donation)", "desc": "Opt-IN vs Opt-OUT enrollment form.", "gruppo_a": "Opt-IN Form", "gruppo_b": "Opt-OUT Form", "unita": "% Effective Donors", "tipo": "ab_cat", "val_map": {0: "Non-Donor", 1: "Organ Donor"}},
     "priming": {"titolo": "16. 🍝 Associative Priming", "desc": "Food prime vs Shower prime.", "gruppo_a": "Food Prime", "gruppo_b": "Shower Prime", "unita": "% Word Completion", "tipo": "ab_cat", "val_map": {0: "Other", 1: "SOUP", 2: "SOAP"}},
     "dunning": {"titolo": "17. 🎓 Dunning-Kruger Effect / Overconfidence", "desc": "Peer comparison vs Nobel laureate comparison.", "gruppo_a": "vs Classmates", "gruppo_b": "vs Nobel Laureate", "unita": "% Perceived Superior", "tipo": "ab_cat", "val_map": {0: "Average / Below", 1: "Above Average"}},
-    "wysiati": {"titolo": "18. 👁️ Visual WYSIATI (Bruner & Potter, 1964)", "desc": "Open text unguided first impression.", "gruppo_a": "Continuous Fluid Unblurring (8s)", "gruppo_b": "4 Discrete Step Frames", "unita": "% Responses", "tipo": "ab_cat", "val_map": {0: "Initial Wrong Impression", 1: "Fire Hydrant / Extinguisher"}},
+    "wysiati": {"titolo": "18. 👁️ Visual WYSIATI (Bruner & Potter, 1964)", "desc": "Open text unguided first impression.", "gruppo_a": "Continuous Fluid Unblurring (13s)", "gruppo_b": "8 Discrete Step Frames (1.5s/step)", "unita": "% Responses", "tipo": "ab_cat", "val_map": {0: "Initial Wrong Impression", 1: "Fire Hydrant / Extinguisher"}},
     "focalizzazione": {"titolo": "19. 😊 Focusing Illusion (Kahneman)", "desc": "Order of happiness questions.", "gruppo_a": "Happiness -> Dating", "gruppo_b": "Dating -> Happiness", "unita": "Happiness Rating (1-10)", "tipo": "ab_num"},
     
     # SINGLE DEMOS
