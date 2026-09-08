@@ -144,7 +144,7 @@ else:
                 go.Bar(name=exp.get("gruppo_b", "B"), x=[exp.get("gruppo_b", "B")], y=[media_b], marker_color='#FF6584', text=[f"{media_b:.1f}"], textposition='auto')
             ])
             fig.update_layout(title="Average Comparison", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", yaxis_title=exp.get("unita", ""))
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True, key=f"ab_num_bar_{esperimento_sel}")
                 
         elif exp["tipo"] == "ab_cat":
             map_dict = exp["val_map"]
@@ -159,11 +159,11 @@ else:
             with c1:
                 fA = go.Figure(data=[go.Pie(labels=labels, values=vals_a, hole=.3, marker_colors=colors)])
                 fA.update_layout(title=exp["gruppo_a"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fA, use_container_width=True)
+                st.plotly_chart(fA, use_container_width=True, key=f"ab_cat_pieA_{esperimento_sel}")
             with c2:
                 fB = go.Figure(data=[go.Pie(labels=labels, values=vals_b, hole=.3, marker_colors=colors)])
                 fB.update_layout(title=exp["gruppo_b"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fB, use_container_width=True)
+                st.plotly_chart(fB, use_container_width=True, key=f"ab_cat_pieB_{esperimento_sel}")
 
 
     # ─── SINGLE DEMOS ─────────────────────────────────────────────────
@@ -176,40 +176,36 @@ else:
         if exp["tipo"] == "single_num":
             fig = go.Figure(data=[go.Histogram(x=vals, marker_color='#00FF88')])
             fig.update_layout(title="Responses Distribution", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True, key=f"single_num_hist_{esperimento_sel}")
             
         elif exp["tipo"] == "single_cat":
             map_dict = exp["val_map"]
             counts = {map_dict[k]: vals.count(k) for k in map_dict}
             fig = go.Figure(data=[go.Pie(labels=list(counts.keys()), values=list(counts.values()), hole=.4, marker_colors=['#6C63FF', '#FF6584', '#00FF88', '#FFA600'])])
             fig.update_layout(title="Group Votes", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True, key=f"single_cat_pie_{esperimento_sel}")
 
-vetri_container = st.empty()
 if esperimento_sel == "macchina":
-    with vetri_container.container():
-        st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
-        st.markdown('<h2 style="text-align:center;">Did you see any broken glass?</h2>', unsafe_allow_html=True)
+    st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
+    st.markdown('<h2 style="text-align:center;">Did you see any broken glass?</h2>', unsafe_allow_html=True)
+    
+    data_vetri = fetch_data("macchina_vetri")
+    if data_vetri:
+        val_vetri_a = [r["valore"] for r in data_vetri if r["gruppo"] == "A"]
+        val_vetri_b = [r["valore"] for r in data_vetri if r["gruppo"] == "B"]
         
-        data_vetri = fetch_data("macchina_vetri")
-        if data_vetri:
-            val_vetri_a = [r["valore"] for r in data_vetri if r["gruppo"] == "A"]
-            val_vetri_b = [r["valore"] for r in data_vetri if r["gruppo"] == "B"]
-            
-            counts_a = {"Yes": val_vetri_a.count(1), "No": val_vetri_a.count(0)}
-            counts_b = {"Yes": val_vetri_b.count(1), "No": val_vetri_b.count(0)}
-            
-            c1_v, c2_v = st.columns(2)
-            with c1_v:
-                fA_v = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
-                fA_v.update_layout(title=exp['gruppo_a'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fA_v, use_container_width=True)
-            with c2_v:
-                fB_v = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
-                fB_v.update_layout(title=exp['gruppo_b'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fB_v, use_container_width=True)
-else:
-    vetri_container.empty()
+        counts_a = {"Yes": val_vetri_a.count(1), "No": val_vetri_a.count(0)}
+        counts_b = {"Yes": val_vetri_b.count(1), "No": val_vetri_b.count(0)}
+        
+        c1_v, c2_v = st.columns(2)
+        with c1_v:
+            fA_v = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
+            fA_v.update_layout(title=exp['gruppo_a'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+            st.plotly_chart(fA_v, use_container_width=True, key="macchina_vetri_A")
+        with c2_v:
+            fB_v = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
+            fB_v.update_layout(title=exp['gruppo_b'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+            st.plotly_chart(fB_v, use_container_width=True, key="macchina_vetri_B")
 
 if auto_refresh:
     time.sleep(5)
