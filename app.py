@@ -185,10 +185,6 @@ else:
             fig.update_layout(title="Group Votes", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig, use_container_width=True)
 
-if auto_refresh:
-    time.sleep(5)
-    st.rerun()
-
 vetri_container = st.empty()
 if esperimento_sel == "macchina":
     with vetri_container.container():
@@ -214,3 +210,7 @@ if esperimento_sel == "macchina":
                 st.plotly_chart(fB_v, use_container_width=True)
 else:
     vetri_container.empty()
+
+if auto_refresh:
+    time.sleep(5)
+    st.rerun()
