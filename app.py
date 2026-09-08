@@ -119,97 +119,102 @@ st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
 if not data:
     st.markdown('<div class="info-box"><h3>📱 Waiting for responses...</h3><p>Scan the QR Code! Results will appear here in real time.</p></div>', unsafe_allow_html=True)
 else:
+    placeholder_ab = st.empty()
+    placeholder_single = st.empty()
+    placeholder_vetri = st.empty()
+    
+    placeholder_ab.empty()
+    placeholder_single.empty()
+    placeholder_vetri.empty()
+
     # ─── A/B EXPERIMENTS ──────────────────────────────────────────────
     if exp["tipo"].startswith("ab"):
-        val_a = [r["valore"] for r in data if r["gruppo"] == "A" and r["valore"] is not None]
-        val_b = [r["valore"] for r in data if r["gruppo"] == "B" and r["valore"] is not None]
-        
-        # Metriche Medie
-        media_a = sum(val_a)/len(val_a) if val_a else 0
-        media_b = sum(val_b)/len(val_b) if val_b else 0
-        diff = abs(media_a - media_b)
-        
-        c1, c2, c3 = st.columns(3)
-        c1.markdown(f'<div class="metric-card"><p class="metric-label">{exp.get("gruppo_a", "A")}</p><p class="metric-value" style="color:#6C63FF">{media_a:.1f}</p><span class="count-badge">📊 {len(val_a)} resp</span></div>', unsafe_allow_html=True)
-        c2.markdown(f'<div class="diff-card"><p class="metric-label">Difference</p><p class="diff-value">Δ {diff:.1f}</p></div>', unsafe_allow_html=True)
-        c3.markdown(f'<div class="metric-card"><p class="metric-label">{exp.get("gruppo_b", "B")}</p><p class="metric-value" style="color:#FF6584">{media_b:.1f}</p><span class="count-badge">📊 {len(val_b)} resp</span></div>', unsafe_allow_html=True)
-        
-        st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
-        
-        c1, c2 = st.columns(2)
-        
-        if exp["tipo"] == "ab_num":
-            fig = go.Figure(data=[
-                go.Bar(name=exp.get("gruppo_a", "A"), x=[exp.get("gruppo_a", "A")], y=[media_a], marker_color='#6C63FF', text=[f"{media_a:.1f}"], textposition='auto'),
-                go.Bar(name=exp.get("gruppo_b", "B"), x=[exp.get("gruppo_b", "B")], y=[media_b], marker_color='#FF6584', text=[f"{media_b:.1f}"], textposition='auto')
-            ])
-            fig.update_layout(title="Average Comparison", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", yaxis_title=exp.get("unita", ""))
-            st.plotly_chart(fig, use_container_width=True, key=f"ab_num_bar_{esperimento_sel}")
+        with placeholder_ab.container():
+            val_a = [r["valore"] for r in data if r["gruppo"] == "A" and r["valore"] is not None]
+            val_b = [r["valore"] for r in data if r["gruppo"] == "B" and r["valore"] is not None]
+            
+            # Metriche Medie
+            media_a = sum(val_a)/len(val_a) if val_a else 0
+            media_b = sum(val_b)/len(val_b) if val_b else 0
+            diff = abs(media_a - media_b)
+            
+            c1, c2, c3 = st.columns(3)
+            c1.markdown(f'<div class="metric-card"><p class="metric-label">{exp.get("gruppo_a", "A")}</p><p class="metric-value" style="color:#6C63FF">{media_a:.1f}</p><span class="count-badge">📊 {len(val_a)} resp</span></div>', unsafe_allow_html=True)
+            c2.markdown(f'<div class="diff-card"><p class="metric-label">Difference</p><p class="diff-value">Δ {diff:.1f}</p></div>', unsafe_allow_html=True)
+            c3.markdown(f'<div class="metric-card"><p class="metric-label">{exp.get("gruppo_b", "B")}</p><p class="metric-value" style="color:#FF6584">{media_b:.1f}</p><span class="count-badge">📊 {len(val_b)} resp</span></div>', unsafe_allow_html=True)
+            
+            st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
+            
+            if exp["tipo"] == "ab_num":
+                fig = go.Figure(data=[
+                    go.Bar(name=exp.get("gruppo_a", "A"), x=[exp.get("gruppo_a", "A")], y=[media_a], marker_color='#6C63FF', text=[f"{media_a:.1f}"], textposition='auto'),
+                    go.Bar(name=exp.get("gruppo_b", "B"), x=[exp.get("gruppo_b", "B")], y=[media_b], marker_color='#FF6584', text=[f"{media_b:.1f}"], textposition='auto')
+                ])
+                fig.update_layout(title="Average Comparison", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", yaxis_title=exp.get("unita", ""))
+                st.plotly_chart(fig, use_container_width=True, key=f"ab_num_bar_{esperimento_sel}")
+                    
+            elif exp["tipo"] == "ab_cat":
+                c1_chart, c2_chart = st.columns(2)
+                map_dict = exp["val_map"]
+                counts_a = {map_dict[k]: val_a.count(k) for k in map_dict}
+                counts_b = {map_dict[k]: val_b.count(k) for k in map_dict}
                 
-        elif exp["tipo"] == "ab_cat":
-            map_dict = exp["val_map"]
-            counts_a = {map_dict[k]: val_a.count(k) for k in map_dict}
-            counts_b = {map_dict[k]: val_b.count(k) for k in map_dict}
-            
-            labels = list(counts_a.keys())
-            vals_a = list(counts_a.values())
-            vals_b = list(counts_b.values())
-            colors = ['#6C63FF', '#FF6584', '#00FF88', '#FFA600']
-            
-            with c1:
-                fA = go.Figure(data=[go.Pie(labels=labels, values=vals_a, hole=.3, marker_colors=colors)])
-                fA.update_layout(title=exp["gruppo_a"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fA, use_container_width=True, key=f"ab_cat_pieA_{esperimento_sel}")
-            with c2:
-                fB = go.Figure(data=[go.Pie(labels=labels, values=vals_b, hole=.3, marker_colors=colors)])
-                fB.update_layout(title=exp["gruppo_b"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fB, use_container_width=True, key=f"ab_cat_pieB_{esperimento_sel}")
-
+                labels = list(counts_a.keys())
+                vals_a = list(counts_a.values())
+                vals_b = list(counts_b.values())
+                colors = ['#6C63FF', '#FF6584', '#00FF88', '#FFA600']
+                
+                with c1_chart:
+                    fA = go.Figure(data=[go.Pie(labels=labels, values=vals_a, hole=.3, marker_colors=colors)])
+                    fA.update_layout(title=exp["gruppo_a"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+                    st.plotly_chart(fA, use_container_width=True, key=f"ab_cat_pieA_{esperimento_sel}")
+                with c2_chart:
+                    fB = go.Figure(data=[go.Pie(labels=labels, values=vals_b, hole=.3, marker_colors=colors)])
+                    fB.update_layout(title=exp["gruppo_b"], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+                    st.plotly_chart(fB, use_container_width=True, key=f"ab_cat_pieB_{esperimento_sel}")
 
     # ─── SINGLE DEMOS ─────────────────────────────────────────────────
     else:
-        vals = [r["valore"] for r in data]
-        st.markdown(f'<div class="metric-card"><p class="metric-label">TOTAL PARTICIPANTS</p><p class="metric-value">{len(vals)}</p></div>', unsafe_allow_html=True)
-        
-        st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
-        
-        if exp["tipo"] == "single_num":
-            fig = go.Figure(data=[go.Histogram(x=vals, marker_color='#00FF88')])
-            fig.update_layout(title="Responses Distribution", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-            st.plotly_chart(fig, use_container_width=True, key=f"single_num_hist_{esperimento_sel}")
+        with placeholder_single.container():
+            vals = [r["valore"] for r in data]
+            st.markdown(f'<div class="metric-card"><p class="metric-label">TOTAL PARTICIPANTS</p><p class="metric-value">{len(vals)}</p></div>', unsafe_allow_html=True)
             
-        elif exp["tipo"] == "single_cat":
-            map_dict = exp["val_map"]
-            counts = {map_dict[k]: vals.count(k) for k in map_dict}
-            fig = go.Figure(data=[go.Pie(labels=list(counts.keys()), values=list(counts.values()), hole=.4, marker_colors=['#6C63FF', '#FF6584', '#00FF88', '#FFA600'])])
-            fig.update_layout(title="Group Votes", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-            st.plotly_chart(fig, use_container_width=True, key=f"single_cat_pie_{esperimento_sel}")
+            st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
+            
+            if exp["tipo"] == "single_num":
+                fig = go.Figure(data=[go.Histogram(x=vals, marker_color='#00FF88')])
+                fig.update_layout(title="Responses Distribution", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+                st.plotly_chart(fig, use_container_width=True, key=f"single_num_hist_{esperimento_sel}")
+                
+            elif exp["tipo"] == "single_cat":
+                map_dict = exp["val_map"]
+                counts = {map_dict[k]: vals.count(k) for k in map_dict}
+                fig = go.Figure(data=[go.Pie(labels=list(counts.keys()), values=list(counts.values()), hole=.4, marker_colors=['#6C63FF', '#FF6584', '#00FF88', '#FFA600'])])
+                fig.update_layout(title="Group Votes", template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+                st.plotly_chart(fig, use_container_width=True, key=f"single_cat_pie_{esperimento_sel}")
 
-vetri_container = st.empty()
-if esperimento_sel == "macchina":
-    with vetri_container.container():
-        st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
-        st.markdown('<h2 style="text-align:center;">Did you see any broken glass?</h2>', unsafe_allow_html=True)
-        
-        data_vetri = fetch_data("macchina_vetri")
-        if data_vetri:
-            val_vetri_a = [r["valore"] for r in data_vetri if r["gruppo"] == "A"]
-            val_vetri_b = [r["valore"] for r in data_vetri if r["gruppo"] == "B"]
+    if esperimento_sel == "macchina":
+        with placeholder_vetri.container():
+            st.markdown('<div class="wow-divider"></div>', unsafe_allow_html=True)
+            st.markdown('<h2 style="text-align:center;">Did you see any broken glass?</h2>', unsafe_allow_html=True)
             
-            counts_a = {"Yes": val_vetri_a.count(1), "No": val_vetri_a.count(0)}
-            counts_b = {"Yes": val_vetri_b.count(1), "No": val_vetri_b.count(0)}
-            
-            c1_v, c2_v = st.columns(2)
-            with c1_v:
-                fA_v = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
-                fA_v.update_layout(title=exp['gruppo_a'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fA_v, use_container_width=True, key="macchina_vetri_A")
-            with c2_v:
-                fB_v = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
-                fB_v.update_layout(title=exp['gruppo_b'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
-                st.plotly_chart(fB_v, use_container_width=True, key="macchina_vetri_B")
-else:
-    vetri_container.empty()
+            data_vetri = fetch_data("macchina_vetri")
+            if data_vetri:
+                val_vetri_a = [r["valore"] for r in data_vetri if r["gruppo"] == "A"]
+                val_vetri_b = [r["valore"] for r in data_vetri if r["gruppo"] == "B"]
+                
+                counts_a = {"Yes": val_vetri_a.count(1), "No": val_vetri_a.count(0)}
+                counts_b = {"Yes": val_vetri_b.count(1), "No": val_vetri_b.count(0)}
+                
+                c1_v, c2_v = st.columns(2)
+                with c1_v:
+                    fA_v = go.Figure(data=[go.Pie(labels=list(counts_a.keys()), values=list(counts_a.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
+                    fA_v.update_layout(title=exp['gruppo_a'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+                    st.plotly_chart(fA_v, use_container_width=True, key="macchina_vetri_A")
+                with c2_v:
+                    fB_v = go.Figure(data=[go.Pie(labels=list(counts_b.keys()), values=list(counts_b.values()), hole=.3, marker_colors=['#FFA600', '#444'])])
+                    fB_v.update_layout(title=exp['gruppo_b'], template="plotly_dark", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+                    st.plotly_chart(fB_v, use_container_width=True, key="macchina_vetri_B")
 
 if auto_refresh:
     time.sleep(5)
