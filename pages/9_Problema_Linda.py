@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,29 +68,30 @@ st.markdown("""<h1 class="exp-title">👩‍🦰 Il Profilo di Linda</h1>""", un
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Profilo:** Linda ha 31 anni, è single, molto schietta e brillante. È laureata in filosofia. Da studentessa era profondamente preoccupata per le questioni relative alla discriminazione e alla giustizia sociale, e ha anche partecipato a manifestazioni antinucleari.""")
-    st.markdown("""---""")
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
+        st.markdown("""**Profilo:** Linda ha 31 anni, è single, molto schietta e brillante. È laureata in filosofia. Da studentessa era profondamente preoccupata per le questioni relative alla discriminazione e alla giustizia sociale, e ha anche partecipato a manifestazioni antinucleari.""")
+        st.markdown("""---""")
 
-    if st.session_state.gruppo == "A":
-        val = st.number_input('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca**?', 0, 100, value=None, key='s1')
+        if st.session_state.gruppo == "A":
+            val = st.number_input('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca**?', 0, 100, value=None, key='s1')
 
-    else:
-        val = st.number_input('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca e che sia attiva nel movimento femminista**?', 0, 100, value=None, key='s2')
+        else:
+            val = st.number_input('Alla luce della sua descrizione, qual è la probabilità (0-100%) che oggi Linda sia **una cassiera di banca e che sia attiva nel movimento femminista**?', 0, 100, value=None, key='s2')
 
 
     
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Invia risposta", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

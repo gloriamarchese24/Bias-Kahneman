@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,29 +68,30 @@ st.markdown("""<h1 class="exp-title">🎰 Statistica Ospedaliera</h1>""", unsafe
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
 
-    if st.session_state.gruppo == "A":
-        val = st.number_input('Secondo te, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, value=None, key='s1')
+        if st.session_state.gruppo == "A":
+            val = st.number_input('Secondo te, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, value=None, key='s1')
 
-    else:
-        val = st.number_input('Secondo te, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, value=None, key='s2')
+        else:
+            val = st.number_input('Secondo te, qual è la percentuale esatta di diagnosi errate dovute a stanchezza del medico?', 0, 100, value=None, key='s2')
 
-    st.markdown("""---""")
-    st.markdown("""### Il numero estratto dalla ruota oggi è: **12**""" if st.session_state.gruppo == 'A' else """### Il numero estratto dalla ruota oggi è: **65**""")
+        st.markdown("""---""")
+        st.markdown("""### Il numero estratto dalla ruota oggi è: **12**""" if st.session_state.gruppo == 'A' else """### Il numero estratto dalla ruota oggi è: **65**""")
 
     
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Invia risposta", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,30 +68,31 @@ st.markdown("""<h1 class="exp-title">🍝 Words and Associations</h1>""", unsafe
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""Read quickly: FORK, LUNCH, HUNGER.""")
-        val = st.text_input('Complete the word: S O _ P', key='t1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""Read quickly: FORK, LUNCH, HUNGER.""")
+            val = st.text_input('Complete the word: S O _ P', key='t1')
 
-    else:
-        st.markdown("""Read quickly: SHOWER, FOAM, CLEAN.""")
-        val = st.text_input('Complete the word: S O _ P', key='t2')
+        else:
+            st.markdown("""Read quickly: SHOWER, FOAM, CLEAN.""")
+            val = st.text_input('Complete the word: S O _ P', key='t2')
 
 
     
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            v = 1 if 'soup' in val.lower() or 'sapore' in val.lower() else (2 if 'soap' in val.lower() or 'sapone' in val.lower() else 0)
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
+            if can_submit:
+                v = 1 if 'soup' in val.lower() or 'sapore' in val.lower() else (2 if 'soap' in val.lower() or 'sapone' in val.lower() else 0)
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

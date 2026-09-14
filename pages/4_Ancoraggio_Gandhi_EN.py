@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,35 +68,36 @@ st.markdown("""<h1 class="exp-title">👴 Gandhi's Age Anchoring</h1>""", unsafe
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""**Did Gandhi die before or after the age of 114?**""")
-        st.radio('', ['After 114', 'Before 114'], horizontal=True, index=None, key='r1')
-        st.markdown("""---""")
-        st.markdown("""**How old was he when he died according to your estimate?**""")
-        eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""**Did Gandhi die before or after the age of 114?**""")
+            st.radio('', ['After 114', 'Before 114'], horizontal=True, index=None, key='r1')
+            st.markdown("""---""")
+            st.markdown("""**How old was he when he died according to your estimate?**""")
+            eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n1')
 
-    else:
-        st.markdown("""**Did Gandhi die before or after the age of 35?**""")
-        st.radio('', ['After 35', 'Before 35'], horizontal=True, index=None, key='r2')
-        st.markdown("""---""")
-        st.markdown("""**How old was he when he died according to your estimate?**""")
-        eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n2')
+        else:
+            st.markdown("""**Did Gandhi die before or after the age of 35?**""")
+            st.radio('', ['After 35', 'Before 35'], horizontal=True, index=None, key='r2')
+            st.markdown("""---""")
+            st.markdown("""**How old was he when he died according to your estimate?**""")
+            eta = st.number_input('Enter age estimate (years):', 0, 150, value=None, key='n2')
 
 
     
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': eta}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

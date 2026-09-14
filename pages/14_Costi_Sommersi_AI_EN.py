@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,32 +68,33 @@ st.markdown("""<h1 class="exp-title">🏭 AI Research Investment</h1>""", unsafe
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""**Scenario:** You are the lead of a research team. TODAY you decided to start coding a new diagnostic algorithm.""")
-        st.markdown("""While drinking coffee, you read a news story: Google has just released a free algorithm that is technically superior to yours.""")
-        scelta = st.radio('What decision do you make?', ['Continue developing mine', 'Abandon my project'], index=None, key='r1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""**Scenario:** You are the lead of a research team. TODAY you decided to start coding a new diagnostic algorithm.""")
+            st.markdown("""While drinking coffee, you read a news story: Google has just released a free algorithm that is technically superior to yours.""")
+            scelta = st.radio('What decision do you make?', ['Continue developing mine', 'Abandon my project'], index=None, key='r1')
 
-    else:
-        st.markdown("""**Scenario:** You are the lead of a research team. For **4 full years** you and your team have worked tirelessly on a new algorithm (90% complete).""")
-        st.markdown("""While drinking coffee, you read a news story: Google has just released a free algorithm that is technically superior to yours.""")
-        scelta = st.radio('What decision do you make?', ['Continue developing mine', 'Abandon my project'], index=None, key='r2')
+        else:
+            st.markdown("""**Scenario:** You are the lead of a research team. For **4 full years** you and your team have worked tirelessly on a new algorithm (90% complete).""")
+            st.markdown("""While drinking coffee, you read a news story: Google has just released a free algorithm that is technically superior to yours.""")
+            scelta = st.radio('What decision do you make?', ['Continue developing mine', 'Abandon my project'], index=None, key='r2')
 
 
     
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            v = 1 if 'Continue' in scelta else 0
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
+            if can_submit:
+                v = 1 if 'Continue' in scelta else 0
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

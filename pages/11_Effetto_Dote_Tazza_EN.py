@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,33 +68,34 @@ st.markdown("""<h1 class="exp-title">☕ Thaler's Mug Experiment</h1>""", unsafe
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""**Scenario:** Congratulations! You have just been **GIVEN** this official university mug (it is now your property).""")
-        st.markdown("""<div style="text-align: center; font-size: 60px;">☕🎓</div>""", unsafe_allow_html=True)
-        st.markdown("""A classmate wants to buy it from you. What is the **MINIMUM PRICE** at which you are willing to sell it?""")
-        val = st.number_input('Price in Euros (€):', 0.0, 50.0, value=None, key='n1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""**Scenario:** Congratulations! You have just been **GIVEN** this official university mug (it is now your property).""")
+            st.markdown("""<div style="text-align: center; font-size: 60px;">☕🎓</div>""", unsafe_allow_html=True)
+            st.markdown("""A classmate wants to buy it from you. What is the **MINIMUM PRICE** at which you are willing to sell it?""")
+            val = st.number_input('Price in Euros (€):', 0.0, 50.0, value=None, key='n1')
 
-    else:
-        st.markdown("""**Scenario:** A classmate has just been given an official university mug. You currently do not have one.""")
-        st.markdown("""<div style="text-align: center; font-size: 60px;">☕🎓</div>""", unsafe_allow_html=True)
-        st.markdown("""They are willing to sell it. What is the **MAXIMUM PRICE** you are willing to pay right now to buy it from them?""")
-        val = st.number_input('Price in Euros (€):', 0.0, 50.0, value=None, key='n2')
+        else:
+            st.markdown("""**Scenario:** A classmate has just been given an official university mug. You currently do not have one.""")
+            st.markdown("""<div style="text-align: center; font-size: 60px;">☕🎓</div>""", unsafe_allow_html=True)
+            st.markdown("""They are willing to sell it. What is the **MAXIMUM PRICE** you are willing to pay right now to buy it from them?""")
+            val = st.number_input('Price in Euros (€):', 0.0, 50.0, value=None, key='n2')
 
 
     
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

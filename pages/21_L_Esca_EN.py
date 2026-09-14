@@ -33,21 +33,22 @@ st.markdown("""<h1 class="exp-title">🗞️ The Economist Subscription</h1>""",
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    scelta = st.radio('Choose:', ['A) Web Only ($50)', 'B) Print Only ($120)', 'C) Web + Print ($120)'], index=None)
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
+        scelta = st.radio('Choose:', ['A) Web Only ($50)', 'B) Print Only ($120)', 'C) Web + Print ($120)'], index=None)
 
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
+            if can_submit:
+                v = 1 if 'A)' in scelta else (2 if 'B)' in scelta else 3)
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

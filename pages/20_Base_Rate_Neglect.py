@@ -33,23 +33,24 @@ st.markdown("""<h1 class="exp-title">🔬 Paradosso Diagnostico</h1>""", unsafe_
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** Immagina che Una grave malattia genetica colpisca esattamente l'1% della popolazione mondiale.""")
-    st.markdown("""Un test in grado di individuarla è infallibile al 95% (5% falsi positivi/negativi).""")
-    st.markdown("""Fai il test e risulti **POSITIVO**.""")
-    val = st.number_input('Qual è la probabilità effettiva (0-100%) che tu abbia davvero la malattia?', 0, 100, value=None)
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
+        st.markdown("""**Scenario:** Immagina che Una grave malattia genetica colpisca esattamente l'1% della popolazione mondiale.""")
+        st.markdown("""Un test in grado di individuarla è infallibile al 95% (5% falsi positivi/negativi).""")
+        st.markdown("""Fai il test e risulti **POSITIVO**.""")
+        val = st.number_input('Qual è la probabilità effettiva (0-100%) che tu abbia davvero la malattia?', 0, 100, value=None)
 
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Invia risposta", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': val}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

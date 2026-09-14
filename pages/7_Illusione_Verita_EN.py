@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,33 +68,34 @@ st.markdown("""<h1 class="exp-title">👁️ Evaluate the Statement</h1>""", uns
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""<p style="font-size:32px; font-weight:900; color:#FAFAFA; font-family:Arial; text-align:center;">Taking Omega-3 reduces<br>bodily inflammation by 15%.</p>""", unsafe_allow_html=True)
-        st.markdown("""---""")
-        st.markdown("""**On a scale of 1 to 10, how true and scientifically valid does this statement seem?**""")
-        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""<p style="font-size:32px; font-weight:900; color:#FAFAFA; font-family:Arial; text-align:center;">Taking Omega-3 reduces<br>bodily inflammation by 15%.</p>""", unsafe_allow_html=True)
+            st.markdown("""---""")
+            st.markdown("""**On a scale of 1 to 10, how true and scientifically valid does this statement seem?**""")
+            val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')
 
-    else:
-        st.markdown("""<p style="font-size:16px; font-weight:300; color:#AAAAAA; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;">Taking omega-3 reduces bodily inflammation by 15%.</p>""", unsafe_allow_html=True)
-        st.markdown("""---""")
-        st.markdown("""**On a scale of 1 to 10, how true and scientifically valid does this statement seem?**""")
-        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')
+        else:
+            st.markdown("""<p style="font-size:16px; font-weight:300; color:#AAAAAA; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;">Taking omega-3 reduces bodily inflammation by 15%.</p>""", unsafe_allow_html=True)
+            st.markdown("""---""")
+            st.markdown("""**On a scale of 1 to 10, how true and scientifically valid does this statement seem?**""")
+            val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')
 
 
     
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,32 +68,33 @@ st.markdown("""<h1 class="exp-title">🤖 AI Robotic Surgery</h1>""", unsafe_all
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** A new AI robotic surgical software is set to perform a complex procedure on 100 patients in critical condition.""")
-    st.markdown("""---""")
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
+        st.markdown("""**Scenario:** A new AI robotic surgical software is set to perform a complex procedure on 100 patients in critical condition.""")
+        st.markdown("""---""")
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""**Statistical Data:** If you use the AI software, **90 patients will survive**.\n\nDo you authorize the software's use?""")
-        scelta = st.radio('', ['Yes', 'No'], horizontal=True, index=None, key='r1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""**Statistical Data:** If you use the AI software, **90 patients will survive**.\n\nDo you authorize the software's use?""")
+            scelta = st.radio('', ['Yes', 'No'], horizontal=True, index=None, key='r1')
 
-    else:
-        st.markdown("""**Statistical Data:** If you use the AI software, **10 patients will die**.\n\nDo you authorize the software's use?""")
-        scelta = st.radio('', ['Yes', 'No'], horizontal=True, index=None, key='r2')
+        else:
+            st.markdown("""**Statistical Data:** If you use the AI software, **10 patients will die**.\n\nDo you authorize the software's use?""")
+            scelta = st.radio('', ['Yes', 'No'], horizontal=True, index=None, key='r2')
 
 
     
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            v = 1 if scelta == 'Yes' else 0
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
+            if can_submit:
+                v = 1 if scelta == 'Yes' else 0
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

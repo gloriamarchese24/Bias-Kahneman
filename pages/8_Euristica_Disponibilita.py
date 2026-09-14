@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,35 +68,36 @@ st.markdown("""<h1 class="exp-title">🧠 Inventario della Personalità</h1>""",
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""1. Richiama alla memoria **6 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
-        st.text_area('Descrivi in breve le 6 situazioni (anche con parole chiave):', height=140, key='t1')
-        st.markdown("""---""")
-        st.markdown("""**In generale nella tua vita, quanto ritieni di essere una persona assertiva (1-10)?**""")
-        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""1. Richiama alla memoria **6 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
+            st.text_area('Descrivi in breve le 6 situazioni (anche con parole chiave):', height=140, key='t1')
+            st.markdown("""---""")
+            st.markdown("""**In generale nella tua vita, quanto ritieni di essere una persona assertiva (1-10)?**""")
+            val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')
 
-    else:
-        st.markdown("""1. Richiama alla memoria **12 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
-        st.text_area('Descrivi in breve le 12 situazioni (anche con parole chiave):', height=200, key='t2')
-        st.markdown("""---""")
-        st.markdown("""**In generale nella tua vita, quanto ritieni di essere una persona assertiva (1-10)?**""")
-        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')
+        else:
+            st.markdown("""1. Richiama alla memoria **12 situazioni** in cui sei riuscito a comportarti in modo molto assertivo (ossia in cui hai fatto rispettare fermamente il tuo punto di vista agli altri e ti sei imposto con sicurezza).""")
+            st.text_area('Descrivi in breve le 12 situazioni (anche con parole chiave):', height=200, key='t2')
+            st.markdown("""---""")
+            st.markdown("""**In generale nella tua vita, quanto ritieni di essere una persona assertiva (1-10)?**""")
+            val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')
 
 
     
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Invia risposta", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

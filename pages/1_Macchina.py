@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,34 +68,35 @@ st.markdown("""<h1 class="exp-title">🚗 Incidente Stradale</h1>""", unsafe_all
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** Hai appena visto un breve video di un incidente tra due automobili.""")
-    st.markdown("""---""")
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
+        st.markdown("""**Scenario:** Hai appena visto un breve video di un incidente tra due automobili.""")
+        st.markdown("""---""")
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono urtate?**""")
-        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono urtate?**""")
+            val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')
 
-    else:
-        st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono disintegrate?**""")
-        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s2')
+        else:
+            st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono disintegrate?**""")
+            val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s2')
 
-    st.markdown("""**2. Hai notato dei vetri rotti a terra?**""")
-    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, index=None, key='v')
+        st.markdown("""**2. Hai notato dei vetri rotti a terra?**""")
+        vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, index=None, key='v')
 
     
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Invia risposta", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
-            supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+                supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

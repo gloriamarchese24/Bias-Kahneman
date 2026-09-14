@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,30 +68,31 @@ st.markdown("""<h1 class="exp-title">🫀 Modulo Assicurativo</h1>""", unsafe_al
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Firma del nuovo modulo per dipendenti ospedalieri.**""")
-    st.markdown("""---""")
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
+        st.markdown("""**Firma del nuovo modulo per dipendenti ospedalieri.**""")
+        st.markdown("""---""")
 
-    if st.session_state.gruppo == "A":
-        opt = st.checkbox('⚠️ Spunta la casella se **VUOI** acconsentire a diventare un donatore di organi.', value=False, key='c1')
+        if st.session_state.gruppo == "A":
+            opt = st.checkbox('⚠️ Spunta la casella se **VUOI** acconsentire a diventare un donatore di organi.', value=False, key='c1')
 
-    else:
-        opt = st.checkbox('⚠️ Spunta la casella se **NON VUOI** diventare un donatore di organi.', value=True, key='c2')
+        else:
+            opt = st.checkbox('⚠️ Spunta la casella se **NON VUOI** diventare un donatore di organi.', value=True, key='c2')
 
 
     
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Invia risposta", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            v = 1 if (st.session_state.gruppo == 'A' and opt == True) or (st.session_state.gruppo == 'B' and opt == False) else 0
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
+            if can_submit:
+                v = 1 if (st.session_state.gruppo == 'A' and opt == True) or (st.session_state.gruppo == 'B' and opt == False) else 0
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,42 +68,43 @@ st.markdown("""<h1 class="exp-title">👁️ Image Recognition (Bruner & Potter)
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** Carefully observe the visual sequence shown below.\n\n⚡ **IMPORTANT:** Type in the box below **THE VERY FIRST THING YOU SEE** (your immediate first impression as soon as the image appears) and submit immediately!""")
-    st.markdown("""---""")
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
+        st.markdown("""**Scenario:** Carefully observe the visual sequence shown below.\n\n⚡ **IMPORTANT:** Type in the box below **THE VERY FIRST THING YOU SEE** (your immediate first impression as soon as the image appears) and submit immediately!""")
+        st.markdown("""---""")
 
-    if st.session_state.gruppo == "A":
-        b64_img = load_hydrant_b64()
-        if b64_img:
-            html_a = f'''<!DOCTYPE html><html><head><style>body {{ margin:0; padding:0; background:#111; font-family:sans-serif; text-align:center; color:white; }} .box {{ padding:1.2rem; background:#111; border-radius:20px; border:1px solid rgba(108,99,255,0.3); }} img {{ width:220px; border-radius:16px; filter:blur(24px); -webkit-filter:blur(24px); box-shadow:0 8px 32px rgba(0,0,0,0.5); transition: filter 0.1s linear; }} p {{ color:#6C63FF; font-weight:600; font-size:0.9rem; margin-top:12px; }} button {{ background:#6C63FF; color:white; border:none; padding:10px 20px; border-radius:10px; font-weight:700; font-size:0.95rem; cursor:pointer; margin-top:8px; box-shadow:0 4px 12px rgba(108,99,255,0.4); }} button:active {{ transform: scale(0.96); }}</style></head><body><div class="box"><img id="imgA" src="data:image/jpeg;base64,{b64_img}" style="filter:blur(24px); -webkit-filter:blur(24px);" /><p id="txtA">🎥 Continuous fluid video unblurring in progress (13s)...</p><button id="btnA" onclick="playA()">▶️ Play Animation</button></div><script>function playA() {{ var img=document.getElementById('imgA'); var txt=document.getElementById('txtA'); var btn=document.getElementById('btnA'); var start=null; var dur=13000; if(img) {{ img.style.filter="blur(24px)"; img.style.webkitFilter="blur(24px)"; }} txt.innerText="🎥 Continuous fluid video unblurring in progress (13s)..."; btn.disabled=true; btn.style.opacity="0.6"; function step(ts) {{ if(!start) start=ts; var progress=(ts-start)/dur; if(progress>1) progress=1; var curBlur=24-(progress*21); if(img) {{ img.style.filter="blur("+curBlur+"px)"; img.style.webkitFilter="blur("+curBlur+"px)"; }} if(progress<1) {{ window.requestAnimationFrame(step); }} else {{ txt.innerText="✅ Focus sequence completed!"; btn.disabled=false; btn.style.opacity="1"; }} }} window.requestAnimationFrame(step); }} window.onload=playA; setTimeout(playA, 100);</script></body></html>'''
-            components.html(html_a, height=360)
-        else:
-            st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div></div>""")
-        scelta = st.text_input('Type here THE VERY FIRST THING YOU SEE / initial impression:', key='t_wys1_en')
+        if st.session_state.gruppo == "A":
+            b64_img = load_hydrant_b64()
+            if b64_img:
+                html_a = f'''<!DOCTYPE html><html><head><style>body {{ margin:0; padding:0; background:#111; font-family:sans-serif; text-align:center; color:white; }} .box {{ padding:1.2rem; background:#111; border-radius:20px; border:1px solid rgba(108,99,255,0.3); }} img {{ width:220px; border-radius:16px; filter:blur(24px); -webkit-filter:blur(24px); box-shadow:0 8px 32px rgba(0,0,0,0.5); transition: filter 0.1s linear; }} p {{ color:#6C63FF; font-weight:600; font-size:0.9rem; margin-top:12px; }} button {{ background:#6C63FF; color:white; border:none; padding:10px 20px; border-radius:10px; font-weight:700; font-size:0.95rem; cursor:pointer; margin-top:8px; box-shadow:0 4px 12px rgba(108,99,255,0.4); }} button:active {{ transform: scale(0.96); }}</style></head><body><div class="box"><img id="imgA" src="data:image/jpeg;base64,{b64_img}" style="filter:blur(24px); -webkit-filter:blur(24px);" /><p id="txtA">🎥 Continuous fluid video unblurring in progress (13s)...</p><button id="btnA" onclick="playA()">▶️ Play Animation</button></div><script>function playA() {{ var img=document.getElementById('imgA'); var txt=document.getElementById('txtA'); var btn=document.getElementById('btnA'); var start=null; var dur=13000; if(img) {{ img.style.filter="blur(24px)"; img.style.webkitFilter="blur(24px)"; }} txt.innerText="🎥 Continuous fluid video unblurring in progress (13s)..."; btn.disabled=true; btn.style.opacity="0.6"; function step(ts) {{ if(!start) start=ts; var progress=(ts-start)/dur; if(progress>1) progress=1; var curBlur=24-(progress*21); if(img) {{ img.style.filter="blur("+curBlur+"px)"; img.style.webkitFilter="blur("+curBlur+"px)"; }} if(progress<1) {{ window.requestAnimationFrame(step); }} else {{ txt.innerText="✅ Focus sequence completed!"; btn.disabled=false; btn.style.opacity="1"; }} }} window.requestAnimationFrame(step); }} window.onload=playA; setTimeout(playA, 100);</script></body></html>'''
+                components.html(html_a, height=360)
+            else:
+                st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(9px); line-height:1;'>🧯🟡</div></div>""")
+            scelta = st.text_input('Type here THE VERY FIRST THING YOU SEE / initial impression:', key='t_wys1_en')
 
-    else:
-        b64_img = load_hydrant_b64()
-        if b64_img:
-            html_b = f'''<!DOCTYPE html><html><head><style>body {{ margin:0; padding:0; background:#111; font-family:sans-serif; text-align:center; color:white; }} .box {{ padding:1.2rem; background:#111; border-radius:20px; border:1px solid rgba(255,166,0,0.3); }} img {{ width:220px; border-radius:16px; filter:blur(24px); -webkit-filter:blur(24px); box-shadow:0 8px 32px rgba(0,0,0,0.5); transition: filter 0.3s ease; }} p {{ color:#FFA600; font-weight:600; font-size:0.9rem; margin-top:12px; }} button {{ background:#FFA600; color:black; border:none; padding:10px 20px; border-radius:10px; font-weight:700; font-size:0.95rem; cursor:pointer; margin-top:8px; box-shadow:0 4px 12px rgba(255,166,0,0.4); }} button:active {{ transform: scale(0.96); }}</style></head><body><div class="box"><img id="imgB" src="data:image/jpeg;base64,{b64_img}" style="filter:blur(24px); -webkit-filter:blur(24px);" /><p id="txtB">🖼️ Frame 1 of 8 (Initial blur 24px)...</p><button id="btnB" onclick="playB()">▶️ Play Animation</button></div><script>var timerId=null; function playB() {{ if(timerId) clearTimeout(timerId); var img=document.getElementById('imgB'); var txt=document.getElementById('txtB'); var btn=document.getElementById('btnB'); if(img) {{ img.style.filter="blur(24px)"; img.style.webkitFilter="blur(24px)"; }} btn.disabled=true; btn.style.opacity="0.6"; var frames=[{{b:24,l:"🖼️ Frame 1 of 8 (24px)"}},{{b:21,l:"🖼️ Frame 2 of 8 (21px)"}},{{b:18,l:"🖼️ Frame 3 of 8 (18px)"}},{{b:15,l:"🖼️ Frame 4 of 8 (15px)"}},{{b:12,l:"🖼️ Frame 5 of 8 (12px)"}},{{b:9,l:"🖼️ Frame 6 di 8 (9px)"}},{{b:6,l:"🖼️ Frame 7 of 8 (6px)"}},{{b:3,l:"🖼️ Frame 8 of 8 (Final focus 3px)"}}]; var idx=0; function showNext() {{ if(img) {{ img.style.filter="blur("+frames[idx].b+"px)"; img.style.webkitFilter="blur("+frames[idx].b+"px)"; }} if(txt) txt.innerText=frames[idx].l; idx++; if(idx<frames.length) {{ timerId=setTimeout(showNext, 1500); }} else {{ btn.disabled=false; btn.style.opacity="1"; }} }} showNext(); }} window.onload=playB; setTimeout(playB, 100);</script></body></html>'''
-            components.html(html_b, height=360)
         else:
-            st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(5px); line-height:1;'>🧯🔴</div></div>""")
-        scelta = st.text_input('Type here THE VERY FIRST THING YOU SEE / initial impression:', key='t_wys2_en')
+            b64_img = load_hydrant_b64()
+            if b64_img:
+                html_b = f'''<!DOCTYPE html><html><head><style>body {{ margin:0; padding:0; background:#111; font-family:sans-serif; text-align:center; color:white; }} .box {{ padding:1.2rem; background:#111; border-radius:20px; border:1px solid rgba(255,166,0,0.3); }} img {{ width:220px; border-radius:16px; filter:blur(24px); -webkit-filter:blur(24px); box-shadow:0 8px 32px rgba(0,0,0,0.5); transition: filter 0.3s ease; }} p {{ color:#FFA600; font-weight:600; font-size:0.9rem; margin-top:12px; }} button {{ background:#FFA600; color:black; border:none; padding:10px 20px; border-radius:10px; font-weight:700; font-size:0.95rem; cursor:pointer; margin-top:8px; box-shadow:0 4px 12px rgba(255,166,0,0.4); }} button:active {{ transform: scale(0.96); }}</style></head><body><div class="box"><img id="imgB" src="data:image/jpeg;base64,{b64_img}" style="filter:blur(24px); -webkit-filter:blur(24px);" /><p id="txtB">🖼️ Frame 1 of 8 (Initial blur 24px)...</p><button id="btnB" onclick="playB()">▶️ Play Animation</button></div><script>var timerId=null; function playB() {{ if(timerId) clearTimeout(timerId); var img=document.getElementById('imgB'); var txt=document.getElementById('txtB'); var btn=document.getElementById('btnB'); if(img) {{ img.style.filter="blur(24px)"; img.style.webkitFilter="blur(24px)"; }} btn.disabled=true; btn.style.opacity="0.6"; var frames=[{{b:24,l:"🖼️ Frame 1 of 8 (24px)"}},{{b:21,l:"🖼️ Frame 2 of 8 (21px)"}},{{b:18,l:"🖼️ Frame 3 of 8 (18px)"}},{{b:15,l:"🖼️ Frame 4 of 8 (15px)"}},{{b:12,l:"🖼️ Frame 5 of 8 (12px)"}},{{b:9,l:"🖼️ Frame 6 di 8 (9px)"}},{{b:6,l:"🖼️ Frame 7 of 8 (6px)"}},{{b:3,l:"🖼️ Frame 8 of 8 (Final focus 3px)"}}]; var idx=0; function showNext() {{ if(img) {{ img.style.filter="blur("+frames[idx].b+"px)"; img.style.webkitFilter="blur("+frames[idx].b+"px)"; }} if(txt) txt.innerText=frames[idx].l; idx++; if(idx<frames.length) {{ timerId=setTimeout(showNext, 1500); }} else {{ btn.disabled=false; btn.style.opacity="1"; }} }} showNext(); }} window.onload=playB; setTimeout(playB, 100);</script></body></html>'''
+                components.html(html_b, height=360)
+            else:
+                st.markdown("""<div style='text-align:center; padding:1.5rem; background:#111; border-radius:12px;'><div style='font-size:70px; filter:blur(5px); line-height:1;'>🧯🔴</div></div>""")
+            scelta = st.text_input('Type here THE VERY FIRST THING YOU SEE / initial impression:', key='t_wys2_en')
 
 
     
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            v = 1 if any(w in scelta.lower() for w in ['idrant', 'estintor', 'hydrant', 'extinguish', 'fuoco', 'antincend', 'firehy', 'fire hy']) else 0
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
+            if can_submit:
+                v = 1 if any(w in scelta.lower() for w in ['idrant', 'estintor', 'hydrant', 'extinguish', 'fuoco', 'antincend', 'firehy', 'fire hy']) else 0
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

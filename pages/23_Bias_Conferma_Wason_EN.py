@@ -33,24 +33,25 @@ st.markdown("""<h1 class="exp-title">🧮 2-4-6 Task (Wason, 1960)</h1>""", unsa
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** You are shown the number sequence: **2 - 4 - 6**.""")
-    st.markdown("""This sequence conforms to a **secret rule** created by the instructor.""")
-    st.markdown("""Which of the following triplets of numbers would you test first to check if your hypothesis about the rule is correct?""")
-    scelta_dom = st.radio('', ['A) 8 - 10 - 12 (Continue even numbers sequence)', 'B) 1 - 3 - 5 (Test odd numbers sequence)', 'C) 1 - 2 - 3 (Test generic increasing sequence)', 'D) 6 - 4 - 2 (Test decreasing sequence)'], index=None)
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
+        st.markdown("""**Scenario:** You are shown the number sequence: **2 - 4 - 6**.""")
+        st.markdown("""This sequence conforms to a **secret rule** created by the instructor.""")
+        st.markdown("""Which of the following triplets of numbers would you test first to check if your hypothesis about the rule is correct?""")
+        scelta_dom = st.radio('', ['A) 8 - 10 - 12 (Continue even numbers sequence)', 'B) 1 - 3 - 5 (Test odd numbers sequence)', 'C) 1 - 2 - 3 (Test generic increasing sequence)', 'D) 6 - 4 - 2 (Test decreasing sequence)'], index=None)
 
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            v = 1 if 'A)' in scelta_dom else (2 if 'B)' in scelta_dom else (3 if 'C)' in scelta_dom else 4))
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
+            if can_submit:
+                v = 1 if 'A)' in scelta_dom else (2 if 'B)' in scelta_dom else (3 if 'C)' in scelta_dom else 4))
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

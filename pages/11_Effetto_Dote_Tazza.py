@@ -29,6 +29,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -67,33 +68,34 @@ st.markdown("""<h1 class="exp-title">☕ Il Mercato delle Tazze</h1>""", unsafe_
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""**Scenario:** Complimenti! Ti è appena stata **REGALATA** questa bellissima tazza del nostro istituto (ora è rigorosamente di tua proprietà).""")
-        st.markdown("""<div style="text-align: center; font-size: 60px;">☕🎓</div>""", unsafe_allow_html=True)
-        st.markdown("""Un tuo compagno arriva e vorrebbe comprarla da te. Qual è il **PREZZO MINIMO** a cui saresti disposto a vendergliela?""")
-        val = st.number_input('Prezzo in Euro (€):', 0.0, 50.0, value=None, key='n1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""**Scenario:** Complimenti! Ti è appena stata **REGALATA** questa bellissima tazza del nostro istituto (ora è rigorosamente di tua proprietà).""")
+            st.markdown("""<div style="text-align: center; font-size: 60px;">☕🎓</div>""", unsafe_allow_html=True)
+            st.markdown("""Un tuo compagno arriva e vorrebbe comprarla da te. Qual è il **PREZZO MINIMO** a cui saresti disposto a vendergliela?""")
+            val = st.number_input('Prezzo in Euro (€):', 0.0, 50.0, value=None, key='n1')
 
-    else:
-        st.markdown("""**Scenario:** Un tuo compagno ha appena ricevuto in regalo una bellissima tazza del nostro istituto. Tu al momento sei a mani vuote.""")
-        st.markdown("""<div style="text-align: center; font-size: 60px;">☕🎓</div>""", unsafe_allow_html=True)
-        st.markdown("""Lui è disposto a venderla. Qual è il **PREZZO MASSIMO** che saresti disposto a sborsare ORA per acquistarla da lui?""")
-        val = st.number_input('Prezzo in Euro (€):', 0.0, 50.0, value=None, key='n2')
+        else:
+            st.markdown("""**Scenario:** Un tuo compagno ha appena ricevuto in regalo una bellissima tazza del nostro istituto. Tu al momento sei a mani vuote.""")
+            st.markdown("""<div style="text-align: center; font-size: 60px;">☕🎓</div>""", unsafe_allow_html=True)
+            st.markdown("""Lui è disposto a venderla. Qual è il **PREZZO MASSIMO** che saresti disposto a sborsare ORA per acquistarla da lui?""")
+            val = st.number_input('Prezzo in Euro (€):', 0.0, 50.0, value=None, key='n2')
 
 
     
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Invia risposta", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)
