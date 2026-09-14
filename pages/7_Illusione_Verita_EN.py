@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import secrets
 import base64
 import os
 import streamlit.components.v1 as components
@@ -59,7 +60,7 @@ if "gruppo" not in st.session_state:
             except Exception:
                 time.sleep(0.05)
         if not assigned:
-            st.session_state.gruppo = "A" if int(time.time() * 1000) % 2 == 1 else "B"
+            st.session_state.gruppo = secrets.choice(["A", "B"])
 
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
