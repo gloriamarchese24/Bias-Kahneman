@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import secrets
 import base64
 import os
 import streamlit.components.v1 as components
@@ -29,6 +30,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -58,7 +60,7 @@ if "gruppo" not in st.session_state:
             except Exception:
                 time.sleep(0.05)
         if not assigned:
-            st.session_state.gruppo = "A" if int(time.time() * 1000) % 2 == 1 else "B"
+            st.session_state.gruppo = secrets.choice(["A", "B"])
 
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
@@ -67,29 +69,30 @@ st.markdown("""<h1 class="exp-title">🎰 Hospital Misdiagnosis Statistics</h1>"
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
 
-    if st.session_state.gruppo == "A":
-        val = st.number_input('In your opinion, what is the exact percentage of misdiagnoses caused by physician fatigue?', 0, 100, value=None, key='s1')
+        if st.session_state.gruppo == "A":
+            val = st.number_input('In your opinion, what is the exact percentage of misdiagnoses caused by physician fatigue?', 0, 100, value=None, key='s1')
 
-    else:
-        val = st.number_input('In your opinion, what is the exact percentage of misdiagnoses caused by physician fatigue?', 0, 100, value=None, key='s2')
+        else:
+            val = st.number_input('In your opinion, what is the exact percentage of misdiagnoses caused by physician fatigue?', 0, 100, value=None, key='s2')
 
-    st.markdown("""---""")
-    st.markdown("""### The number spun on the wheel today is: **12**""" if st.session_state.gruppo == 'A' else """### The number spun on the wheel today is: **65**""")
+        st.markdown("""---""")
+        st.markdown("""### The number spun on the wheel today is: **12**""" if st.session_state.gruppo == 'A' else """### The number spun on the wheel today is: **65**""")
 
     
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

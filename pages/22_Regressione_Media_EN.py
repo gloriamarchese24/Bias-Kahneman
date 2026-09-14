@@ -33,22 +33,23 @@ st.markdown("""<h1 class="exp-title">🧑‍✈️ Praise vs Punishment Effect</
 st.markdown("""<p class="exp-subtitle">Please answer the questions below</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""Flight instructors notice: reprimanding leads to better subsequent maneuvers, while praising leads to worse ones. Do you believe this is:""")
-    scelta_dom = st.radio('', ['A) Correct psychological intuition.', 'B) Statistical mistake (regression to the mean).'], index=None)
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
+        st.markdown("""Flight instructors notice: reprimanding leads to better subsequent maneuvers, while praising leads to worse ones. Do you believe this is:""")
+        scelta_dom = st.radio('', ['A) Correct psychological intuition.', 'B) Statistical mistake (regression to the mean).'], index=None)
 
-    if st.button("📨 Submit response", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Please answer the question before submitting.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'scelta_dom', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Please answer the question before submitting.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            v = 1 if 'A)' in scelta_dom else 2
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
+            if can_submit:
+                v = 1 if 'A)' in scelta_dom else 2
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': 'A', 'valore': v}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)

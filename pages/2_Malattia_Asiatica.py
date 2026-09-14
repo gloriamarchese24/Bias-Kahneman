@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import secrets
 import base64
 import os
 import streamlit.components.v1 as components
@@ -29,6 +30,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -58,7 +60,7 @@ if "gruppo" not in st.session_state:
             except Exception:
                 time.sleep(0.05)
         if not assigned:
-            st.session_state.gruppo = "A" if int(time.time() * 1000) % 2 == 1 else "B"
+            st.session_state.gruppo = secrets.choice(["A", "B"])
 
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
@@ -67,32 +69,33 @@ st.markdown("""<h1 class="exp-title">🦠 La Malattia Asiatica</h1>""", unsafe_a
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
-    st.markdown("""**Scenario:** Immagina che l'Italia si stia preparando ad affrontare una malattia molto contagiosa asiatica, che dovrebbe uccidere 600 persone. Hai due programmi per affrontarla.""")
-    st.markdown("""---""")
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
+        st.markdown("""**Scenario:** Immagina che l'Italia si stia preparando ad affrontare una malattia molto contagiosa asiatica, che dovrebbe uccidere 600 persone. Hai due programmi per affrontarla.""")
+        st.markdown("""---""")
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""Quale programma scegli?""")
-        scelta = st.radio('', ['Programma A: Saranno salvate 200 persone (risultato certo).', 'Programma B: C\'è 1/3 di probabilità di salvare tutte e 600 le persone, e 2/3 di non salvare nessuno.'], index=None, key='r1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""Quale programma scegli?""")
+            scelta = st.radio('', ['Programma A: Saranno salvate 200 persone (risultato certo).', 'Programma B: C\'è 1/3 di probabilità di salvare tutte e 600 le persone, e 2/3 di non salvare nessuno.'], index=None, key='r1')
 
-    else:
-        st.markdown("""Quale programma scegli?""")
-        scelta = st.radio('', ['Programma A: Moriranno 400 persone (risultato certo).', 'Programma B: C\'è 1/3 di probabilità che non muoia nessuno, e 2/3 che muoiano tutte e 600 le persone.'], index=None, key='r2')
+        else:
+            st.markdown("""Quale programma scegli?""")
+            scelta = st.radio('', ['Programma A: Moriranno 400 persone (risultato certo).', 'Programma B: C\'è 1/3 di probabilità che non muoia nessuno, e 2/3 che muoiano tutte e 600 le persone.'], index=None, key='r2')
 
 
     
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Invia risposta", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            v = 0 if 'A:' in scelta else 1
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
+            if can_submit:
+                v = 0 if 'A:' in scelta else 1
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': v}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)

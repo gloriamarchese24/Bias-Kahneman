@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import secrets
 import base64
 import os
 import streamlit.components.v1 as components
@@ -29,6 +30,7 @@ def get_supabase():
 
 supabase = get_supabase()
 
+@st.cache_data
 def load_hydrant_b64():
     candidates = [
         'fire_hydrant.jpg',
@@ -58,7 +60,7 @@ if "gruppo" not in st.session_state:
             except Exception:
                 time.sleep(0.05)
         if not assigned:
-            st.session_state.gruppo = "A" if int(time.time() * 1000) % 2 == 1 else "B"
+            st.session_state.gruppo = secrets.choice(["A", "B"])
 
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
@@ -67,33 +69,34 @@ st.markdown("""<h1 class="exp-title">👁️ Valuta l'Affermazione</h1>""", unsa
 st.markdown("""<p class="exp-subtitle">Rispondi alle domande qui sotto</p>""", unsafe_allow_html=True)
 
 if not st.session_state[NOME_ESPERIMENTO]:
+    with st.form(key=f"form_{NOME_ESPERIMENTO}"):
 
-    if st.session_state.gruppo == "A":
-        st.markdown("""<p style="font-size:32px; font-weight:900; color:#FAFAFA; font-family:Arial; text-align:center;">L'assunzione di Omega-3 riduce<br>del 15% le infiammazioni corporee.</p>""", unsafe_allow_html=True)
-        st.markdown("""---""")
-        st.markdown("""**Da 1 a 10, quanto ti sembra vera e scientifica questa frase?**""")
-        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')
+        if st.session_state.gruppo == "A":
+            st.markdown("""<p style="font-size:32px; font-weight:900; color:#FAFAFA; font-family:Arial; text-align:center;">L'assunzione di Omega-3 riduce<br>del 15% le infiammazioni corporee.</p>""", unsafe_allow_html=True)
+            st.markdown("""---""")
+            st.markdown("""**Da 1 a 10, quanto ti sembra vera e scientifica questa frase?**""")
+            val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s1')
 
-    else:
-        st.markdown("""<p style="font-size:16px; font-weight:300; color:#AAAAAA; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;">L'assunzione di omega-3 riduce del 15% le infiammazioni corporee.</p>""", unsafe_allow_html=True)
-        st.markdown("""---""")
-        st.markdown("""**Da 1 a 10, quanto ti sembra vera e scientifica questa frase?**""")
-        val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')
+        else:
+            st.markdown("""<p style="font-size:16px; font-weight:300; color:#AAAAAA; font-family:'Comic Sans MS', cursive; text-align:center; padding: 2rem;">L'assunzione di omega-3 riduce del 15% le infiammazioni corporee.</p>""", unsafe_allow_html=True)
+            st.markdown("""---""")
+            st.markdown("""**Da 1 a 10, quanto ti sembra vera e scientifica questa frase?**""")
+            val = st.radio('', [1,2,3,4,5,6,7,8,9,10], horizontal=True, index=None, key='s2')
 
 
     
-    if st.button("📨 Invia risposta", type="primary", use_container_width=True):
-        can_submit = True
-        for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
-            if var_name in locals() and locals()[var_name] is None:
-                st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
-                can_submit = False
-                break
+        if st.form_submit_button("📨 Invia risposta", type="primary", use_container_width=True):
+            can_submit = True
+            for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
+                if var_name in locals() and locals()[var_name] is None:
+                    st.warning("⚠️ Per favore, rispondi alla domanda prima di inviare.")
+                    can_submit = False
+                    break
         
-        if can_submit:
-            supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
+            if can_submit:
+                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
 
-            st.session_state[NOME_ESPERIMENTO] = True
-            st.rerun()
+                st.session_state[NOME_ESPERIMENTO] = True
+                st.rerun()
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Grazie per aver risposto!</p></div>''', unsafe_allow_html=True)
