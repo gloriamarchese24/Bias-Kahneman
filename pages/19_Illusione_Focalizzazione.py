@@ -47,20 +47,17 @@ if "gruppo" not in st.session_state:
     if "g" in st.query_params and st.query_params["g"] in ["A", "B"]:
         st.session_state.gruppo = st.query_params["g"]
     else:
-        assigned = False
-        for attempt in range(3):
-            try:
-                sb_client = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
-                r = sb_client.table("Risposte").insert({"esperimento": NOME_ESPERIMENTO + "_visit", "gruppo": "PENDING", "valore": 0}).execute()
-                if r.data and len(r.data) > 0 and "id" in r.data[0]:
-                    row_id = r.data[0]["id"]
-                    st.session_state.gruppo = "A" if row_id % 2 == 1 else "B"
-                    assigned = True
-                    break
-            except Exception:
-                time.sleep(0.05)
-        if not assigned:
-            st.session_state.gruppo = secrets.choice(["A", "B"])
+        try:
+            sb_client = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
+            r = sb_client.rpc("assign_group", {"exp_name": NOME_ESPERIMENTO}).execute()
+            if r.data in ["A", "B"]:
+                st.session_state.gruppo = r.data
+            else:
+                st.error("Errore di connessione, ricaricare la pagina" if "Macchina" in __file__ or "Gandhi" in __file__ else "Connection error, please reload the page")
+                st.stop()
+        except Exception:
+            st.error("Errore di connessione, ricaricare la pagina" if "Macchina" in __file__ or "Gandhi" in __file__ else "Connection error, please reload the page")
+            st.stop()
 
 if NOME_ESPERIMENTO not in st.session_state:
     st.session_state[NOME_ESPERIMENTO] = False
