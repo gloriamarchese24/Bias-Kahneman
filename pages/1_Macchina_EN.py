@@ -84,7 +84,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""**2. Did you see any broken glass on the ground?**""")
         vetri = st.radio('Choose:', ['Yes', 'No'], horizontal=True, index=None, key='v')
 
-    
+
         if st.form_submit_button("📨 Submit response", type="primary", use_container_width=True):
             can_submit = True
             for var_name in ['scelta', 'val', 'eta', 'colpa', 'vetri', 'fiducia']:
@@ -92,12 +92,32 @@ if not st.session_state[NOME_ESPERIMENTO]:
                     st.warning("⚠️ Please answer the question before submitting.")
                     can_submit = False
                     break
-        
-            if can_submit:
-                supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()
-                supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri in ['Sì', 'Yes'] else 0}).execute()
 
-                st.session_state[NOME_ESPERIMENTO] = True
-                st.rerun()
+            if can_submit:
+                rows = [
+
+
+                    {'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val},
+
+
+                    {'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri in ['Sì', 'Yes', 'SÌ', 'Sì', 'SÃ¬'] else 0}
+
+
+                ]
+                try:
+
+
+                    supabase.table('Risposte').insert(rows).execute()
+
+
+                    st.session_state[NOME_ESPERIMENTO] = True
+                    st.rerun()
+
+
+                except Exception:
+
+
+                    st.error('Errore di connessione. Riprova.' if 'Macchina.py' in __file__ else 'Connection error. Please try again.')
+
 else:
     st.markdown('''<div class="thanks-box"><p class="thanks-emoji">🎉</p><p class="thanks-text">Thank you for participating!</p></div>''', unsafe_allow_html=True)
