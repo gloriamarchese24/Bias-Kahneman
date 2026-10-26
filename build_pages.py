@@ -176,7 +176,7 @@ else:
 build_ab_page(
     "1_Macchina.py", "macchina", "🚗", "Incidente Auto", "Incidente Stradale",
     "    st.markdown(\"\"\"**Scenario:** Hai appena visto un breve video di un incidente tra due automobili.\"\"\")\n    st.markdown(\"\"\"---\"\"\")\n",
-    "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono urtate?**\"\"\")\n        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')\n",
+    "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono toccate?**\"\"\")\n        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')\n",
     "        st.markdown(\"\"\"**A che velocità (in km/h) andavano le auto quando si sono disintegrate?**\"\"\")\n        val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s2')\n",
     "    st.markdown(\"\"\"**2. Hai notato dei vetri rotti a terra?**\"\"\")\n    vetri = st.radio('Scegli:', ['Sì', 'No'], horizontal=True, index=None, key='v')\n",
     "        supabase.table('Risposte').insert({'esperimento': NOME_ESPERIMENTO, 'gruppo': st.session_state.gruppo, 'valore': val}).execute()\n        supabase.table('Risposte').insert({'esperimento': 'macchina_vetri', 'gruppo': st.session_state.gruppo, 'valore': 1 if vetri=='Sì' else 0}).execute()\n",

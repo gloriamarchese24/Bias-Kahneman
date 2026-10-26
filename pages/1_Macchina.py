@@ -71,7 +71,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
         st.markdown("""---""")
 
         if st.session_state.gruppo == "A":
-            st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono urtate?**""")
+            st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono toccate?**""")
             val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')
 
         else:
