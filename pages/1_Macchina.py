@@ -75,7 +75,7 @@ if not st.session_state[NOME_ESPERIMENTO]:
             val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s1')
 
         else:
-            st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono disintegrate?**""")
+            st.markdown("""**A che velocità (in km/h) andavano le auto quando si sono schiantate?**""")
             val = st.number_input('Stima la velocità (km/h):', 0, 200, value=None, key='s2')
 
         st.markdown("""**2. Hai notato dei vetri rotti a terra?**""")
