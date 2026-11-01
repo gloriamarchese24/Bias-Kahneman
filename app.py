@@ -481,8 +481,9 @@ ESPERIMENTI = {
 
 # ─── SIDEBAR ──────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### 🌐 Lingua / Language")
-    lingua = st.radio("Seleziona lingua / Select language:", ["🇮🇹 Italiano", "🇬🇧 English"], index=0, label_visibility="collapsed")
+    st.markdown("### 🌐 Language / Lingua")
+    default_idx = 1 if st.query_params.get("lang") in ["it", "IT"] else 0
+    lingua = st.radio("Select language / Seleziona lingua:", ["🇬🇧 English", "🇮🇹 Italiano"], index=default_idx, label_visibility="collapsed")
     is_it = (lingua == "🇮🇹 Italiano")
 
     st.markdown("---")
